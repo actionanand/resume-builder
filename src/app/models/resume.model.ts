@@ -5,6 +5,7 @@ export interface EducationEntry {
   startDate: string;
   endDate: string;
   description: string;
+  cgpa: string;
 }
 
 export interface Experience {

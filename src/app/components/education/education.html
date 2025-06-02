@@ -6,6 +6,9 @@
         <h3>{{ education.degree }}</h3>
         <p>{{ education.institution }} - {{ education.location }}</p>
         <p>{{ education.startDate }} - {{ education.endDate }}</p>
+        <p *ngIf="education.cgpa" class="education-cgpa">
+          <span class="cgpa-label">CGPA/Percentage:</span> {{ education.cgpa }}
+        </p>
       </div>
       <div class="education-actions">
         <button (click)="editEducationEntry(i)" class="btn-edit">Edit</button>
@@ -16,53 +19,62 @@
       <p>{{ education.description }}</p>
     </div>
   </div>
-  
+
   <div *ngIf="showEducationForm" class="education-form">
     <h3>{{ isEditing ? 'Edit Education' : 'Add Education' }}</h3>
     <form (ngSubmit)="saveEducationEntry()">
       <div class="form-row">
         <div class="form-field">
           <label for="degree">Degree/Certificate</label>
-          <input type="text" id="degree" [(ngModel)]="currentEducation.degree" name="degree" required>
+          <input type="text" id="degree" [(ngModel)]="currentEducation.degree" name="degree" required />
         </div>
         <div class="form-field">
           <label for="institution">Institution</label>
-          <input type="text" id="institution" [(ngModel)]="currentEducation.institution" name="institution" required>
+          <input type="text" id="institution" [(ngModel)]="currentEducation.institution" name="institution" required />
         </div>
       </div>
-      
+
       <div class="form-row">
         <div class="form-field">
           <label for="location">Location</label>
-          <input type="text" id="location" [(ngModel)]="currentEducation.location" name="location" required>
+          <input type="text" id="location" [(ngModel)]="currentEducation.location" name="location" required />
+        </div>
+        <div class="form-field">
+          <label for="cgpa">CGPA/Percentage</label>
+          <input
+            type="text"
+            id="cgpa"
+            [(ngModel)]="currentEducation.cgpa"
+            name="cgpa"
+            placeholder="e.g., 3.8/4.0 or 85%" />
         </div>
       </div>
-      
+
       <div class="form-row">
         <div class="form-field">
           <label for="startDate">Start Date</label>
-          <input type="text" id="startDate" [(ngModel)]="currentEducation.startDate" name="startDate" required>
+          <input type="text" id="startDate" [(ngModel)]="currentEducation.startDate" name="startDate" required />
         </div>
         <div class="form-field">
           <label for="endDate">End Date</label>
-          <input type="text" id="endDate" [(ngModel)]="currentEducation.endDate" name="endDate" required>
+          <input type="text" id="endDate" [(ngModel)]="currentEducation.endDate" name="endDate" required />
         </div>
       </div>
-      
+
       <div class="form-row">
         <div class="form-field">
           <label for="description">Description</label>
           <textarea id="description" [(ngModel)]="currentEducation.description" name="description" rows="3"></textarea>
         </div>
       </div>
-      
+
       <div class="form-actions">
         <button type="submit" class="btn-save">Save</button>
         <button type="button" (click)="cancelForm()" class="btn-cancel">Cancel</button>
       </div>
     </form>
   </div>
-  
+
   <button *ngIf="!showEducationForm" (click)="openAddEducationForm()" class="btn-add">
     <span>+</span> Add Education
   </button>

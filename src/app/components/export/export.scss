@@ -1,7 +1,7 @@
 .export-section {
   background: white;
   border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
   padding: 25px;
 }
 
@@ -16,7 +16,7 @@ h2 {
 .export-options {
   display: flex;
   gap: 25px;
-  
+
   @media (max-width: 768px) {
     flex-direction: column;
   }
@@ -24,34 +24,34 @@ h2 {
 
 .export-sidebar {
   flex: 0 0 300px;
-  
+
   @media (max-width: 768px) {
     flex: 1;
   }
-  
+
   h3 {
     color: #2c3e50;
     font-size: 18px;
     margin: 0 0 15px;
   }
-  
+
   .form-group {
     margin-bottom: 15px;
-    
+
     label {
       display: block;
       margin-bottom: 5px;
       color: #7f8c8d;
       font-size: 14px;
     }
-    
+
     select {
       width: 100%;
       padding: 10px;
       border: 1px solid #dcdfe6;
       border-radius: 4px;
       font-size: 16px;
-      
+
       &:focus {
         outline: none;
         border-color: #3498db;
@@ -65,7 +65,7 @@ h2 {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  
+
   .btn-export {
     padding: 12px;
     background-color: #3498db;
@@ -77,11 +77,11 @@ h2 {
     display: flex;
     align-items: center;
     justify-content: center;
-    
+
     &:hover {
       background-color: #2980b9;
     }
-    
+
     &:disabled {
       background-color: #95a5a6;
       cursor: not-allowed;
@@ -93,19 +93,19 @@ h2 {
   margin-top: 20px;
   padding-top: 15px;
   border-top: 1px solid #f0f0f0;
-  
+
   h4 {
     color: #2c3e50;
     font-size: 16px;
     margin: 0 0 5px;
   }
-  
+
   p {
     color: #7f8c8d;
     font-size: 14px;
     margin: 0 0 10px;
   }
-  
+
   .btn-copy {
     padding: 8px 12px;
     background-color: #2ecc71;
@@ -114,7 +114,7 @@ h2 {
     border-radius: 4px;
     font-size: 14px;
     cursor: pointer;
-    
+
     &:hover {
       background-color: #27ae60;
     }
@@ -136,20 +136,20 @@ h2 {
   border: 1px solid #dcdfe6;
   border-radius: 4px;
   background-color: #f8f9fa;
-  
+
   .preview-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 15px;
     border-bottom: 1px solid #dcdfe6;
-    
+
     h3 {
       color: #2c3e50;
       font-size: 18px;
       margin: 0;
     }
-    
+
     .btn-toggle {
       background: none;
       border: 1px solid #dcdfe6;
@@ -158,75 +158,75 @@ h2 {
       font-size: 14px;
       color: #7f8c8d;
       cursor: pointer;
-      
+
       &:hover {
         background-color: #ecf0f1;
       }
     }
   }
-  
+
   .resume-preview {
     padding: 30px;
     background-color: white;
     max-height: 600px;
     overflow-y: auto;
-    
+
     // Theme: Modern
     &.modern {
       font-family: 'Roboto', Arial, sans-serif;
-      
+
       h1 {
         color: #3498db;
         font-size: 28px;
       }
-      
+
       h2 {
         color: #2c3e50;
         font-size: 20px;
         border-bottom: 2px solid #3498db;
         padding-bottom: 5px;
       }
-      
+
       h3 {
         color: #2c3e50;
         font-size: 16px;
       }
     }
-    
+
     // Theme: Classic
     &.classic {
       font-family: 'Times New Roman', Times, serif;
-      
+
       h1 {
         color: #000;
         font-size: 28px;
         text-align: center;
       }
-      
+
       h2 {
         color: #333;
         font-size: 20px;
         border-bottom: 1px solid #333;
         text-transform: uppercase;
       }
-      
+
       h3 {
         color: #333;
         font-size: 16px;
         font-weight: bold;
       }
     }
-    
+
     // Theme: Minimal
     &.minimal {
       font-family: 'Arial', sans-serif;
-      
+
       h1 {
         color: #333;
         font-size: 26px;
         font-weight: normal;
       }
-      
+
       h2 {
         color: #333;
         font-size: 18px;
@@ -235,128 +235,146 @@ h2 {
         text-transform: uppercase;
         letter-spacing: 1px;
       }
-      
+
       h3 {
         color: #333;
         font-size: 15px;
         font-weight: normal;
       }
     }
-    
+
     // Theme: Professional
     &.professional {
       font-family: 'Calibri', 'Trebuchet MS', sans-serif;
-      
+
       h1 {
         color: #2c3e50;
         font-size: 28px;
       }
-      
+
       h2 {
         color: #34495e;
         font-size: 19px;
         border-bottom: 1px solid #bdc3c7;
       }
-      
+
       h3 {
         color: #2980b9;
         font-size: 16px;
       }
     }
-    
+
     // Font sizes
     &.small {
       font-size: 12px;
-      
-      h1 { font-size: 24px; }
-      h2 { font-size: 18px; }
-      h3 { font-size: 14px; }
+
+      h1 {
+        font-size: 24px;
+      }
+      h2 {
+        font-size: 18px;
+      }
+      h3 {
+        font-size: 14px;
+      }
     }
-    
+
     &.medium {
       font-size: 14px;
-      
-      h1 { font-size: 28px; }
-      h2 { font-size: 20px; }
-      h3 { font-size: 16px; }
+
+      h1 {
+        font-size: 28px;
+      }
+      h2 {
+        font-size: 20px;
+      }
+      h3 {
+        font-size: 16px;
+      }
     }
-    
+
     &.large {
       font-size: 16px;
-      
-      h1 { font-size: 32px; }
-      h2 { font-size: 24px; }
-      h3 { font-size: 18px; }
+
+      h1 {
+        font-size: 32px;
+      }
+      h2 {
+        font-size: 24px;
+      }
+      h3 {
+        font-size: 18px;
+      }
     }
-    
+
     .preview-section {
       margin-bottom: 25px;
-      
+
       h2 {
         margin-top: 0;
         margin-bottom: 15px;
       }
-      
+
       p {
         margin: 0 0 10px;
         line-height: 1.5;
       }
     }
-    
+
     .preview-profile {
       text-align: center;
       margin-bottom: 30px;
-      
+
       h1 {
         margin: 0 0 5px;
       }
-      
+
       .profile-title {
         margin: 0 0 10px;
         font-size: 18px;
         color: #7f8c8d;
       }
-      
+
       .profile-contact {
         margin-bottom: 10px;
-        
+
         span {
           display: inline-block;
           margin: 0 10px;
           color: #34495e;
         }
       }
-      
+
       .profile-links {
         a {
           display: inline-block;
           margin: 0 10px;
           color: #3498db;
           text-decoration: none;
-          
+
           &:hover {
             text-decoration: underline;
           }
         }
       }
     }
-    
+
     .item-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 5px;
-      
+
       h3 {
         margin: 0;
       }
-      
+
       .item-date {
         color: #7f8c8d;
         font-size: 14px;
       }
     }
-    
+
     .item-subheader {
       display: flex;
       justify-content: space-between;
@@ -364,54 +382,62 @@ h2 {
       color: #7f8c8d;
       font-size: 14px;
     }
-    
-    .experience-item, .project-item, .education-item {
+
+    .experience-item,
+    .project-item,
+    .education-item {
       margin-bottom: 20px;
-      
+
       &:last-child {
         margin-bottom: 0;
       }
-      
+
       ul {
         margin: 10px 0 0;
         padding-left: 20px;
-        
+
         li {
           margin-bottom: 5px;
         }
       }
     }
-    
+
     .project-link {
       font-size: 14px;
       color: #3498db;
       text-decoration: none;
-      
+
       &:hover {
         text-decoration: underline;
       }
     }
-    
+
     .project-tech {
       margin-top: 8px;
       font-size: 14px;
       color: #34495e;
     }
-    
+
     .skill-group {
       margin-bottom: 15px;
-      
+
       h3 {
         margin: 0 0 5px;
         font-size: 16px;
       }
-      
+
       p {
         margin: 0;
       }
     }
   }
-  
+
+  .item-cgpa {
+    margin: 5px 0;
+    color: #34495e;
+    font-size: 14px;
+  }
+
   .preview-placeholder {
     display: flex;
     justify-content: center;
