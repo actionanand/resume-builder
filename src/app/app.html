@@ -1,2 +1,21 @@
-<div> Hello {{ title }} </div>
-<router-outlet />
+<div class="resume-builder-container">
+  <header class="header">
+    <h1>{{ title }}</h1>
+    <p>Build an ATS-friendly resume with modern features</p>
+  </header>
+
+  <div class="resume-sections">
+    <app-profile></app-profile>
+    <!-- <app-experience></app-experience> -->
+    <app-education></app-education>
+    <!-- <app-skills></app-skills>
+    <app-projects></app-projects>
+    <app-about></app-about>
+    <app-qr-code></app-qr-code>
+    <app-export></app-export> -->
+  </div>
+
+  <footer class="footer">
+    <p>&copy; 2025 Resume Builder</p>
+  </footer>
+</div>
