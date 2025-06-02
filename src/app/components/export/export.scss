@@ -510,3 +510,85 @@ h2 {
     -webkit-print-color-adjust: exact;
   }
 }
+
+@media print {
+  .digital-signature {
+    page-break-inside: avoid;
+
+    .signature-image {
+      max-height: 60px;
+    }
+  }
+}
+
+// digital signature option
+
+.signature-options {
+  margin-left: 25px;
+  margin-top: 8px;
+}
+
+.signature-upload-area {
+  margin-top: 10px;
+  margin-left: 25px;
+}
+
+.signature-preview {
+  border: 1px solid #dcdfe6;
+  border-radius: 4px;
+  padding: 10px;
+  margin-bottom: 10px;
+  position: relative;
+
+  .signature-img {
+    max-width: 100%;
+    max-height: 80px;
+    display: block;
+  }
+
+  .btn-remove-image {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: none;
+    border: none;
+    color: #e74c3c;
+    cursor: pointer;
+    font-size: 14px;
+
+    &:hover {
+      color: #c0392b;
+    }
+  }
+}
+
+.upload-label {
+  display: inline-block;
+  padding: 8px 12px;
+  background-color: #f8f9fa;
+  border: 1px dashed #dcdfe6;
+  border-radius: 4px;
+  cursor: pointer;
+  color: #7f8c8d;
+  font-size: 14px;
+
+  &:hover {
+    background-color: #ecf0f1;
+  }
+
+  .file-input {
+    display: none;
+  }
+}
+
+.digital-signature {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .signature-image {
+    max-width: 200px;
+    max-height: 80px;
+    margin-bottom: 5px;
+  }
+}

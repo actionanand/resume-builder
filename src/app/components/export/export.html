@@ -29,6 +29,35 @@
             name="includeSignatureLine" />
           <label for="includeSignatureLine">Include signature line</label>
         </div>
+
+        <div class="signature-options" *ngIf="includeSignatureLine">
+          <div class="checkbox-field">
+            <input
+              type="checkbox"
+              id="useDigitalSignature"
+              [(ngModel)]="useDigitalSignature"
+              (change)="saveSignaturePreference()"
+              name="useDigitalSignature" />
+            <label for="useDigitalSignature">Use digital signature</label>
+          </div>
+
+          <div class="signature-upload-area" *ngIf="useDigitalSignature">
+            <div *ngIf="signatureImageUrl" class="signature-preview">
+              <img [src]="signatureImageUrl" alt="Your signature" class="signature-img" />
+              <button type="button" (click)="removeSignatureImage()" class="btn-remove-image">Remove</button>
+            </div>
+
+            <label *ngIf="!signatureImageUrl" for="signatureUpload" class="upload-label">
+              Upload signature image
+              <input
+                type="file"
+                id="signatureUpload"
+                (change)="onSignatureImageSelected($event)"
+                accept="image/*"
+                class="file-input" />
+            </label>
+          </div>
+        </div>
       </div>
 
       <div class="export-actions">
@@ -156,8 +185,14 @@
 
         <!-- Signature Section -->
         <div class="signature-section" *ngIf="includeSignatureLine">
-          <div class="signature-line"></div>
-          <div class="signature-text">Signature ({{ resumeService.getProfile()?.fullName || 'Candidate' }})</div>
+          <div *ngIf="!useDigitalSignature || !signatureImageUrl">
+            <div class="signature-line"></div>
+            <div class="signature-text">Signature ({{ resumeService.getProfile()?.fullName || 'Candidate' }})</div>
+          </div>
+          <div *ngIf="useDigitalSignature && signatureImageUrl" class="digital-signature">
+            <img [src]="signatureImageUrl" alt="Digital signature" class="signature-image" />
+            <div class="signature-text">{{ resumeService.getProfile()?.fullName || 'Candidate' }}</div>
+          </div>
         </div>
       </div>
 

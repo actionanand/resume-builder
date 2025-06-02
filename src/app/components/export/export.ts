@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, OnInit, ElementRef, ViewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -23,7 +24,10 @@ export class Export implements OnInit {
   isGeneratingPDF = false;
   exportMessage = '';
   showPreview = true;
+
   includeSignatureLine = true;
+  useDigitalSignature = false;
+  signatureImageUrl: string | null = null;
 
   themes = [
     { id: 'modern', name: 'Modern' },
@@ -43,14 +47,54 @@ export class Export implements OnInit {
   ngOnInit(): void {
     this.generateMarkdown();
 
+    // Load signature preferences
     const signaturePreference = localStorage.getItem('resumeSignatureLine');
     if (signaturePreference !== null) {
       this.includeSignatureLine = signaturePreference === 'true';
+    }
+
+    const digitalSignaturePreference = localStorage.getItem('resumeDigitalSignature');
+    if (digitalSignaturePreference !== null) {
+      this.useDigitalSignature = digitalSignaturePreference === 'true';
+    }
+
+    // Load saved signature image if it exists
+    const savedSignatureImage = localStorage.getItem('resumeSignatureImage');
+    if (savedSignatureImage) {
+      this.signatureImageUrl = savedSignatureImage;
     }
   }
 
   saveSignaturePreference(): void {
     localStorage.setItem('resumeSignatureLine', this.includeSignatureLine.toString());
+    localStorage.setItem('resumeDigitalSignature', this.useDigitalSignature.toString());
+
+    // If signature line is unchecked, also uncheck digital signature
+    if (!this.includeSignatureLine) {
+      this.useDigitalSignature = false;
+    }
+  }
+
+  onSignatureImageSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+      const reader = new FileReader();
+
+      reader.onload = (e: any) => {
+        this.signatureImageUrl = e.target.result;
+        if (this.signatureImageUrl !== null) {
+          localStorage.setItem('resumeSignatureImage', this.signatureImageUrl);
+        }
+      };
+
+      reader.readAsDataURL(file);
+    }
+  }
+
+  removeSignatureImage(): void {
+    this.signatureImageUrl = null;
+    localStorage.removeItem('resumeSignatureImage');
   }
 
   generateMarkdown(): void {
