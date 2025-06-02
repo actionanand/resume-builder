@@ -19,6 +19,18 @@
         </select>
       </div>
 
+      <div class="form-group">
+        <div class="checkbox-field">
+          <input
+            type="checkbox"
+            id="includeSignatureLine"
+            [(ngModel)]="includeSignatureLine"
+            (change)="saveSignaturePreference()"
+            name="includeSignatureLine" />
+          <label for="includeSignatureLine">Include signature line</label>
+        </div>
+      </div>
+
       <div class="export-actions">
         <button (click)="exportAsPDF()" [disabled]="isGeneratingPDF" class="btn-export">
           <span *ngIf="!isGeneratingPDF">Export as PDF</span>
@@ -140,6 +152,12 @@
             <div *ngIf="edu.cgpa" class="item-cgpa"><strong>CGPA/Percentage:</strong> {{ edu.cgpa }}</div>
             <p *ngIf="edu.description">{{ edu.description }}</p>
           </div>
+        </div>
+
+        <!-- Signature Section -->
+        <div class="signature-section" *ngIf="includeSignatureLine">
+          <div class="signature-line"></div>
+          <div class="signature-text">Signature ({{ resumeService.getProfile()?.fullName || 'Candidate' }})</div>
         </div>
       </div>
 

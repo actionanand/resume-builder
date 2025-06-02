@@ -449,3 +449,64 @@ h2 {
     padding: 0 20px;
   }
 }
+
+// signature section
+
+.signature-section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  width: 100%;
+  margin-top: 40px;
+  padding-top: 30px;
+}
+
+.signature-line {
+  width: 200px;
+  height: 1px;
+  border-bottom: 1px solid #2c3e50;
+  margin-bottom: 8px;
+}
+
+.signature-text {
+  width: 200px;
+  text-align: center;
+  font-size: 12px;
+  color: #7f8c8d;
+}
+
+.checkbox-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  input[type='checkbox'] {
+    margin: 0;
+  }
+
+  label {
+    font-size: 14px;
+    color: #7f8c8d;
+    cursor: pointer;
+  }
+}
+
+// Add special print styles for the signature
+@media print {
+  .signature-section {
+    margin-top: 50px;
+    page-break-inside: avoid;
+  }
+
+  .signature-line {
+    border-bottom: 1px solid #000;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .signature-text {
+    color: #000 !important;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+}
