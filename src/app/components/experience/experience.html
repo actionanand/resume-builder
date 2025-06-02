@@ -32,38 +32,37 @@
 
   <div *ngIf="showForm" class="experience-form">
     <h3>{{ isEditing ? 'Edit Experience' : 'Add Experience' }}</h3>
-    <form (ngSubmit)="saveExperience()">
+    <form [formGroup]="experienceForm" (ngSubmit)="saveExperience()">
       <div class="form-row">
         <div class="form-field">
           <label for="company">Company</label>
-          <input type="text" id="company" [(ngModel)]="currentExp.company" name="company" required />
+          <input type="text" id="company" formControlName="company" required />
         </div>
         <div class="form-field">
           <label for="position">Position</label>
-          <input type="text" id="position" [(ngModel)]="currentExp.position" name="position" required />
+          <input type="text" id="position" formControlName="position" required />
         </div>
       </div>
 
       <div class="form-row">
         <div class="form-field">
           <label for="location">Location</label>
-          <input type="text" id="location" [(ngModel)]="currentExp.location" name="location" required />
+          <input type="text" id="location" formControlName="location" required />
         </div>
       </div>
 
       <div class="form-row">
         <div class="form-field">
           <label for="startDate">Start Date</label>
-          <input type="text" id="startDate" [(ngModel)]="currentExp.startDate" name="startDate" required />
+          <input type="text" id="startDate" formControlName="startDate" required />
         </div>
         <div class="form-field">
           <label for="endDate">End Date</label>
           <input
             type="text"
             id="endDate"
-            [(ngModel)]="currentExp.endDate"
-            name="endDate"
-            [required]="!currentExp.currentlyWorking" />
+            formControlName="endDate"
+            [required]="!experienceForm.get('currentlyWorking')?.value" />
         </div>
       </div>
 
@@ -72,8 +71,7 @@
           <input
             type="checkbox"
             id="currentlyWorking"
-            [(ngModel)]="currentExp.currentlyWorking"
-            name="currentlyWorking"
+            formControlName="currentlyWorking"
             (change)="onCurrentlyWorkingChange()" />
           <label for="currentlyWorking">I currently work here</label>
         </div>
@@ -82,15 +80,15 @@
       <div class="form-row">
         <div class="form-field">
           <label for="description">Job Description</label>
-          <textarea id="description" [(ngModel)]="currentExp.description" name="description" rows="3"></textarea>
+          <textarea id="description" formControlName="description" rows="3"></textarea>
         </div>
       </div>
 
       <div class="form-field">
         <label>Achievements</label>
-        <div class="achievements-list">
-          <div *ngFor="let achievement of currentExp.achievements; let i = index" class="achievement-item">
-            <input type="text" [(ngModel)]="currentExp.achievements[i]" [name]="'achievement'+i" />
+        <div class="achievements-list" formArrayName="achievements">
+          <div *ngFor="let achievement of achievementsArray.controls; let i = index" class="achievement-item">
+            <input type="text" [formControlName]="i" />
             <button type="button" (click)="removeAchievement(i)" class="btn-remove">✕</button>
           </div>
         </div>

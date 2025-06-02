@@ -1,69 +1,78 @@
 <!-- eslint-disable @angular-eslint/template/label-has-associated-control -->
 <div class="section-container qr-code-section">
   <h2>QR Code</h2>
-  
+
   <div class="qr-options">
     <div class="qr-preview">
       <div class="qr-container" *ngIf="qrDataString">
-        <qrcode 
-          [qrdata]="qrDataString" 
-          [width]="200" 
+        <qrcode
+          [qrdata]="qrDataString"
+          [width]="200"
           [errorCorrectionLevel]="'M'"
           [colorDark]="darkColor"
           [colorLight]="'#ffffff'">
         </qrcode>
       </div>
-      <div class="no-qr" *ngIf="!qrDataString">
-        Fill in your contact details to generate a QR code
-      </div>
+      <div class="no-qr" *ngIf="!qrDataString">Your profile information will be used to generate a QR code</div>
     </div>
-    
+
     <div class="qr-form">
       <h3>QR Code Information</h3>
-      <p class="qr-description">Generate a QR code with your contact information to make it easy for recruiters to save your details.</p>
-      
-      <div class="form-row">
-        <div class="form-field">
-          <label for="qrName">Name</label>
-          <input type="text" id="qrName" [(ngModel)]="qrName" name="qrName" (input)="updateQrCode()">
+      <p class="qr-description">Your contact details from your profile are automatically included in the QR code.</p>
+
+      <div class="profile-info-preview">
+        <h4>Included Profile Information</h4>
+        <div class="info-item" *ngIf="profileData?.fullName">
+          <span class="info-label">Name:</span>
+          <span class="info-value">{{ profileData.fullName }}</span>
+        </div>
+        <div class="info-item" *ngIf="profileData?.phone">
+          <span class="info-label">Phone:</span>
+          <span class="info-value">{{ profileData.phone }}</span>
+        </div>
+        <div class="info-item" *ngIf="profileData?.email">
+          <span class="info-label">Email:</span>
+          <span class="info-value">{{ profileData.email }}</span>
+        </div>
+        <div class="info-item" *ngIf="profileData?.portfolio">
+          <span class="info-label">Portfolio:</span>
+          <span class="info-value">{{ profileData.portfolio }}</span>
         </div>
       </div>
-      
-      <div class="form-row">
-        <div class="form-field">
-          <label for="qrPhone">Phone Number</label>
-          <input type="tel" id="qrPhone" [(ngModel)]="qrPhone" name="qrPhone" (input)="updateQrCode()">
+
+      <div class="additional-info-section">
+        <h4>Additional Information</h4>
+        <p>Add custom information to include in your QR code</p>
+
+        <div class="custom-fields">
+          <div *ngFor="let field of customFields; let i = index" class="custom-field-row">
+            <div class="form-row">
+              <div class="form-field">
+                <input type="text" [(ngModel)]="field.key" placeholder="Key" (input)="updateQrCode()" />
+              </div>
+              <div class="form-field">
+                <input type="text" [(ngModel)]="field.value" placeholder="Value" (input)="updateQrCode()" />
+              </div>
+              <button type="button" (click)="removeCustomField(i)" class="btn-remove">✕</button>
+            </div>
+          </div>
         </div>
+
+        <button type="button" (click)="addCustomField()" class="btn-add-field"><span>+</span> Add Custom Field</button>
       </div>
-      
-      <div class="form-row">
-        <div class="form-field">
-          <label for="qrEmail">Email</label>
-          <input type="email" id="qrEmail" [(ngModel)]="qrEmail" name="qrEmail" (input)="updateQrCode()">
-        </div>
-      </div>
-      
-      <div class="form-row">
-        <div class="form-field">
-          <label for="qrPortfolio">Portfolio URL</label>
-          <input type="url" id="qrPortfolio" [(ngModel)]="qrPortfolio" name="qrPortfolio" (input)="updateQrCode()">
-        </div>
-      </div>
-      
+
       <div class="form-row color-options">
         <div class="form-field">
           <label>QR Code Color</label>
           <div class="color-pickers">
-            <input type="color" [(ngModel)]="darkColor" name="darkColor" (input)="updateQrCode()">
+            <input type="color" [(ngModel)]="darkColor" name="darkColor" (input)="updateQrCode()" />
             <span>{{ darkColor }}</span>
           </div>
         </div>
       </div>
-      
+
       <div class="qr-actions">
-        <button (click)="downloadQrCode()" [disabled]="!qrDataString" class="btn-download">
-          Download QR Code
-        </button>
+        <button (click)="downloadQrCode()" [disabled]="!qrDataString" class="btn-download">Download QR Code</button>
       </div>
     </div>
   </div>
