@@ -1,0 +1,100 @@
+<!-- eslint-disable @angular-eslint/template/label-has-associated-control -->
+<div class="section-container experience-section">
+  <h2>Work Experience</h2>
+  
+  <div *ngFor="let exp of experiences; let i = index" class="experience-item">
+    <div class="experience-header">
+      <div>
+        <h3>{{ exp.position }}</h3>
+        <h4>{{ exp.company }}</h4>
+        <p class="dates">
+          {{ exp.startDate }} - {{ exp.currentlyWorking ? 'Present' : exp.endDate }}
+          <span class="location">{{ exp.location }}</span>
+        </p>
+      </div>
+      <div class="actions">
+        <button (click)="editExperience(i)" class="btn-edit">Edit</button>
+        <button (click)="deleteExperience(i)" class="btn-delete">Delete</button>
+      </div>
+    </div>
+    
+    <div class="experience-body">
+      <p class="description">{{ exp.description }}</p>
+      
+      <div *ngIf="exp.achievements && exp.achievements.length > 0" class="achievements">
+        <h5>Key Achievements:</h5>
+        <ul>
+          <li *ngFor="let achievement of exp.achievements">{{ achievement }}</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  
+  <div *ngIf="showForm" class="experience-form">
+    <h3>{{ isEditing ? 'Edit Experience' : 'Add Experience' }}</h3>
+    <form (ngSubmit)="saveExperience()">
+      <div class="form-row">
+        <div class="form-field">
+          <label for="company">Company</label>
+          <input type="text" id="company" [(ngModel)]="currentExp.company" name="company" required>
+        </div>
+        <div class="form-field">
+          <label for="position">Position</label>
+          <input type="text" id="position" [(ngModel)]="currentExp.position" name="position" required>
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-field">
+          <label for="location">Location</label>
+          <input type="text" id="location" [(ngModel)]="currentExp.location" name="location" required>
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-field">
+          <label for="startDate">Start Date</label>
+          <input type="text" id="startDate" [(ngModel)]="currentExp.startDate" name="startDate" required>
+        </div>
+        <div class="form-field">
+          <label for="endDate">End Date</label>
+          <input type="text" id="endDate" [(ngModel)]="currentExp.endDate" name="endDate" [required]="!currentExp.currentlyWorking">
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-field checkbox">
+          <input type="checkbox" id="currentlyWorking" [(ngModel)]="currentExp.currentlyWorking" name="currentlyWorking">
+          <label for="currentlyWorking">I currently work here</label>
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-field">
+          <label for="description">Job Description</label>
+          <textarea id="description" [(ngModel)]="currentExp.description" name="description" rows="3"></textarea>
+        </div>
+      </div>
+      
+      <div class="form-field">
+        <label>Achievements</label>
+        <div class="achievements-list">
+          <div *ngFor="let achievement of currentExp.achievements; let i = index" class="achievement-item">
+            <input type="text" [(ngModel)]="currentExp.achievements[i]" [name]="'achievement'+i">
+            <button type="button" (click)="removeAchievement(i)" class="btn-remove">✕</button>
+          </div>
+        </div>
+        <button type="button" (click)="addAchievement()" class="btn-add-small">+ Add Achievement</button>
+      </div>
+      
+      <div class="form-actions">
+        <button type="submit" class="btn-save">Save</button>
+        <button type="button" (click)="cancelForm()" class="btn-cancel">Cancel</button>
+      </div>
+    </form>
+  </div>
+  
+  <button *ngIf="!showForm" (click)="openAddForm()" class="btn-add">
+    <span>+</span> Add Experience
+  </button>
+</div>

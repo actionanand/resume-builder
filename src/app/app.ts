@@ -3,13 +3,13 @@ import { RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Profile } from './components/profile/profile';
-// import { ExperienceComponent } from './components/experience/experience';
 import { Education } from './components/education/education';
-// import { SkillsComponent } from './components/skills/skills.component';
-// import { ProjectsComponent } from './components/projects/projects.component';
-// import { AboutComponent } from './components/about/about.component';
-// import { QrCodeComponent } from './components/qr-code/qr-code.component';
-// import { ExportComponent } from './components/export/export.component';
+import { Skills } from './components/skills/skills';
+import { ExperienceComponent } from './components/experience/experience';
+import { ProjectsComponent } from './components/projects/projects';
+import { About } from './components/about/about';
+import { QrCode } from './components/qr-code/qr-code';
+import { Export } from './components/export/export';
 // import { ResumeService } from './services/resume.service';
 
 @Component({
@@ -21,12 +21,12 @@ import { Education } from './components/education/education';
     ReactiveFormsModule,
     Profile,
     Education,
-    // ExperienceComponent,
-    // SkillsComponent,
-    // ProjectsComponent,
-    // AboutComponent,
-    // QrCodeComponent,
-    // ExportComponent
+    ExperienceComponent,
+    Skills,
+    ProjectsComponent,
+    About,
+    QrCode,
+    Export
   ],
   providers: [],
   templateUrl: './app.html',

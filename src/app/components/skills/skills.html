@@ -1,0 +1,42 @@
+<div class="section-container skills-section">
+  <h2>Technical Skills</h2>
+  
+  <div *ngFor="let group of skillGroups; let i = index" class="skill-group">
+    <div class="skill-header">
+      <h3>{{ group.category }}</h3>
+      <div class="actions">
+        <button (click)="editSkillGroup(i)" class="btn-edit">Edit</button>
+        <button (click)="deleteSkillGroup(i)" class="btn-delete">Delete</button>
+      </div>
+    </div>
+    <div class="skill-tags">
+      <span *ngFor="let skill of group.skills" class="skill-tag">
+        {{ skill }}
+      </span>
+    </div>
+  </div>
+  
+  <div *ngIf="showForm" class="skill-form">
+    <h3>{{ isEditing ? 'Edit Skill Group' : 'Add Skill Group' }}</h3>
+    <form (ngSubmit)="saveSkillGroup()">
+      <div class="form-field">
+        <label for="category">Category</label>
+        <input type="text" id="category" [(ngModel)]="currentGroup.category" name="category" placeholder="e.g., Programming Languages, Frameworks, Tools" required>
+      </div>
+      
+      <div class="form-field">
+        <label for="skills">Skills (comma-separated)</label>
+        <textarea id="skills" [(ngModel)]="skillsInput" name="skills" rows="3" placeholder="e.g., JavaScript, React, Node.js"></textarea>
+      </div>
+      
+      <div class="form-actions">
+        <button type="submit" class="btn-save">Save</button>
+        <button type="button" (click)="cancelForm()" class="btn-cancel">Cancel</button>
+      </div>
+    </form>
+  </div>
+  
+  <button *ngIf="!showForm" (click)="openAddForm()" class="btn-add">
+    <span>+</span> Add Skill Group
+  </button>
+</div>

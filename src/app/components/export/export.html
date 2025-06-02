@@ -1,0 +1,140 @@
+<div class="section-container export-section">
+  <h2>Export Resume</h2>
+
+  <div class="export-options">
+    <div class="export-sidebar">
+      <h3>Export Settings</h3>
+      
+      <div class="form-group">
+        <label for="theme">Theme</label>
+        <select id="theme" [(ngModel)]="selectedTheme" name="theme">
+          <option *ngFor="let theme of themes" [value]="theme.id">{{ theme.name }}</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label for="fontSize">Font Size</label>
+        <select id="fontSize" [(ngModel)]="selectedFontSize" name="fontSize">
+          <option *ngFor="let size of fontSizes" [value]="size.id">{{ size.name }}</option>
+        </select>
+      </div>
+      
+      <div class="export-actions">
+        <button (click)="exportAsPDF()" [disabled]="isGeneratingPDF" class="btn-export">
+          <span *ngIf="!isGeneratingPDF">Export as PDF</span>
+          <span *ngIf="isGeneratingPDF">Generating...</span>
+        </button>
+        
+        <button (click)="exportAsWord()" class="btn-export">Export as Word</button>
+        
+        <div class="markdown-section">
+          <h4>Markdown Format</h4>
+          <p>Copy your resume content as Markdown</p>
+          <button (click)="copyMarkdown()" class="btn-copy">Copy Markdown</button>
+        </div>
+      </div>
+      
+      <div *ngIf="exportMessage" class="export-message">
+        {{ exportMessage }}
+      </div>
+    </div>
+    
+    <div class="export-preview">
+      <div class="preview-header">
+        <h3>Preview</h3>
+        <button (click)="togglePreview()" class="btn-toggle">
+          {{ showPreview ? 'Hide Preview' : 'Show Preview' }}
+        </button>
+      </div>
+      
+      <div *ngIf="showPreview" #resumePreview class="resume-preview" [ngClass]="[selectedTheme, selectedFontSize]">
+        <!-- Profile Section -->
+        <div class="preview-section preview-profile">
+          <h1>{{ resumeService.getProfile()?.fullName }}</h1>
+          <p class="profile-title">{{ resumeService.getProfile()?.title }}</p>
+          
+          <div class="profile-contact">
+            <span *ngIf="resumeService.getProfile()?.email">{{ resumeService.getProfile()?.email }}</span>
+            <span *ngIf="resumeService.getProfile()?.phone">{{ resumeService.getProfile()?.phone }}</span>
+            <span *ngIf="resumeService.getProfile()?.location">{{ resumeService.getProfile()?.location }}</span>
+          </div>
+          
+          <div class="profile-links">
+            <a *ngIf="resumeService.getProfile()?.github" [href]="resumeService.getProfile()?.github" target="_blank">GitHub</a>
+            <a *ngIf="resumeService.getProfile()?.linkedin" [href]="resumeService.getProfile()?.linkedin" target="_blank">LinkedIn</a>
+            <a *ngIf="resumeService.getProfile()?.portfolio" [href]="resumeService.getProfile()?.portfolio" target="_blank">Portfolio</a>
+          </div>
+        </div>
+        
+        <!-- About Section -->
+        <div *ngIf="resumeService.getAbout()" class="preview-section preview-about">
+          <h2>About</h2>
+          <p>{{ resumeService.getAbout() }}</p>
+        </div>
+        
+        <!-- Experience Section -->
+        <div *ngIf="resumeService.getExperiences()?.length" class="preview-section preview-experience">
+          <h2>Experience</h2>
+          <div *ngFor="let exp of resumeService.getExperiences()" class="experience-item">
+            <div class="item-header">
+              <h3>{{ exp.position }}</h3>
+              <span class="item-date">{{ exp.startDate }} - {{ exp.endDate || 'Present' }}</span>
+            </div>
+            <div class="item-subheader">
+              <span>{{ exp.company }}</span>
+              <span *ngIf="exp.location">{{ exp.location }}</span>
+            </div>
+            <p>{{ exp.description }}</p>
+            <ul *ngIf="exp.achievements?.length">
+              <li *ngFor="let achievement of exp.achievements">{{ achievement }}</li>
+            </ul>
+          </div>
+        </div>
+        
+        <!-- Projects Section -->
+        <div *ngIf="resumeService.getProjects()?.length" class="preview-section preview-projects">
+          <h2>Projects</h2>
+          <div *ngFor="let project of resumeService.getProjects()" class="project-item">
+            <div class="item-header">
+              <h3>{{ project.name }}</h3>
+              <a *ngIf="project.link" [href]="project.link" target="_blank" class="project-link">View Project</a>
+            </div>
+            <p>{{ project.description }}</p>
+            <div *ngIf="project.technologies" class="project-tech">
+              <strong>Technologies:</strong> {{ project.technologies }}
+            </div>
+          </div>
+        </div>
+        
+        <!-- Education Section -->
+        <div *ngIf="resumeService.getEducation()?.length" class="preview-section preview-education">
+          <h2>Education</h2>
+          <div *ngFor="let edu of resumeService.getEducation()" class="education-item">
+            <div class="item-header">
+              <h3>{{ edu.degree }}</h3>
+              <span class="item-date">{{ edu.startDate }} - {{ edu.endDate }}</span>
+            </div>
+            <div class="item-subheader">
+              <span>{{ edu.institution }}</span>
+              <span *ngIf="edu.location">{{ edu.location }}</span>
+            </div>
+            <p *ngIf="edu.description">{{ edu.description }}</p>
+          </div>
+        </div>
+        
+        <!-- Skills Section -->
+        <div *ngIf="resumeService.getSkills()?.length" class="preview-section preview-skills">
+          <h2>Skills</h2>
+          <div *ngFor="let skillGroup of resumeService.getSkills()" class="skill-group">
+            <h3>{{ skillGroup.category }}</h3>
+            <p>{{ skillGroup.skills.join(', ') }}</p>
+          </div>
+        </div>
+      </div>
+      
+      <div *ngIf="!showPreview" class="preview-placeholder">
+        Click "Show Preview" to see how your resume will look
+      </div>
+    </div>
+  </div>
+</div>

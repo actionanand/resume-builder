@@ -1,16 +1,10 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ResumeService } from '../../services/resume';
 
-export interface EducationEntry {
-  degree: string;
-  institution: string;
-  location: string;
-  startDate: string;
-  endDate: string;
-  description: string;
-}
+import { ResumeService } from '../../services/resume';
+import { EducationEntry } from '../../models/resume.model';
+
 
 @Component({
   selector: 'app-education',

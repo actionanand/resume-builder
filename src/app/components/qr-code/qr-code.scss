@@ -1,0 +1,142 @@
+.section-container {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  padding: 25px;
+  margin-bottom: 25px;
+}
+
+h2 {
+  color: #2c3e50;
+  font-size: 22px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #f0f0f0;
+  padding-bottom: 10px;
+}
+
+.qr-options {
+  display: flex;
+  gap: 30px;
+}
+
+.qr-preview {
+  flex: 0 0 220px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  
+  .qr-container {
+    padding: 10px;
+    background: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    border-radius: 4px;
+  }
+  
+  .no-qr {
+    width: 200px;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border: 1px dashed #bdc3c7;
+    color: #95a5a6;
+    padding: 15px;
+    font-size: 14px;
+  }
+}
+
+.qr-form {
+  flex: 1;
+  
+  h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #2c3e50;
+    font-size: 18px;
+  }
+  
+  .qr-description {
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: #7f8c8d;
+    font-size: 14px;
+  }
+}
+
+.form-row {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.form-field {
+  flex: 1;
+  
+  label {
+    display: block;
+    margin-bottom: 5px;
+    color: #7f8c8d;
+    font-size: 14px;
+  }
+  
+  input[type="text"],
+  input[type="tel"],
+  input[type="email"],
+  input[type="url"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #dcdfe6;
+    border-radius: 4px;
+    font-size: 16px;
+    
+    &:focus {
+      outline: none;
+      border-color: #3498db;
+    }
+  }
+}
+
+.color-options {
+  .color-pickers {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    
+    input[type="color"] {
+      width: 40px;
+      height: 40px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    
+    span {
+      font-size: 14px;
+      color: #7f8c8d;
+    }
+  }
+}
+
+.qr-actions {
+  margin-top: 20px;
+  
+  .btn-download {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+    font-size: 14px;
+    cursor: pointer;
+    
+    &:hover {
+      background-color: #2980b9;
+    }
+    
+    &:disabled {
+      background-color: #bdc3c7;
+      cursor: not-allowed;
+    }
+  }
+}
