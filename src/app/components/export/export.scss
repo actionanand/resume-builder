@@ -716,6 +716,23 @@ h2 {
   }
 }
 
+.profile-links a,
+.project-link {
+  overflow-wrap: break-word;
+  word-break: break-all;
+  max-width: 100%;
+}
+
+// Make project link URL more subtle when showing URL
+.project-link {
+  font-size: 0.9em;
+
+  // When showing URLs
+  .show-urls & {
+    color: #7f8c8d;
+  }
+}
+
 @media print {
   .profile-photo-container {
     print-color-adjust: exact;

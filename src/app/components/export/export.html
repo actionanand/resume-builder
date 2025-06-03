@@ -98,6 +98,18 @@
         </div>
       </div>
 
+      <div class="form-group">
+        <div class="checkbox-field">
+          <input
+            type="checkbox"
+            id="showHyperlinkUrls"
+            [(ngModel)]="showHyperlinkUrls"
+            (change)="saveHyperlinkPreference()"
+            name="showHyperlinkUrls" />
+          <label for="showHyperlinkUrls">Show URLs instead of link text</label>
+        </div>
+      </div>
+
       <div class="export-actions">
         <button (click)="exportAsPDF()" [disabled]="isGeneratingPDF" class="btn-export">
           <span *ngIf="!isGeneratingPDF">Export as PDF</span>
@@ -124,7 +136,11 @@
         </button>
       </div>
 
-      <div *ngIf="showPreview" #resumePreview class="resume-preview" [ngClass]="[selectedTheme, selectedFontSize]">
+      <div
+        *ngIf="showPreview"
+        #resumePreview
+        class="resume-preview"
+        [ngClass]="[selectedTheme, selectedFontSize, showHyperlinkUrls ? 'show-urls' : '']">
         <!-- Profile Section -->
         <div class="preview-section preview-profile">
           <div class="profile-header">
@@ -155,21 +171,21 @@
                   [href]="resumeService.getProfile()?.github"
                   target="_blank"
                   class="contact-icon icon-github">
-                  GitHub
+                  {{ showHyperlinkUrls ? resumeService.getProfile()?.github : 'GitHub' }}
                 </a>
                 <a
                   *ngIf="resumeService.getProfile()?.linkedin"
                   [href]="resumeService.getProfile()?.linkedin"
                   target="_blank"
                   class="contact-icon icon-linkedin">
-                  LinkedIn
+                  {{ showHyperlinkUrls ? resumeService.getProfile()?.linkedin : 'LinkedIn' }}
                 </a>
                 <a
                   *ngIf="resumeService.getProfile()?.portfolio"
                   [href]="resumeService.getProfile()?.portfolio"
                   target="_blank"
                   class="contact-icon icon-website">
-                  Portfolio
+                  {{ showHyperlinkUrls ? resumeService.getProfile()?.portfolio : 'Portfolio' }}
                 </a>
               </div>
             </div>
@@ -216,7 +232,9 @@
           <div *ngFor="let project of resumeService.getProjects()" class="project-item">
             <div class="item-header">
               <h3>{{ project.name }}</h3>
-              <a *ngIf="project.link" [href]="project.link" target="_blank" class="project-link">View Project</a>
+              <a *ngIf="project.link" [href]="project.link" target="_blank" class="project-link">
+                {{ showHyperlinkUrls ? project.link : 'View Project' }}
+              </a>
             </div>
             <p>{{ project.description }}</p>
             <div *ngIf="project.technologies" class="project-tech">
