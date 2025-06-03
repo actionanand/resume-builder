@@ -85,6 +85,19 @@
         </div>
       </div>
 
+      <!-- show icons for contact -->
+      <div class="form-group">
+        <div class="checkbox-field">
+          <input
+            type="checkbox"
+            id="showContactIcons"
+            [(ngModel)]="showContactIcons"
+            (change)="saveIconPreference()"
+            name="showContactIcons" />
+          <label for="showContactIcons">Show contact & social media icons</label>
+        </div>
+      </div>
+
       <div class="export-actions">
         <button (click)="exportAsPDF()" [disabled]="isGeneratingPDF" class="btn-export">
           <span *ngIf="!isGeneratingPDF">Export as PDF</span>
@@ -124,31 +137,40 @@
               <h1>{{ resumeService.getProfile()?.fullName }}</h1>
               <p class="profile-title">{{ resumeService.getProfile()?.title }}</p>
 
-              <div class="profile-contact">
-                <span *ngIf="resumeService.getProfile()?.email">{{ resumeService.getProfile()?.email }}</span>
-                <span *ngIf="resumeService.getProfile()?.phone">{{ resumeService.getProfile()?.phone }}</span>
-                <span *ngIf="resumeService.getProfile()?.location">{{ resumeService.getProfile()?.location }}</span>
+              <div class="profile-contact" [class.hide-icons]="!showContactIcons">
+                <span *ngIf="resumeService.getProfile()?.email" class="contact-icon icon-email">
+                  {{ resumeService.getProfile()?.email }}
+                </span>
+                <span *ngIf="resumeService.getProfile()?.phone" class="contact-icon icon-phone">
+                  {{ resumeService.getProfile()?.phone }}
+                </span>
+                <span *ngIf="resumeService.getProfile()?.location" class="contact-icon icon-location">
+                  {{ resumeService.getProfile()?.location }}
+                </span>
               </div>
 
-              <div class="profile-links">
+              <div class="profile-links" [class.hide-icons]="!showContactIcons">
                 <a
                   *ngIf="resumeService.getProfile()?.github"
                   [href]="resumeService.getProfile()?.github"
                   target="_blank"
-                  >GitHub</a
-                >
+                  class="contact-icon icon-github">
+                  GitHub
+                </a>
                 <a
                   *ngIf="resumeService.getProfile()?.linkedin"
                   [href]="resumeService.getProfile()?.linkedin"
                   target="_blank"
-                  >LinkedIn</a
-                >
+                  class="contact-icon icon-linkedin">
+                  LinkedIn
+                </a>
                 <a
                   *ngIf="resumeService.getProfile()?.portfolio"
                   [href]="resumeService.getProfile()?.portfolio"
                   target="_blank"
-                  >Portfolio</a
-                >
+                  class="contact-icon icon-website">
+                  Portfolio
+                </a>
               </div>
             </div>
           </div>

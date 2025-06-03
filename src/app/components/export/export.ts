@@ -26,6 +26,7 @@ export class Export implements OnInit {
   isGeneratingPDF = false;
   exportMessage = '';
   showPreview = true;
+  showContactIcons = true;
 
   includeSignatureLine = true;
   useDigitalSignature = false;
@@ -74,6 +75,12 @@ export class Export implements OnInit {
       this.signatureImageUrl = savedSignatureImage;
     }
 
+    // Load icon preference
+    const showIconsPreference = localStorage.getItem('resumeShowContactIcons');
+    if (showIconsPreference !== null) {
+      this.showContactIcons = showIconsPreference === 'true';
+    }
+
     // Load QR code preferences
     const qrCodePreference = localStorage.getItem('resumeIncludeQrCode');
     if (qrCodePreference !== null) {
@@ -119,6 +126,10 @@ export class Export implements OnInit {
 
       reader.readAsDataURL(file);
     }
+  }
+
+  saveIconPreference(): void {
+    localStorage.setItem('resumeShowContactIcons', this.showContactIcons.toString());
   }
 
   removeSignatureImage(): void {

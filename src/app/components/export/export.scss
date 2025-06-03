@@ -336,19 +336,25 @@ h2 {
       }
 
       .profile-contact {
-        margin-bottom: 10px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 8px;
+        font-size: 0.9em;
+        color: #555;
 
         span {
-          display: inline-block;
-          margin: 0 10px;
-          color: #34495e;
+          margin-right: 20px;
         }
       }
 
       .profile-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-top: 10px;
+
         a {
-          display: inline-block;
-          margin: 0 10px;
           color: #3498db;
           text-decoration: none;
 
@@ -703,9 +709,36 @@ h2 {
   flex: 1;
 }
 
+.hide-icons {
+  .contact-icon {
+    padding-left: 0;
+    background-image: none;
+  }
+}
+
 @media print {
   .profile-photo-container {
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact;
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 600px) {
+  .profile-contact,
+  .profile-links {
+    flex-direction: column;
+    gap: 5px;
+  }
+}
+
+// Print styles
+@media print {
+  .profile-contact {
+    color: black;
+  }
+
+  .profile-links a {
+    color: #2980b9;
   }
 }
