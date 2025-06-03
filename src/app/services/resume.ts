@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 
 import { BehaviorSubject } from 'rxjs';
 
-import { ProfileInfo } from '../models/resume.model';
+import { ProfileInfo } from '../models';
 
 @Injectable({
   providedIn: 'root',

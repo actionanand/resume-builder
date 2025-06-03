@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormArray, ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 import { ResumeService } from '../../services/resume';
-import { Experience } from '../../models/resume.model';
+import { Experience } from '../../models';
 
 @Component({
   selector: 'app-experience',

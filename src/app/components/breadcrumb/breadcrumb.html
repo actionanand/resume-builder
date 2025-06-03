@@ -1,0 +1,19 @@
+<!-- eslint-disable @angular-eslint/template/click-events-have-key-events -->
+<!-- eslint-disable @angular-eslint/template/interactive-supports-focus -->
+<div class="breadcrumb-container">
+  <div class="breadcrumb-nav">
+    <div
+      *ngFor="let section of sections; let i = index"
+      class="breadcrumb-item"
+      [ngClass]="{'active': section.id === currentSection, 'completed': section.completed}"
+      (click)="changeSection(section.id)">
+      <div class="breadcrumb-icon">
+        <i class="icon" [ngClass]="section.icon"></i>
+      </div>
+
+      <span class="breadcrumb-label">{{ section.name }}</span>
+
+      <div class="breadcrumb-connector" *ngIf="i < sections.length - 1"></div>
+    </div>
+  </div>
+</div>

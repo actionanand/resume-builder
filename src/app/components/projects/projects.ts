@@ -3,13 +3,13 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { ResumeService } from '../../services/resume';
-import { Project } from '../../models/resume.model';
+import { Project } from '../../models';
 
 @Component({
   selector: 'app-projects',
   imports: [CommonModule, FormsModule],
   templateUrl: './projects.html',
-  styleUrl: './projects.scss'
+  styleUrl: './projects.scss',
 })
 export class ProjectsComponent implements OnInit {
   projects: Project[] = [];
@@ -18,7 +18,7 @@ export class ProjectsComponent implements OnInit {
     description: '',
     technologies: '',
     link: '',
-    image: ''
+    image: '',
   };
   showForm = false;
   isEditing = false;
@@ -37,7 +37,7 @@ export class ProjectsComponent implements OnInit {
       description: '',
       technologies: '',
       link: '',
-      image: ''
+      image: '',
     };
     this.showForm = true;
   }
@@ -78,7 +78,7 @@ export class ProjectsComponent implements OnInit {
     } else {
       this.resumeService.addProject(this.currentProject);
     }
-    
+
     this.projects = this.resumeService.getProjects();
     this.cancelForm();
   }

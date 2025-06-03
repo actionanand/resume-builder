@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { ResumeService } from '../../services/resume';
-import { EducationEntry } from '../../models/resume.model';
+import { EducationEntry } from '../../models';
 
 @Component({
   selector: 'app-education',

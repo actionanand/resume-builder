@@ -3,13 +3,13 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { ResumeService } from '../../services/resume';
-import { SkillGroup } from '../../models/resume.model';
+import { SkillGroup } from '../../models';
 
 @Component({
   selector: 'app-skills',
   imports: [CommonModule, FormsModule],
   templateUrl: './skills.html',
-  styleUrl: './skills.scss'
+  styleUrl: './skills.scss',
 })
 export class Skills implements OnInit {
   skillGroups: SkillGroup[] = [];
@@ -53,15 +53,15 @@ export class Skills implements OnInit {
       .split(',')
       .map(skill => skill.trim())
       .filter(skill => skill !== '');
-    
+
     this.currentGroup.skills = skills;
-    
+
     if (this.isEditing) {
       this.skillGroups[this.editIndex] = { ...this.currentGroup };
     } else {
       this.skillGroups.push({ ...this.currentGroup });
     }
-    
+
     this.resumeService.saveSkills(this.skillGroups);
     this.cancelForm();
   }
