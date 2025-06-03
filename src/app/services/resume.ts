@@ -1,6 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Injectable } from '@angular/core';
+
 import { BehaviorSubject } from 'rxjs';
+
+import { ProfileInfo } from '../models/resume.model';
 
 @Injectable({
   providedIn: 'root',
@@ -154,6 +157,20 @@ export class ResumeService {
     return this.resumeData;
   }
 
+  getEmptyProfile(): ProfileInfo {
+    return {
+      fullName: '',
+      title: '',
+      email: '',
+      phone: '',
+      location: '',
+      github: '',
+      linkedin: '',
+      portfolio: '',
+      photoUrl: '',
+    };
+  }
+
   exportAsMarkdown(): string {
     const data = this.resumeData;
     let markdown = '';
@@ -162,6 +179,11 @@ export class ResumeService {
     if (data.profile) {
       markdown += `# ${data.profile.fullName}\n`;
       markdown += `## ${data.profile.title}\n\n`;
+
+      if (data.profile.photoUrl) {
+        markdown += `_Profile photo available in the original resume_\n\n`;
+      }
+
       markdown += `📧 ${data.profile.email} | 📱 ${data.profile.phone} | 📍 ${data.profile.location}\n\n`;
 
       const socialLinks = [];

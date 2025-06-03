@@ -114,31 +114,43 @@
       <div *ngIf="showPreview" #resumePreview class="resume-preview" [ngClass]="[selectedTheme, selectedFontSize]">
         <!-- Profile Section -->
         <div class="preview-section preview-profile">
-          <h1>{{ resumeService.getProfile()?.fullName }}</h1>
-          <p class="profile-title">{{ resumeService.getProfile()?.title }}</p>
+          <div class="profile-header">
+            <!-- Add profile photo container -->
+            <div class="profile-photo-container" *ngIf="resumeService.getProfile()?.photoUrl">
+              <img [src]="resumeService.getProfile()?.photoUrl" alt="Profile Photo" class="profile-photo" />
+            </div>
 
-          <div class="profile-contact">
-            <span *ngIf="resumeService.getProfile()?.email">{{ resumeService.getProfile()?.email }}</span>
-            <span *ngIf="resumeService.getProfile()?.phone">{{ resumeService.getProfile()?.phone }}</span>
-            <span *ngIf="resumeService.getProfile()?.location">{{ resumeService.getProfile()?.location }}</span>
-          </div>
+            <div class="profile-info">
+              <h1>{{ resumeService.getProfile()?.fullName }}</h1>
+              <p class="profile-title">{{ resumeService.getProfile()?.title }}</p>
 
-          <div class="profile-links">
-            <a *ngIf="resumeService.getProfile()?.github" [href]="resumeService.getProfile()?.github" target="_blank"
-              >GitHub</a
-            >
-            <a
-              *ngIf="resumeService.getProfile()?.linkedin"
-              [href]="resumeService.getProfile()?.linkedin"
-              target="_blank"
-              >LinkedIn</a
-            >
-            <a
-              *ngIf="resumeService.getProfile()?.portfolio"
-              [href]="resumeService.getProfile()?.portfolio"
-              target="_blank"
-              >Portfolio</a
-            >
+              <div class="profile-contact">
+                <span *ngIf="resumeService.getProfile()?.email">{{ resumeService.getProfile()?.email }}</span>
+                <span *ngIf="resumeService.getProfile()?.phone">{{ resumeService.getProfile()?.phone }}</span>
+                <span *ngIf="resumeService.getProfile()?.location">{{ resumeService.getProfile()?.location }}</span>
+              </div>
+
+              <div class="profile-links">
+                <a
+                  *ngIf="resumeService.getProfile()?.github"
+                  [href]="resumeService.getProfile()?.github"
+                  target="_blank"
+                  >GitHub</a
+                >
+                <a
+                  *ngIf="resumeService.getProfile()?.linkedin"
+                  [href]="resumeService.getProfile()?.linkedin"
+                  target="_blank"
+                  >LinkedIn</a
+                >
+                <a
+                  *ngIf="resumeService.getProfile()?.portfolio"
+                  [href]="resumeService.getProfile()?.portfolio"
+                  target="_blank"
+                  >Portfolio</a
+                >
+              </div>
+            </div>
           </div>
         </div>
 

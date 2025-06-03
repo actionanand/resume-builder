@@ -8,7 +8,7 @@ import { ResumeService } from '../../services/resume';
   selector: 'app-profile',
   imports: [CommonModule, FormsModule],
   templateUrl: './profile.html',
-  styleUrl: './profile.scss'
+  styleUrl: './profile.scss',
 })
 export class Profile {
   profile = {
@@ -21,9 +21,9 @@ export class Profile {
     github: '',
     linkedin: '',
     stackoverflow: '',
-    portfolio: ''
+    portfolio: '',
   };
-  
+
   private resumeService = inject(ResumeService);
 
   constructor() {
@@ -33,15 +33,26 @@ export class Profile {
     }
   }
 
-  onPhotoSelected(event: Event) {
+  onPhotoSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length) {
+    if (input.files && input.files.length > 0) {
       const file = input.files[0];
+
+      // Check file size (limit to 1MB)
+      if (file.size > 1024 * 1024) {
+        alert('Image size should be less than 1MB');
+        return;
+      }
+
       const reader = new FileReader();
-      reader.onload = () => {
-        this.profile.photoUrl = reader.result as string;
-        this.saveProfile();
+
+      reader.onload = (e: ProgressEvent<FileReader>) => {
+        if (e.target && e.target.result) {
+          this.profile.photoUrl = e.target.result as string;
+          this.saveProfile();
+        }
       };
+
       reader.readAsDataURL(file);
     }
   }

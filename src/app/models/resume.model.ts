@@ -31,3 +31,15 @@ export interface Project {
   link: string;
   image?: string;
 }
+
+export interface ProfileInfo {
+  fullName: string;
+  title: string;
+  email: string;
+  phone: string;
+  location: string;
+  github: string;
+  linkedin: string;
+  portfolio: string;
+  photoUrl?: string;
+}
