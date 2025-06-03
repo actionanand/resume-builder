@@ -60,6 +60,31 @@
         </div>
       </div>
 
+      <!-- QR code export settings section -->
+      <div class="form-group">
+        <div class="checkbox-field">
+          <input
+            type="checkbox"
+            id="includeQrCode"
+            [(ngModel)]="includeQrCode"
+            (change)="saveQrCodePreference()"
+            name="includeQrCode" />
+          <label for="includeQrCode">Include QR code</label>
+        </div>
+
+        <div class="qr-options" *ngIf="includeQrCode">
+          <div class="form-field">
+            <label for="qrCodeSize">QR Code Size</label>
+            <select id="qrCodeSize" [(ngModel)]="qrCodeSize" (change)="saveQrCodePreference()" name="qrCodeSize">
+              <option value="small">Small</option>
+              <option value="medium">Medium</option>
+              <option value="large">Large</option>
+            </select>
+          </div>
+          <p class="option-description">Uses your customized QR code from the QR Code section</p>
+        </div>
+      </div>
+
       <div class="export-actions">
         <button (click)="exportAsPDF()" [disabled]="isGeneratingPDF" class="btn-export">
           <span *ngIf="!isGeneratingPDF">Export as PDF</span>
@@ -183,19 +208,35 @@
           </div>
         </div>
 
-        <!-- Signature Section -->
-        <div class="signature-section" *ngIf="includeSignatureLine">
-          <div *ngIf="!useDigitalSignature || !signatureImageUrl">
-            <div class="signature-line"></div>
-            <div class="signature-text">Signature ({{ resumeService.getProfile()?.fullName || 'Candidate' }})</div>
+        <!-- Resume Footer with QR Code and Signature -->
+        <div class="resume-footer" *ngIf="includeQrCode || includeSignatureLine">
+          <!-- Left side: QR Code -->
+          <div class="footer-left" *ngIf="includeQrCode && qrData.qrDataString">
+            <div class="qr-code-container">
+              <qrcode
+                [qrdata]="qrData.qrDataString"
+                [width]="getQrCodeSize()"
+                [errorCorrectionLevel]="'M'"
+                [colorDark]="qrData.darkColor"
+                [colorLight]="'#ffffff'">
+              </qrcode>
+              <div class="qr-label">Scan for contact info</div>
+            </div>
           </div>
-          <div *ngIf="useDigitalSignature && signatureImageUrl" class="digital-signature">
-            <img [src]="signatureImageUrl" alt="Digital signature" class="signature-image" />
-            <div class="signature-text">{{ resumeService.getProfile()?.fullName || 'Candidate' }}</div>
+
+          <!-- Right side: Signature -->
+          <div class="footer-right" *ngIf="includeSignatureLine">
+            <div *ngIf="!useDigitalSignature || !signatureImageUrl">
+              <div class="signature-line"></div>
+              <div class="signature-text">Signature ({{ resumeService.getProfile()?.fullName || 'Candidate' }})</div>
+            </div>
+            <div *ngIf="useDigitalSignature && signatureImageUrl" class="digital-signature">
+              <img [src]="signatureImageUrl" alt="Digital signature" class="signature-image" />
+              <div class="signature-text">{{ resumeService.getProfile()?.fullName || 'Candidate' }}</div>
+            </div>
           </div>
         </div>
       </div>
-
       <div *ngIf="!showPreview" class="preview-placeholder">Click "Show Preview" to see how your resume will look</div>
     </div>
   </div>

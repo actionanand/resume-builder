@@ -120,6 +120,13 @@ export class QrCode implements OnInit, OnDestroy {
 
     this.qrDataString = vCardData;
     this.saveCustomFields();
+
+    // Share the QR code data with other components through the service
+    this.resumeService.updateQrCodeData({
+      qrDataString: this.qrDataString,
+      darkColor: this.darkColor,
+      customFields: this.customFields,
+    });
   }
 
   saveCustomFields(): void {

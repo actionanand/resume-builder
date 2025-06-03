@@ -18,6 +18,18 @@ export class ResumeService {
   private resumeDataSubject = new BehaviorSubject<any>(this.resumeData);
   resumeData$ = this.resumeDataSubject.asObservable();
 
+  private _qrCodeData = new BehaviorSubject<{
+    qrDataString: string;
+    darkColor: string;
+    customFields: any[];
+  }>({
+    qrDataString: '',
+    darkColor: '#000000',
+    customFields: [],
+  });
+
+  qrCodeData$ = this._qrCodeData.asObservable();
+
   constructor() {
     this.loadResumeData();
   }
@@ -42,6 +54,25 @@ export class ResumeService {
   saveProfile(profile: any) {
     this.resumeData.profile = profile;
     this.saveResumeData();
+  }
+
+  updateQrCodeData(data: { qrDataString: string; darkColor: string; customFields: any[] }): void {
+    this._qrCodeData.next(data);
+
+    // Save to localStorage for persistence
+    localStorage.setItem('resumeQrCodeData', JSON.stringify(data));
+  }
+
+  getQrCodeData(): { qrDataString: string; darkColor: string; customFields: any[] } {
+    const savedData = localStorage.getItem('resumeQrCodeData');
+    if (savedData) {
+      try {
+        return JSON.parse(savedData);
+      } catch (e) {
+        console.error('Error parsing QR code data', e);
+      }
+    }
+    return this._qrCodeData.value;
   }
 
   getExperiences() {

@@ -491,7 +491,7 @@ h2 {
   }
 }
 
-// Add special print styles for the signature
+// special print styles for the signature
 @media print {
   .signature-section {
     margin-top: 50px;
@@ -590,5 +590,86 @@ h2 {
     max-width: 200px;
     max-height: 80px;
     margin-bottom: 5px;
+  }
+}
+
+// these styles for the resume footer with QR code and signature
+
+.resume-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.footer-left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.footer-right {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.qr-code-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 5px;
+
+  .qr-label {
+    margin-top: 5px;
+    font-size: 12px;
+    color: #7f8c8d;
+    text-align: center;
+  }
+}
+
+.qr-options {
+  margin-left: 25px;
+  margin-top: 5px;
+
+  .option-description {
+    font-size: 13px;
+    color: #7f8c8d;
+    margin-top: 8px;
+  }
+
+  .form-field {
+    margin-bottom: 10px;
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 14px;
+      color: #7f8c8d;
+    }
+
+    select {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #dcdfe6;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+  }
+}
+
+// print styles
+@media print {
+  .resume-footer {
+    margin-top: 30px;
+    page-break-inside: avoid;
+  }
+
+  .qr-code-container .qr-label {
+    color: #333 !important;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
   }
 }

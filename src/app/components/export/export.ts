@@ -5,13 +5,14 @@ import { FormsModule } from '@angular/forms';
 
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import { QRCodeComponent } from 'angularx-qrcode';
 
 import { ResumeService } from '../../services/resume';
 
 @Component({
   selector: 'app-export',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, QRCodeComponent],
   templateUrl: './export.html',
   styleUrls: ['./export.scss'],
 })
@@ -28,6 +29,14 @@ export class Export implements OnInit {
   includeSignatureLine = true;
   useDigitalSignature = false;
   signatureImageUrl: string | null = null;
+
+  includeQrCode = false;
+  qrCodeSize = 'medium';
+  qrData: { qrDataString: string; darkColor: string; customFields: any[] } = {
+    qrDataString: '',
+    darkColor: '#000000',
+    customFields: [],
+  };
 
   themes = [
     { id: 'modern', name: 'Modern' },
@@ -63,6 +72,25 @@ export class Export implements OnInit {
     if (savedSignatureImage) {
       this.signatureImageUrl = savedSignatureImage;
     }
+
+    // Load QR code preferences
+    const qrCodePreference = localStorage.getItem('resumeIncludeQrCode');
+    if (qrCodePreference !== null) {
+      this.includeQrCode = qrCodePreference === 'true';
+    }
+
+    const qrCodeSize = localStorage.getItem('resumeQrCodeSize');
+    if (qrCodeSize) {
+      this.qrCodeSize = qrCodeSize;
+    }
+
+    // Get initial QR code data
+    this.qrData = this.resumeService.getQrCodeData();
+
+    // Subscribe to QR code data updates
+    this.resumeService.qrCodeData$.subscribe(data => {
+      this.qrData = data;
+    });
   }
 
   saveSignaturePreference(): void {
@@ -97,6 +125,25 @@ export class Export implements OnInit {
     localStorage.removeItem('resumeSignatureImage');
   }
 
+  // Save QR code preferences
+  saveQrCodePreference(): void {
+    localStorage.setItem('resumeIncludeQrCode', this.includeQrCode.toString());
+    localStorage.setItem('resumeQrCodeSize', this.qrCodeSize);
+  }
+
+  // Get QR code size based on selection
+  getQrCodeSize(): number {
+    switch (this.qrCodeSize) {
+      case 'small':
+        return 80;
+      case 'large':
+        return 120;
+      case 'medium':
+      default:
+        return 100;
+    }
+  }
+
   generateMarkdown(): void {
     this.markdownContent = this.resumeService.exportAsMarkdown();
   }
@@ -122,6 +169,7 @@ export class Export implements OnInit {
       html2canvas(element, {
         scale: 2,
         useCORS: true,
+        allowTaint: true,
         logging: false,
       })
         .then(canvas => {
@@ -147,7 +195,7 @@ export class Export implements OnInit {
           this.isGeneratingPDF = false;
           this.showMessage('Error generating PDF. Please try again.');
         });
-    }, 500);
+    }, 500); // 500ms delay to ensure QR code is rendered
   }
 
   exportAsWord(): void {
