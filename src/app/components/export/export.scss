@@ -602,6 +602,10 @@ h2 {
   margin-top: 40px;
   padding-top: 20px;
   border-top: 1px solid #f0f0f0;
+
+  &.signature-only {
+    justify-content: flex-end; // Right align when only signature is present
+  }
 }
 
 .footer-left {

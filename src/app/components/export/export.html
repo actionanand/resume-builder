@@ -209,7 +209,7 @@
         </div>
 
         <!-- Resume Footer with QR Code and Signature -->
-        <div class="resume-footer" *ngIf="includeQrCode || includeSignatureLine">
+        <div class="resume-footer" [ngClass]="{'signature-only': includeSignatureLine && !includeQrCode}">
           <!-- Left side: QR Code -->
           <div class="footer-left" *ngIf="includeQrCode && qrData.qrDataString">
             <div class="qr-code-container">
