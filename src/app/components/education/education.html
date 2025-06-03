@@ -78,4 +78,16 @@
   <button *ngIf="!showEducationForm" (click)="openAddEducationForm()" class="btn-add">
     <span>+</span> Add Education
   </button>
+
+  <div class="section-navigation with-prev">
+    <button type="button" (click)="goToPreviousSection()" class="btn btn-prev">
+      <i class="material-icons">arrow_forward</i>
+      Previous: Projects
+    </button>
+
+    <button type="button" (click)="goToNextSection()" class="btn btn-primary">
+      Next: QR Code
+      <i class="material-icons">arrow_forward</i>
+    </button>
+  </div>
 </div>

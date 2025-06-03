@@ -1,7 +1,9 @@
+@use '../../shared/css/navigation.scss';
+
 .section-container {
   background: white;
   border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
   padding: 25px;
   margin-bottom: 25px;
 }
@@ -25,19 +27,19 @@ h2 {
   display: flex;
   justify-content: space-between;
   margin-bottom: 15px;
-  
+
   h3 {
     margin: 0 0 5px 0;
     color: #2c3e50;
     font-size: 18px;
   }
-  
+
   .project-link {
     a {
       color: #2980b9;
       font-size: 14px;
       text-decoration: none;
-      
+
       &:hover {
         text-decoration: underline;
       }
@@ -48,7 +50,7 @@ h2 {
 .actions {
   display: flex;
   gap: 8px;
-  
+
   button {
     background: none;
     border: none;
@@ -57,18 +59,18 @@ h2 {
     padding: 4px 8px;
     border-radius: 4px;
   }
-  
+
   .btn-edit {
     color: #2980b9;
-    
+
     &:hover {
       background-color: rgba(41, 128, 185, 0.1);
     }
   }
-  
+
   .btn-delete {
     color: #e74c3c;
-    
+
     &:hover {
       background-color: rgba(231, 76, 60, 0.1);
     }
@@ -78,31 +80,31 @@ h2 {
 .project-body {
   display: flex;
   gap: 15px;
-  
+
   .project-image {
     flex: 0 0 150px;
-    
+
     img {
       width: 100%;
       border-radius: 4px;
       object-fit: cover;
     }
   }
-  
+
   .project-details {
     flex: 1;
-    
+
     .description {
       margin: 0 0 10px 0;
       color: #34495e;
       font-size: 14px;
       line-height: 1.5;
     }
-    
+
     .technologies {
       color: #7f8c8d;
       font-size: 14px;
-      
+
       strong {
         color: #2c3e50;
       }
@@ -116,7 +118,7 @@ h2 {
   border: 1px solid #f0f0f0;
   border-radius: 4px;
   background-color: #f9f9f9;
-  
+
   h3 {
     margin-top: 0;
     margin-bottom: 15px;
@@ -127,27 +129,28 @@ h2 {
 
 .form-field {
   margin-bottom: 15px;
-  
+
   label {
     display: block;
     margin-bottom: 5px;
     color: #7f8c8d;
     font-size: 14px;
   }
-  
-  input, textarea {
+
+  input,
+  textarea {
     width: 100%;
     padding: 10px;
     border: 1px solid #dcdfe6;
     border-radius: 4px;
     font-size: 16px;
-    
+
     &:focus {
       outline: none;
       border-color: #3498db;
     }
   }
-  
+
   textarea {
     resize: vertical;
   }
@@ -157,12 +160,12 @@ h2 {
   .image-preview {
     position: relative;
     width: 150px;
-    
+
     img {
       width: 100%;
       border-radius: 4px;
     }
-    
+
     button {
       position: absolute;
       top: 5px;
@@ -173,18 +176,18 @@ h2 {
       padding: 3px 6px;
       font-size: 12px;
       cursor: pointer;
-      
+
       &:hover {
         background: rgba(255, 255, 255, 1);
       }
     }
   }
-  
+
   .image-input {
     display: flex;
     flex-direction: column;
     gap: 5px;
-    
+
     span {
       font-size: 12px;
       color: #95a5a6;
@@ -197,7 +200,7 @@ h2 {
   justify-content: flex-end;
   gap: 10px;
   margin-top: 15px;
-  
+
   button {
     padding: 8px 16px;
     border-radius: 4px;
@@ -205,20 +208,20 @@ h2 {
     cursor: pointer;
     border: none;
   }
-  
+
   .btn-save {
     background-color: #3498db;
     color: white;
-    
+
     &:hover {
       background-color: #2980b9;
     }
   }
-  
+
   .btn-cancel {
     background-color: #bdc3c7;
     color: #2c3e50;
-    
+
     &:hover {
       background-color: #a6acaf;
     }
@@ -239,11 +242,11 @@ h2 {
   width: 100%;
   justify-content: center;
   transition: all 0.2s;
-  
+
   span {
     font-size: 18px;
   }
-  
+
   &:hover {
     background-color: rgba(149, 165, 166, 0.1);
     border-color: #7f8c8d;

@@ -1,20 +1,24 @@
 <div class="section-container about-section">
   <h2>About Me</h2>
-  
+
   <div *ngIf="!isEditing" class="about-content">
-    <div [innerHTML]="aboutText || 'Add a professional summary that highlights your experience and key strengths.'" 
-          class="about-text" 
-          [class.placeholder]="!aboutText">
-    </div>
+    <div
+      [innerHTML]="aboutText || 'Add a professional summary that highlights your experience and key strengths.'"
+      class="about-text"
+      [class.placeholder]="!aboutText"></div>
     <button (click)="startEditing()" class="btn-edit">Edit</button>
   </div>
-  
+
   <div *ngIf="isEditing" class="about-form">
     <div class="form-field">
       <label for="about">Professional Summary</label>
-      <textarea id="about" [(ngModel)]="editableText" name="about" rows="6" 
-                placeholder="Write a concise summary of your professional background, key skills, and career objectives. This is often the first section recruiters read."></textarea>
-      
+      <textarea
+        id="about"
+        [(ngModel)]="editableText"
+        name="about"
+        rows="6"
+        placeholder="Write a concise summary of your professional background, key skills, and career objectives. This is often the first section recruiters read."></textarea>
+
       <div class="form-tips">
         <h4>Tips for a Strong Summary:</h4>
         <ul>
@@ -25,10 +29,22 @@
         </ul>
       </div>
     </div>
-    
+
     <div class="form-actions">
       <button (click)="saveAbout()" class="btn-save">Save</button>
       <button (click)="cancelEditing()" class="btn-cancel">Cancel</button>
     </div>
+  </div>
+
+  <div class="section-navigation with-prev">
+    <button type="button" (click)="goToPreviousSection()" class="btn btn-prev">
+      <i class="material-icons">arrow_forward</i>
+      Previous: Profile
+    </button>
+
+    <button type="button" (click)="goToNextSection()" class="btn btn-primary">
+      Next: Skills
+      <i class="material-icons">arrow_forward</i>
+    </button>
   </div>
 </div>

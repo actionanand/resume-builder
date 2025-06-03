@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, OnInit, ElementRef, ViewChild, inject } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, inject, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -18,6 +18,7 @@ import { ResumeService } from '../../services/resume';
 })
 export class Export implements OnInit {
   @ViewChild('resumePreview') resumePreview!: ElementRef;
+  @Input() previewOnly = false;
 
   markdownContent = '';
   selectedTheme = 'modern';

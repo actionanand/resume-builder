@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -23,6 +23,8 @@ export class Education implements OnInit {
     cgpa: '',
   };
 
+  @Output() navigate = new EventEmitter<string>();
+
   showEducationForm = false;
   isEditing = false;
   editingIndex = -1;
@@ -31,6 +33,14 @@ export class Education implements OnInit {
 
   ngOnInit(): void {
     this.educationEntries = this.resumeService.getEducation() || [];
+  }
+
+  goToPreviousSection(): void {
+    this.navigate.emit('projects');
+  }
+
+  goToNextSection(): void {
+    this.navigate.emit('qr-code');
   }
 
   openAddEducationForm(): void {

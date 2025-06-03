@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -19,10 +19,20 @@ export class Skills implements OnInit {
   isEditing = false;
   editIndex = -1;
 
+  @Output() navigate = new EventEmitter<string>();
+
   private resumeService = inject(ResumeService);
 
   ngOnInit(): void {
     this.skillGroups = this.resumeService.getSkills() || [];
+  }
+
+  goToPreviousSection(): void {
+    this.navigate.emit('about');
+  }
+
+  goToNextSection(): void {
+    this.navigate.emit('experience');
   }
 
   openAddForm(): void {

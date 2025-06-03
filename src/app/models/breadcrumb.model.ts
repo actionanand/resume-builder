@@ -1,6 +1,6 @@
-export interface Section {
+export interface BreadcrumbItem {
   id: string;
-  name: string;
+  label: string;
   icon: string;
-  completed?: boolean;
+  complete?: boolean;
 }

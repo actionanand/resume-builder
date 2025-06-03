@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, Output, EventEmitter } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { ResumeService } from '../../services/resume';
@@ -24,6 +24,8 @@ export class Profile {
     portfolio: '',
   };
 
+  @Output() navigate = new EventEmitter<string>();
+
   private resumeService = inject(ResumeService);
 
   constructor() {
@@ -31,6 +33,13 @@ export class Profile {
     if (savedProfile) {
       this.profile = savedProfile;
     }
+  }
+
+  goToNextSection(): void {
+    // Save profile data first
+    this.saveProfile();
+    // Then emit navigation event
+    this.navigate.emit('about');
   }
 
   onPhotoSelected(event: Event): void {

@@ -1,6 +1,6 @@
 <div class="section-container projects-section">
   <h2>Projects</h2>
-  
+
   <div *ngFor="let project of projects; let i = index" class="project-item">
     <div class="project-header">
       <div>
@@ -14,66 +14,83 @@
         <button (click)="deleteProject(i)" class="btn-delete">Delete</button>
       </div>
     </div>
-    
+
     <div class="project-body">
       <div *ngIf="project.image" class="project-image">
-        <img [src]="project.image" alt="{{ project.name }}">
+        <img [src]="project.image" alt="{{ project.name }}" />
       </div>
       <div class="project-details">
         <p class="description">{{ project.description }}</p>
-        <div class="technologies">
-          <strong>Technologies:</strong> {{ project.technologies }}
-        </div>
+        <div class="technologies"><strong>Technologies:</strong> {{ project.technologies }}</div>
       </div>
     </div>
   </div>
-  
+
   <div *ngIf="showForm" class="project-form">
     <h3>{{ isEditing ? 'Edit Project' : 'Add Project' }}</h3>
     <form (ngSubmit)="saveProject()">
       <div class="form-field">
         <label for="name">Project Name</label>
-        <input type="text" id="name" [(ngModel)]="currentProject.name" name="name" required>
+        <input type="text" id="name" [(ngModel)]="currentProject.name" name="name" required />
       </div>
-      
+
       <div class="form-field">
         <label for="description">Description</label>
         <textarea id="description" [(ngModel)]="currentProject.description" name="description" rows="3"></textarea>
       </div>
-      
+
       <div class="form-field">
         <label for="technologies">Technologies Used</label>
-        <input type="text" id="technologies" [(ngModel)]="currentProject.technologies" name="technologies" placeholder="e.g., React, Node.js, MongoDB">
+        <input
+          type="text"
+          id="technologies"
+          [(ngModel)]="currentProject.technologies"
+          name="technologies"
+          placeholder="e.g., React, Node.js, MongoDB" />
       </div>
-      
+
       <div class="form-field">
         <label for="link">Project Link</label>
-        <input type="url" id="link" [(ngModel)]="currentProject.link" name="link" placeholder="https://github.com/username/project">
+        <input
+          type="url"
+          id="link"
+          [(ngModel)]="currentProject.link"
+          name="link"
+          placeholder="https://github.com/username/project" />
       </div>
-      
+
       <div class="form-field">
         <label for="image">Project Image</label>
         <div class="image-upload">
           <div *ngIf="currentProject.image" class="image-preview">
-            <img [src]="currentProject.image" alt="Project Image">
+            <img [src]="currentProject.image" alt="Project Image" />
             <button type="button" (click)="removeImage()">Remove</button>
           </div>
           <div *ngIf="!currentProject.image" class="image-input">
-            <input type="file" id="image" (change)="onImageSelected($event)" accept="image/*">
+            <input type="file" id="image" (change)="onImageSelected($event)" accept="image/*" />
             <span>Optional: Choose an image to showcase your project</span>
           </div>
         </div>
       </div>
-      
+
       <div class="form-actions">
         <button type="submit" class="btn-save">Save</button>
         <button type="button" (click)="cancelForm()" class="btn-cancel">Cancel</button>
       </div>
     </form>
   </div>
-  
-  <button *ngIf="!showForm" (click)="openAddForm()" class="btn-add">
-    <span>+</span> Add Project
-  </button>
-</div>
 
+  <button *ngIf="!showForm" (click)="openAddForm()" class="btn-add"><span>+</span> Add Project</button>
+
+  <div class="section-navigation with-prev">
+    <button type="button" (click)="goToPreviousSection()" class="btn btn-prev">
+      <i class="material-icons">arrow_forward</i>
+      Previous: Experience
+    </button>
+
+    <button type="button" (click)="goToNextSection()" class="btn btn-primary">
+      Next: Education
+      <i class="material-icons">arrow_forward</i>
+    </button>
+  </div>
+</div>

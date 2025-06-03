@@ -4,15 +4,36 @@
     <p>Build an ATS-friendly resume with modern features</p>
   </header>
 
-  <div class="resume-sections">
-    <app-profile></app-profile>
-    <app-experience></app-experience>
-    <app-education></app-education>
-    <app-skills></app-skills>
-    <app-projects></app-projects>
-    <app-about></app-about>
-    <app-qr-code></app-qr-code>
-    <app-export></app-export>
+  <!-- Breadcrumb Navigation -->
+  <app-breadcrumb
+    [sections]="breadcrumbSections"
+    [activeSection]="currentSection"
+    (sectionChange)="onSectionChange($event)">
+  </app-breadcrumb>
+
+  <!-- Section Container - Shows the active section -->
+  <div class="section-container">
+    <app-profile *ngIf="currentSection === 'profile'" (navigate)="onSectionChange($event)"> </app-profile>
+
+    <app-about *ngIf="currentSection === 'about'" (navigate)="onSectionChange($event)"> </app-about>
+
+    <app-skills *ngIf="currentSection === 'skills'" (navigate)="onSectionChange($event)"> </app-skills>
+
+    <app-experience *ngIf="currentSection === 'experience'" (navigate)="onSectionChange($event)"> </app-experience>
+
+    <app-projects *ngIf="currentSection === 'projects'" (navigate)="onSectionChange($event)"> </app-projects>
+
+    <app-education *ngIf="currentSection === 'education'" (navigate)="onSectionChange($event)"> </app-education>
+
+    <app-qr-code *ngIf="currentSection === 'qr-code'" (navigate)="onSectionChange($event)"> </app-qr-code>
+
+    <app-export *ngIf="currentSection === 'export'"> </app-export>
+  </div>
+
+  <!-- Export Preview - Always visible at the bottom -->
+  <div class="export-preview-container" *ngIf="currentSection !== 'export'">
+    <h2>Resume Preview</h2>
+    <app-export [previewOnly]="true"></app-export>
   </div>
 
   <footer class="footer">

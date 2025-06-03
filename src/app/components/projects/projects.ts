@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -13,6 +13,9 @@ import { Project } from '../../models';
 })
 export class ProjectsComponent implements OnInit {
   projects: Project[] = [];
+
+  @Output() navigate = new EventEmitter<string>();
+
   currentProject: Project = {
     name: '',
     description: '',
@@ -28,6 +31,14 @@ export class ProjectsComponent implements OnInit {
 
   ngOnInit(): void {
     this.projects = this.resumeService.getProjects() || [];
+  }
+
+  goToPreviousSection(): void {
+    this.navigate.emit('experience');
+  }
+
+  goToNextSection(): void {
+    this.navigate.emit('education');
   }
 
   openAddForm(): void {

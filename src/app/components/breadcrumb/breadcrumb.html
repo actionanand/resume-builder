@@ -5,13 +5,12 @@
     <div
       *ngFor="let section of sections; let i = index"
       class="breadcrumb-item"
-      [ngClass]="{'active': section.id === currentSection, 'completed': section.completed}"
-      (click)="changeSection(section.id)">
+      [ngClass]="{'active': section.id === activeSection, 'complete': section.complete}"
+      (click)="onSectionClick(section.id)">
       <div class="breadcrumb-icon">
-        <i class="icon" [ngClass]="section.icon"></i>
+        <i class="material-icons">{{section.icon}}</i>
       </div>
-
-      <span class="breadcrumb-label">{{ section.name }}</span>
+      <span class="breadcrumb-label">{{section.label}}</span>
 
       <div class="breadcrumb-connector" *ngIf="i < sections.length - 1"></div>
     </div>

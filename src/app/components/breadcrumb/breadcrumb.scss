@@ -1,74 +1,67 @@
 .breadcrumb-container {
-  width: 100%;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
   overflow-x: auto;
+  padding: 10px 0;
 }
 
 .breadcrumb-nav {
   display: flex;
   align-items: center;
   min-width: max-content;
-  padding: 10px 0;
 }
 
 .breadcrumb-item {
   display: flex;
   align-items: center;
+  margin-right: 5px;
   cursor: pointer;
-  position: relative;
+  border-radius: 4px;
+  padding: 8px 12px;
+  transition: all 0.2s ease;
+}
 
-  &:hover {
-    .breadcrumb-icon {
-      background-color: #3498db;
-      color: #fff;
-    }
+.breadcrumb-item:hover {
+  background-color: #f0f7ff;
+}
 
-    .breadcrumb-label {
-      color: #3498db;
-    }
-  }
+.breadcrumb-item.active {
+  background-color: #e3f2fd;
+}
 
-  &.active {
-    .breadcrumb-icon {
-      background-color: #3498db;
-      color: #fff;
-    }
-
-    .breadcrumb-label {
-      font-weight: 600;
-      color: #3498db;
-    }
-  }
-
-  &.completed {
-    .breadcrumb-icon {
-      background-color: #27ae60;
-      color: #fff;
-    }
-  }
+.breadcrumb-item.complete .breadcrumb-icon {
+  background-color: #4caf50;
+  color: white;
 }
 
 .breadcrumb-icon {
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
-  background-color: #ecf0f1;
+  background-color: #e0e0e0;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-right: 10px;
-  transition: all 0.3s ease;
 }
 
 .breadcrumb-label {
   font-size: 14px;
-  color: #7f8c8d;
-  transition: all 0.3s ease;
+  color: #555;
 }
 
 .breadcrumb-connector {
-  width: 40px;
   height: 2px;
-  background-color: #ecf0f1;
+  background-color: #ddd;
+  width: 20px;
   margin: 0 10px;
+}
+
+.active .breadcrumb-label {
+  font-weight: 500;
+  color: #1976d2;
+}
+
+.active .breadcrumb-icon {
+  background-color: #1976d2;
+  color: white;
 }

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormArray, ReactiveFormsModule, FormsModule } from '@angular/forms';
 
@@ -18,6 +18,8 @@ export class ExperienceComponent implements OnInit {
   isEditing = false;
   editIndex = -1;
 
+  @Output() navigate = new EventEmitter<string>();
+
   // Form related properties
   experienceForm!: FormGroup;
 
@@ -28,6 +30,14 @@ export class ExperienceComponent implements OnInit {
   ngOnInit(): void {
     this.experiences = this.resumeService.getExperiences() || [];
     this.initForm();
+  }
+
+  goToPreviousSection(): void {
+    this.navigate.emit('skills');
+  }
+
+  goToNextSection(): void {
+    this.navigate.emit('projects');
   }
 
   // Initialize the form

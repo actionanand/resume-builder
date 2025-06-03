@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, inject, OnInit, OnDestroy } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -23,6 +23,8 @@ export class QrCode implements OnInit, OnDestroy {
   // QR code data
   qrDataString = '';
   darkColor = '#000000';
+
+  @Output() navigate = new EventEmitter<string>();
 
   // Custom fields
   customFields: CustomField[] = [];
@@ -58,6 +60,15 @@ export class QrCode implements OnInit, OnDestroy {
 
     // Generate initial QR code
     this.updateQrCode();
+  }
+
+  goToPreviousSection(): void {
+    this.navigate.emit('education');
+  }
+
+  finishAndExport(): void {
+    // You might want to save QR code state here
+    this.navigate.emit('export');
   }
 
   ngOnDestroy(): void {
