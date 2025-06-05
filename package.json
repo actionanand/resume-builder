@@ -29,6 +29,7 @@
     "angularx-qrcode": "^19.0.0",
     "html2canvas": "^1.4.1",
     "jspdf": "^2.5.1",
+    "pdfmake": "^0.2.20",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"
