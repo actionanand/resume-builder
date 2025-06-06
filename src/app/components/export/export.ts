@@ -613,7 +613,7 @@ export class Export implements OnInit {
             text: achievement,
             style: 'listItem',
           })),
-          margin: [0, 0, 0, 10],
+          margin: [15, 0, 0, 10],
         };
 
         docDefinition.content.push(achievementList);
