@@ -63,7 +63,7 @@ export class Export implements OnInit {
   ngOnInit(): void {
     this.generateMarkdown();
 
-    pdfMake.vfs = pdfFonts.pdfMake.vfs;
+    pdfMake.vfs = pdfFonts.vfs;
 
     // Load signature preferences
     const signaturePreference = localStorage.getItem('resumeSignatureLine');
@@ -418,8 +418,10 @@ export class Export implements OnInit {
           {
             width: '*',
             stack: [
-              { text: profile.fullName, style: 'header' },
-              { text: profile.title, style: 'normalText', margin: [0, 0, 0, 10] },
+              // Name and title centered within this column
+              { text: profile.fullName, style: 'header', alignment: 'center' },
+              { text: profile.title, style: 'normalText', margin: [0, 0, 0, 10], alignment: 'center' },
+              // Contact info and links remain left-aligned
               this.createContactInfo(profile),
               this.createProfileLinks(profile),
             ],
@@ -428,10 +430,10 @@ export class Export implements OnInit {
         margin: [0, 0, 0, 15],
       });
     } else {
-      // No photo, just add the text elements
+      // No photo, center everything within the page
       profileSection.push(
-        { text: profile.fullName, style: 'header' },
-        { text: profile.title, style: 'normalText', margin: [0, 0, 0, 10] },
+        { text: profile.fullName, style: 'header', alignment: 'center' },
+        { text: profile.title, style: 'normalText', margin: [0, 0, 0, 10], alignment: 'center' },
         this.createContactInfo(profile),
         this.createProfileLinks(profile),
       );
@@ -765,12 +767,13 @@ export class Export implements OnInit {
               image: qrCodeDataUrl,
               width: this.getQrCodeSize(),
               height: this.getQrCodeSize(),
+              alignment: 'left', // the QR code at left in its column
             },
             {
               text: 'Scan for contact info',
               fontSize: 8,
-              alignment: 'center',
-              margin: [0, 5, 0, 0],
+              alignment: 'left',
+              margin: [12, 5, 0, 0], // [left, top, right, bottom]
             },
           ],
           width: '50%',
@@ -787,6 +790,8 @@ export class Export implements OnInit {
         alignment: 'right',
       };
 
+      // Calculate vertical margin to align with QR code
+      const verticalMargin = this.includeQrCode ? this.getQrCodeSize() / 3 : 0;
       // Digital signature with image
       if (this.useDigitalSignature && this.signatureImageUrl) {
         try {
@@ -796,6 +801,8 @@ export class Export implements OnInit {
               image: signatureDataUrl,
               width: 100,
               alignment: 'right',
+              // Add top margin to align vertically with QR code
+              margin: [0, verticalMargin, 0, 0],
             },
             {
               text: this.resumeService.getProfile()?.fullName || 'Candidate',
@@ -806,13 +813,13 @@ export class Export implements OnInit {
           );
         } catch (e) {
           console.error('Error loading signature image:', e);
-          // Fallback to signature line
-          this.addSignatureLine(signatureContent.stack);
+          // Fallback to signature line with margin
+          this.addSignatureLine(signatureContent.stack, verticalMargin);
         }
       }
       // Normal signature line
       else {
-        this.addSignatureLine(signatureContent.stack);
+        this.addSignatureLine(signatureContent.stack, verticalMargin);
       }
 
       footerContent.push(signatureContent);
@@ -829,8 +836,7 @@ export class Export implements OnInit {
     }
   }
 
-  // Helper to add signature line
-  private addSignatureLine(stack: any[]): void {
+  private addSignatureLine(stack: any[], topMargin: number = 0): void {
     stack.push(
       {
         canvas: [
@@ -844,6 +850,8 @@ export class Export implements OnInit {
           },
         ],
         alignment: 'right',
+        // Apply top margin to align with QR code
+        margin: [0, topMargin, 0, 0],
       },
       {
         text: `Signature (${this.resumeService.getProfile()?.fullName || 'Candidate'})`,
