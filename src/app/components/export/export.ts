@@ -823,6 +823,15 @@ export class Export implements OnInit {
       }
 
       footerContent.push(signatureContent);
+
+      // If no QR code, add an empty column first to push signature to right
+      if (!this.includeQrCode || !this.qrData.qrDataString) {
+        // Insert empty column at the beginning
+        footerContent.unshift({
+          text: '',
+          width: '50%',
+        });
+      }
     }
 
     // If we have content, add it as a row to the document
