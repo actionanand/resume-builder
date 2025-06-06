@@ -648,7 +648,7 @@ export class Export implements OnInit {
           link: project.link,
           style: 'smallText',
           color: colors.accentColor,
-          width: 'auto',
+          width: this.showHyperlinkUrls ? '33%' : 'auto',
           alignment: 'right',
         });
       }
