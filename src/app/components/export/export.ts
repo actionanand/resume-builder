@@ -457,39 +457,41 @@ export class Export implements OnInit {
 
   // Create contact info row
   private async createContactInfo(profile: any): Promise<any> {
-    // If icons are disabled, use the existing implementation with bullet separators
+    // If icons are disabled, use the existing implementation without bullet separators
     if (!this.showContactIcons) {
-      const contactItems = [];
+      const contactColumns = [];
 
       if (profile.email) {
-        contactItems.push({ text: profile.email, style: 'smallText' });
+        contactColumns.push({
+          text: profile.email,
+          style: 'smallText',
+          width: 'auto',
+          margin: [0, 0, 20, 0],
+        });
       }
 
       if (profile.phone) {
-        contactItems.push({ text: profile.phone, style: 'smallText' });
+        contactColumns.push({
+          text: profile.phone,
+          style: 'smallText',
+          width: 'auto',
+          margin: [0, 0, 20, 0],
+        });
       }
 
       if (profile.location) {
-        contactItems.push({ text: profile.location, style: 'smallText' });
+        contactColumns.push({
+          text: profile.location,
+          style: 'smallText',
+          width: 'auto',
+        });
       }
 
-      if (contactItems.length === 0) return null;
-
-      // Add separator between items
-      const separatedItems = [];
-      for (let i = 0; i < contactItems.length; i++) {
-        separatedItems.push(contactItems[i]);
-        if (i < contactItems.length - 1) {
-          separatedItems.push({ text: ' • ', style: 'smallText' });
-        }
-      }
+      if (contactColumns.length === 0) return null;
 
       return {
-        stack: [
-          {
-            text: separatedItems,
-          },
-        ],
+        columns: contactColumns,
+        alignment: 'center',
         margin: [0, 0, 0, 5],
       };
     }
@@ -614,57 +616,50 @@ export class Export implements OnInit {
 
   // Create profile links row
   private async createProfileLinks(profile: any): Promise<any> {
-    // If icons are disabled, use the existing implementation
+    // If icons are disabled, use columns without bullet separators
     if (!this.showContactIcons) {
-      const linkItems = [];
+      const linkColumns = [];
 
       if (profile.github) {
         const text = this.showHyperlinkUrls ? profile.github : 'GitHub';
-        linkItems.push({
+        linkColumns.push({
           text: text,
           link: profile.github,
           style: 'smallText',
-          color: '#0000EE',
+          color: '#0366d6',
+          width: 'auto',
+          margin: [0, 0, 20, 0],
         });
       }
 
       if (profile.linkedin) {
         const text = this.showHyperlinkUrls ? profile.linkedin : 'LinkedIn';
-        linkItems.push({
+        linkColumns.push({
           text: text,
           link: profile.linkedin,
           style: 'smallText',
-          color: '#0000EE',
+          color: '#0366d6',
+          width: 'auto',
+          margin: [0, 0, 20, 0],
         });
       }
 
       if (profile.portfolio) {
         const text = this.showHyperlinkUrls ? profile.portfolio : 'Portfolio';
-        linkItems.push({
+        linkColumns.push({
           text: text,
           link: profile.portfolio,
           style: 'smallText',
-          color: '#0000EE',
+          color: '#0366d6',
+          width: 'auto',
         });
       }
 
-      if (linkItems.length === 0) return null;
-
-      // Add separator between items
-      const separatedItems = [];
-      for (let i = 0; i < linkItems.length; i++) {
-        separatedItems.push(linkItems[i]);
-        if (i < linkItems.length - 1) {
-          separatedItems.push({ text: ' • ', style: 'smallText' });
-        }
-      }
+      if (linkColumns.length === 0) return null;
 
       return {
-        stack: [
-          {
-            text: separatedItems,
-          },
-        ],
+        columns: linkColumns,
+        alignment: 'center',
         margin: [0, 0, 0, 5],
       };
     }
