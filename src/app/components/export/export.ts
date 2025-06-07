@@ -278,9 +278,10 @@ export class Export implements OnInit {
     const docDefinition: any = {
       content: [],
       defaultStyle: {
-        font: 'Roboto',
+        // Use default Roboto font instead of Helvetica
         fontSize: baseFontSize,
         lineHeight: 1.3,
+        color: colors.textColor,
       },
       styles: {
         header: {
@@ -298,18 +299,27 @@ export class Export implements OnInit {
         sectionTitle: {
           fontSize: baseFontSize * 1.2,
           bold: true,
+          color: colors.secondaryColor,
           margin: [0, 8, 0, 4],
         },
         normalText: {
           fontSize: baseFontSize,
           margin: [0, 2, 0, 2],
+          color: colors.textColor,
         },
         smallText: {
           fontSize: baseFontSize * 0.9,
           margin: [0, 1, 0, 1],
+          color: colors.subtitleColor,
         },
         listItem: {
           margin: [0, 2, 0, 2],
+          color: colors.textColor,
+        },
+        dateText: {
+          fontSize: baseFontSize * 0.9,
+          margin: [0, 1, 0, 1],
+          color: colors.subtitleColor,
         },
       },
       pageSize: 'A4',
@@ -326,7 +336,7 @@ export class Export implements OnInit {
     this.addSkillsSection(docDefinition);
 
     // Add experience section
-    this.addExperienceSection(docDefinition);
+    this.addExperienceSection(docDefinition, colors);
 
     // Add projects section
     this.addProjectsSection(docDefinition, colors);
@@ -348,30 +358,40 @@ export class Export implements OnInit {
           primaryColor: '#3498db',
           secondaryColor: '#2c3e50',
           accentColor: '#2980b9',
+          textColor: '#333333',
+          subtitleColor: '#7f8c8d', // Add this color for titles, dates, etc.
         };
       case 'classic':
         return {
           primaryColor: '#000000',
           secondaryColor: '#333333',
           accentColor: '#666666',
+          textColor: '#000000',
+          subtitleColor: '#555555', // Add similar color for classic theme
         };
       case 'minimal':
         return {
           primaryColor: '#333333',
           secondaryColor: '#555555',
           accentColor: '#777777',
+          textColor: '#333333',
+          subtitleColor: '#7f8c8d', // Add for minimal theme
         };
       case 'professional':
         return {
           primaryColor: '#2c3e50',
           secondaryColor: '#34495e',
           accentColor: '#2980b9',
+          textColor: '#333333',
+          subtitleColor: '#7f8c8d', // Add for professional theme
         };
       default:
         return {
           primaryColor: '#000000',
           secondaryColor: '#333333',
           accentColor: '#666666',
+          textColor: '#000000',
+          subtitleColor: '#555555',
         };
     }
   }
@@ -436,7 +456,7 @@ export class Export implements OnInit {
               { text: profile.title, style: 'normalText', margin: [0, 0, 0, 10], alignment: 'center' },
               // Contact info and links remain left-aligned
               await this.createContactInfo(profile),
-              await this.createProfileLinks(profile),
+              await this.createProfileLinks(profile, colors),
             ],
           },
         ],
@@ -448,7 +468,7 @@ export class Export implements OnInit {
         { text: profile.fullName, style: 'header', alignment: 'center' },
         { text: profile.title, style: 'normalText', margin: [0, 0, 0, 10], alignment: 'center' },
         await this.createContactInfo(profile),
-        await this.createProfileLinks(profile),
+        await this.createProfileLinks(profile, colors),
       );
     }
 
@@ -615,7 +635,7 @@ export class Export implements OnInit {
   }
 
   // Create profile links row
-  private async createProfileLinks(profile: any): Promise<any> {
+  private async createProfileLinks(profile: any, colors: any): Promise<any> {
     // If icons are disabled, use columns without bullet separators
     if (!this.showContactIcons) {
       const linkColumns = [];
@@ -626,7 +646,7 @@ export class Export implements OnInit {
           text: text,
           link: profile.github,
           style: 'smallText',
-          color: '#0366d6',
+          color: colors.accentColor,
           width: 'auto',
           margin: [0, 0, 20, 0],
         });
@@ -638,7 +658,7 @@ export class Export implements OnInit {
           text: text,
           link: profile.linkedin,
           style: 'smallText',
-          color: '#0366d6',
+          color: colors.accentColor,
           width: 'auto',
           margin: [0, 0, 20, 0],
         });
@@ -650,7 +670,7 @@ export class Export implements OnInit {
           text: text,
           link: profile.portfolio,
           style: 'smallText',
-          color: '#0366d6',
+          color: colors.accentColor,
           width: 'auto',
         });
       }
@@ -686,7 +706,7 @@ export class Export implements OnInit {
                   text: this.showHyperlinkUrls ? profile.github : 'GitHub',
                   link: profile.github,
                   style: 'smallText',
-                  color: '#0366d6',
+                  color: colors.accentColor,
                   margin: [2, 0, 0, 0], // space between icon and text in profile links
                 },
               ],
@@ -700,7 +720,7 @@ export class Export implements OnInit {
           text: this.showHyperlinkUrls ? profile.github : 'GitHub',
           link: profile.github,
           style: 'smallText',
-          color: '#0366d6',
+          color: colors.accentColor,
           width: 'auto',
           margin: [0, 0, 20, 0],
         });
@@ -726,7 +746,7 @@ export class Export implements OnInit {
                   text: this.showHyperlinkUrls ? profile.linkedin : 'LinkedIn',
                   link: profile.linkedin,
                   style: 'smallText',
-                  color: '#0366d6',
+                  color: colors.accentColor,
                   margin: [2, 0, 0, 0],
                 },
               ],
@@ -740,7 +760,7 @@ export class Export implements OnInit {
           text: this.showHyperlinkUrls ? profile.linkedin : 'LinkedIn',
           link: profile.linkedin,
           style: 'smallText',
-          color: '#0366d6',
+          color: colors.accentColor,
           width: 'auto',
           margin: [0, 0, 20, 0],
         });
@@ -766,7 +786,7 @@ export class Export implements OnInit {
                   text: this.showHyperlinkUrls ? profile.portfolio : 'Portfolio',
                   link: profile.portfolio,
                   style: 'smallText',
-                  color: '#0366d6',
+                  color: colors.accentColor,
                   margin: [2, 0, 0, 0],
                 },
               ],
@@ -779,7 +799,7 @@ export class Export implements OnInit {
           text: this.showHyperlinkUrls ? profile.portfolio : 'Portfolio',
           link: profile.portfolio,
           style: 'smallText',
-          color: '#0366d6',
+          color: colors.accentColor,
           width: 'auto',
         });
       }
@@ -821,7 +841,7 @@ export class Export implements OnInit {
   }
 
   // Experience section
-  private addExperienceSection(docDefinition: any): void {
+  private addExperienceSection(docDefinition: any, colors: any): void {
     const experiences = this.resumeService.getExperiences();
     if (!experiences?.length) return;
 
@@ -838,7 +858,7 @@ export class Export implements OnInit {
           },
           {
             text: `${exp.startDate} - ${exp.endDate || 'Present'}`,
-            style: 'smallText',
+            style: 'dateText',
             width: 'auto',
             alignment: 'right',
           },
@@ -854,6 +874,7 @@ export class Export implements OnInit {
         text: companyInfo.join(' • '),
         style: 'smallText',
         italics: true,
+        color: colors.subtitleColor,
         margin: [0, 0, 0, 5],
       });
 
@@ -928,9 +949,12 @@ export class Export implements OnInit {
       // Add technologies
       if (project.technologies) {
         docDefinition.content.push({
-          text: [{ text: 'Technologies: ', bold: true }, project.technologies],
+          text: [
+            { text: 'Technologies: ', bold: true, color: colors.textColor },
+            { text: project.technologies, color: colors.textColor },
+          ],
           style: 'smallText',
-          margin: [0, 0, 0, 10],
+          margin: [0, 7, 0, 10],
         });
       } else {
         // Add spacing after project
@@ -957,7 +981,7 @@ export class Export implements OnInit {
           },
           {
             text: `${edu.startDate} - ${edu.endDate}`,
-            style: 'smallText',
+            style: 'dateText',
             width: 'auto',
             alignment: 'right',
           },
