@@ -114,6 +114,19 @@ export class Export implements OnInit {
     });
   }
 
+  private async getIconFromPublicFolder(iconName: string): Promise<string> {
+    try {
+      // Path to icons in public directory - adjust path as needed
+      const iconPath = `/icons/${iconName}.svg`;
+
+      // Convert image to data URL that pdfMake can use
+      return await this.getImageDataUrl(iconPath);
+    } catch (error) {
+      console.error(`Error loading icon '${iconName}':`, error);
+      return ''; // Return empty string on error which will skip the icon
+    }
+  }
+
   saveSignaturePreference(): void {
     localStorage.setItem('resumeSignatureLine', this.includeSignatureLine.toString());
     localStorage.setItem('resumeDigitalSignature', this.useDigitalSignature.toString());
@@ -422,8 +435,8 @@ export class Export implements OnInit {
               { text: profile.fullName, style: 'header', alignment: 'center' },
               { text: profile.title, style: 'normalText', margin: [0, 0, 0, 10], alignment: 'center' },
               // Contact info and links remain left-aligned
-              this.createContactInfo(profile),
-              this.createProfileLinks(profile),
+              await this.createContactInfo(profile),
+              await this.createProfileLinks(profile),
             ],
           },
         ],
@@ -434,8 +447,8 @@ export class Export implements OnInit {
       profileSection.push(
         { text: profile.fullName, style: 'header', alignment: 'center' },
         { text: profile.title, style: 'normalText', margin: [0, 0, 0, 10], alignment: 'center' },
-        this.createContactInfo(profile),
-        this.createProfileLinks(profile),
+        await this.createContactInfo(profile),
+        await this.createProfileLinks(profile),
       );
     }
 
@@ -443,93 +456,312 @@ export class Export implements OnInit {
   }
 
   // Create contact info row
-  private createContactInfo(profile: any): any {
+  private async createContactInfo(profile: any): Promise<any> {
+    // If icons are disabled, use the existing implementation with bullet separators
+    if (!this.showContactIcons) {
+      const contactItems = [];
+
+      if (profile.email) {
+        contactItems.push({ text: profile.email, style: 'smallText' });
+      }
+
+      if (profile.phone) {
+        contactItems.push({ text: profile.phone, style: 'smallText' });
+      }
+
+      if (profile.location) {
+        contactItems.push({ text: profile.location, style: 'smallText' });
+      }
+
+      if (contactItems.length === 0) return null;
+
+      // Add separator between items
+      const separatedItems = [];
+      for (let i = 0; i < contactItems.length; i++) {
+        separatedItems.push(contactItems[i]);
+        if (i < contactItems.length - 1) {
+          separatedItems.push({ text: ' • ', style: 'smallText' });
+        }
+      }
+
+      return {
+        stack: [
+          {
+            text: separatedItems,
+          },
+        ],
+        margin: [0, 0, 0, 5],
+      };
+    }
+    // With icons enabled, create a different layout with icons from public folder
     const contactItems = [];
 
+    // Add email with icon
     if (profile.email) {
-      contactItems.push({ text: profile.email, style: 'smallText' });
+      try {
+        const emailIconUrl = await this.getIconFromPublicFolder('email');
+        contactItems.push({
+          columns: [
+            {
+              width: 16,
+              image: emailIconUrl,
+              fit: [12, 12],
+              alignment: 'center',
+            },
+            {
+              width: 'auto',
+              text: profile.email,
+              style: 'smallText',
+              margin: [5, 0, 15, 0],
+            },
+          ],
+          margin: [0, 0, 0, 3],
+        });
+      } catch (e) {
+        // Fallback to no icon
+        contactItems.push({
+          text: profile.email,
+          style: 'smallText',
+          margin: [0, 0, 0, 3],
+        });
+      }
     }
 
+    // Add phone with icon
     if (profile.phone) {
-      contactItems.push({ text: profile.phone, style: 'smallText' });
+      try {
+        const phoneIconUrl = await this.getIconFromPublicFolder('phone');
+        contactItems.push({
+          columns: [
+            {
+              width: 16,
+              image: phoneIconUrl,
+              fit: [12, 12],
+              alignment: 'center',
+            },
+            {
+              width: 'auto',
+              text: profile.phone,
+              style: 'smallText',
+              margin: [5, 0, 15, 0],
+            },
+          ],
+          margin: [0, 0, 0, 3],
+        });
+      } catch (e) {
+        // Fallback to no icon
+        contactItems.push({
+          text: profile.phone,
+          style: 'smallText',
+          margin: [0, 0, 0, 3],
+        });
+      }
     }
 
+    // Add location with icon
     if (profile.location) {
-      contactItems.push({ text: profile.location, style: 'smallText' });
+      try {
+        const locationIconUrl = await this.getIconFromPublicFolder('location');
+        contactItems.push({
+          columns: [
+            {
+              width: 16,
+              image: locationIconUrl,
+              fit: [12, 12],
+              alignment: 'center',
+            },
+            {
+              width: 'auto',
+              text: profile.location,
+              style: 'smallText',
+              margin: [5, 0, 0, 0],
+            },
+          ],
+        });
+      } catch (e) {
+        // Fallback to no icon
+        contactItems.push({
+          text: profile.location,
+          style: 'smallText',
+        });
+      }
     }
 
     if (contactItems.length === 0) return null;
 
-    // Add separator between items
-    const separatedItems = [];
-    for (let i = 0; i < contactItems.length; i++) {
-      separatedItems.push(contactItems[i]);
-      if (i < contactItems.length - 1) {
-        separatedItems.push({ text: ' • ', style: 'smallText' });
-      }
-    }
-
     return {
-      stack: [
-        {
-          text: separatedItems,
-        },
-      ],
+      stack: contactItems,
       margin: [0, 0, 0, 5],
     };
   }
 
   // Create profile links row
-  private createProfileLinks(profile: any): any {
+  private async createProfileLinks(profile: any): Promise<any> {
+    // If icons are disabled, use the existing implementation
+    if (!this.showContactIcons) {
+      const linkItems = [];
+
+      if (profile.github) {
+        const text = this.showHyperlinkUrls ? profile.github : 'GitHub';
+        linkItems.push({
+          text: text,
+          link: profile.github,
+          style: 'smallText',
+          color: '#0000EE',
+        });
+      }
+
+      if (profile.linkedin) {
+        const text = this.showHyperlinkUrls ? profile.linkedin : 'LinkedIn';
+        linkItems.push({
+          text: text,
+          link: profile.linkedin,
+          style: 'smallText',
+          color: '#0000EE',
+        });
+      }
+
+      if (profile.portfolio) {
+        const text = this.showHyperlinkUrls ? profile.portfolio : 'Portfolio';
+        linkItems.push({
+          text: text,
+          link: profile.portfolio,
+          style: 'smallText',
+          color: '#0000EE',
+        });
+      }
+
+      if (linkItems.length === 0) return null;
+
+      // Add separator between items
+      const separatedItems = [];
+      for (let i = 0; i < linkItems.length; i++) {
+        separatedItems.push(linkItems[i]);
+        if (i < linkItems.length - 1) {
+          separatedItems.push({ text: ' • ', style: 'smallText' });
+        }
+      }
+
+      return {
+        stack: [
+          {
+            text: separatedItems,
+          },
+        ],
+        margin: [0, 0, 0, 5],
+      };
+    }
+
+    // With icons enabled, create a different layout with icons
     const linkItems = [];
 
+    // Add GitHub with icon
     if (profile.github) {
-      const text = this.showHyperlinkUrls ? profile.github : 'GitHub';
-      linkItems.push({
-        text: text,
-        link: profile.github,
-        style: 'smallText',
-        color: '#0000EE',
-      });
+      try {
+        const githubIconUrl = await this.getIconFromPublicFolder('github');
+        linkItems.push({
+          columns: [
+            {
+              width: 16,
+              image: githubIconUrl,
+              fit: [12, 12],
+              alignment: 'center',
+            },
+            {
+              width: 'auto',
+              text: this.showHyperlinkUrls ? profile.github : 'GitHub',
+              link: profile.github,
+              style: 'smallText',
+              color: '#0366d6',
+              margin: [5, 0, 15, 0],
+            },
+          ],
+          margin: [0, 0, 0, 3],
+        });
+      } catch (e) {
+        // Fallback without icon
+        linkItems.push({
+          text: this.showHyperlinkUrls ? profile.github : 'GitHub',
+          link: profile.github,
+          style: 'smallText',
+          color: '#0366d6',
+          margin: [0, 0, 0, 3],
+        });
+      }
     }
 
+    // Add LinkedIn with icon
     if (profile.linkedin) {
-      const text = this.showHyperlinkUrls ? profile.linkedin : 'LinkedIn';
-      linkItems.push({
-        text: text,
-        link: profile.linkedin,
-        style: 'smallText',
-        color: '#0000EE',
-      });
+      try {
+        const linkedinIconUrl = await this.getIconFromPublicFolder('linkedin');
+        linkItems.push({
+          columns: [
+            {
+              width: 16,
+              image: linkedinIconUrl,
+              fit: [12, 12],
+              alignment: 'center',
+            },
+            {
+              width: 'auto',
+              text: this.showHyperlinkUrls ? profile.linkedin : 'LinkedIn',
+              link: profile.linkedin,
+              style: 'smallText',
+              color: '#0366d6',
+              margin: [5, 0, 15, 0],
+            },
+          ],
+          margin: [0, 0, 0, 3],
+        });
+      } catch (e) {
+        // Fallback without icon
+        linkItems.push({
+          text: this.showHyperlinkUrls ? profile.linkedin : 'LinkedIn',
+          link: profile.linkedin,
+          style: 'smallText',
+          color: '#0366d6',
+          margin: [0, 0, 0, 3],
+        });
+      }
     }
 
+    // Add Portfolio/website with icon
     if (profile.portfolio) {
-      const text = this.showHyperlinkUrls ? profile.portfolio : 'Portfolio';
-      linkItems.push({
-        text: text,
-        link: profile.portfolio,
-        style: 'smallText',
-        color: '#0000EE',
-      });
+      try {
+        const websiteIconUrl = await this.getIconFromPublicFolder('website');
+        linkItems.push({
+          columns: [
+            {
+              width: 16,
+              image: websiteIconUrl,
+              fit: [12, 12],
+              alignment: 'center',
+            },
+            {
+              width: 'auto',
+              text: this.showHyperlinkUrls ? profile.portfolio : 'Portfolio',
+              link: profile.portfolio,
+              style: 'smallText',
+              color: '#0366d6',
+              margin: [5, 0, 0, 0],
+            },
+          ],
+        });
+      } catch (e) {
+        // Fallback without icon
+        linkItems.push({
+          text: this.showHyperlinkUrls ? profile.portfolio : 'Portfolio',
+          link: profile.portfolio,
+          style: 'smallText',
+          color: '#0366d6',
+        });
+      }
     }
 
     if (linkItems.length === 0) return null;
 
-    // Add separator between items
-    const separatedItems = [];
-    for (let i = 0; i < linkItems.length; i++) {
-      separatedItems.push(linkItems[i]);
-      if (i < linkItems.length - 1) {
-        separatedItems.push({ text: ' • ', style: 'smallText' });
-      }
-    }
-
     return {
-      stack: [
-        {
-          text: separatedItems,
-        },
-      ],
+      stack: linkItems,
       margin: [0, 0, 0, 5],
     };
   }
