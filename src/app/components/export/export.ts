@@ -347,7 +347,7 @@ export class Export implements OnInit {
         return {
           primaryColor: '#3498db',
           secondaryColor: '#2c3e50',
-          accentColor: '#e74c3c',
+          accentColor: '#2980b9',
         };
       case 'classic':
         return {
@@ -493,36 +493,42 @@ export class Export implements OnInit {
         margin: [0, 0, 0, 5],
       };
     }
-    // With icons enabled, create a different layout with icons from public folder
-    const contactItems = [];
+
+    // With icons enabled, create a horizontal row of contacts
+    const contactColumns = [];
 
     // Add email with icon
     if (profile.email) {
       try {
         const emailIconUrl = await this.getIconFromPublicFolder('email');
-        contactItems.push({
-          columns: [
+        contactColumns.push({
+          stack: [
             {
-              width: 16,
-              image: emailIconUrl,
-              fit: [12, 12],
-              alignment: 'center',
-            },
-            {
-              width: 'auto',
-              text: profile.email,
-              style: 'smallText',
-              margin: [5, 0, 15, 0],
+              columns: [
+                {
+                  width: 16,
+                  image: emailIconUrl,
+                  fit: [12, 12],
+                  alignment: 'center',
+                },
+                {
+                  width: 'auto',
+                  text: profile.email,
+                  style: 'smallText',
+                  margin: [5, 0, 0, 0],
+                },
+              ],
             },
           ],
-          margin: [0, 0, 0, 3],
+          width: 'auto',
+          margin: [0, 0, 20, 0], // Add right margin for spacing between items
         });
       } catch (e) {
-        // Fallback to no icon
-        contactItems.push({
+        contactColumns.push({
           text: profile.email,
           style: 'smallText',
-          margin: [0, 0, 0, 3],
+          width: 'auto',
+          margin: [0, 0, 20, 0],
         });
       }
     }
@@ -531,29 +537,34 @@ export class Export implements OnInit {
     if (profile.phone) {
       try {
         const phoneIconUrl = await this.getIconFromPublicFolder('phone');
-        contactItems.push({
-          columns: [
+        contactColumns.push({
+          stack: [
             {
-              width: 16,
-              image: phoneIconUrl,
-              fit: [12, 12],
-              alignment: 'center',
-            },
-            {
-              width: 'auto',
-              text: profile.phone,
-              style: 'smallText',
-              margin: [5, 0, 15, 0],
+              columns: [
+                {
+                  width: 16,
+                  image: phoneIconUrl,
+                  fit: [12, 12],
+                  alignment: 'center',
+                },
+                {
+                  width: 'auto',
+                  text: profile.phone,
+                  style: 'smallText',
+                  margin: [5, 0, 0, 0],
+                },
+              ],
             },
           ],
-          margin: [0, 0, 0, 3],
+          width: 'auto',
+          margin: [0, 0, 20, 0], // Add right margin for spacing between items
         });
       } catch (e) {
-        // Fallback to no icon
-        contactItems.push({
+        contactColumns.push({
           text: profile.phone,
           style: 'smallText',
-          margin: [0, 0, 0, 3],
+          width: 'auto',
+          margin: [0, 0, 20, 0],
         });
       }
     }
@@ -562,35 +573,41 @@ export class Export implements OnInit {
     if (profile.location) {
       try {
         const locationIconUrl = await this.getIconFromPublicFolder('location');
-        contactItems.push({
-          columns: [
+        contactColumns.push({
+          stack: [
             {
-              width: 16,
-              image: locationIconUrl,
-              fit: [12, 12],
-              alignment: 'center',
-            },
-            {
-              width: 'auto',
-              text: profile.location,
-              style: 'smallText',
-              margin: [5, 0, 0, 0],
+              columns: [
+                {
+                  width: 16,
+                  image: locationIconUrl,
+                  fit: [12, 12],
+                  alignment: 'center',
+                },
+                {
+                  width: 'auto',
+                  text: profile.location,
+                  style: 'smallText',
+                  margin: [5, 0, 0, 0],
+                },
+              ],
             },
           ],
+          width: 'auto',
         });
       } catch (e) {
-        // Fallback to no icon
-        contactItems.push({
+        contactColumns.push({
           text: profile.location,
           style: 'smallText',
+          width: 'auto',
         });
       }
     }
 
-    if (contactItems.length === 0) return null;
+    if (contactColumns.length === 0) return null;
 
     return {
-      stack: contactItems,
+      columns: contactColumns,
+      alignment: 'center',
       margin: [0, 0, 0, 5],
     };
   }
@@ -652,40 +669,45 @@ export class Export implements OnInit {
       };
     }
 
-    // With icons enabled, create a different layout with icons
-    const linkItems = [];
+    // With icons enabled, create a horizontal row of links
+    const linkColumns = [];
 
     // Add GitHub with icon
     if (profile.github) {
       try {
         const githubIconUrl = await this.getIconFromPublicFolder('github');
-        linkItems.push({
-          columns: [
+        linkColumns.push({
+          stack: [
             {
-              width: 16,
-              image: githubIconUrl,
-              fit: [12, 12],
-              alignment: 'center',
-            },
-            {
-              width: 'auto',
-              text: this.showHyperlinkUrls ? profile.github : 'GitHub',
-              link: profile.github,
-              style: 'smallText',
-              color: '#0366d6',
-              margin: [5, 0, 15, 0],
+              columns: [
+                {
+                  width: 16,
+                  image: githubIconUrl,
+                  fit: [12, 12],
+                  alignment: 'center',
+                },
+                {
+                  width: 'auto',
+                  text: this.showHyperlinkUrls ? profile.github : 'GitHub',
+                  link: profile.github,
+                  style: 'smallText',
+                  color: '#0366d6',
+                  margin: [2, 0, 0, 0], // space between icon and text in profile links
+                },
+              ],
             },
           ],
-          margin: [0, 0, 0, 3],
+          width: 'auto',
+          margin: [0, 0, 20, 0], // Add right margin for spacing between items
         });
       } catch (e) {
-        // Fallback without icon
-        linkItems.push({
+        linkColumns.push({
           text: this.showHyperlinkUrls ? profile.github : 'GitHub',
           link: profile.github,
           style: 'smallText',
           color: '#0366d6',
-          margin: [0, 0, 0, 3],
+          width: 'auto',
+          margin: [0, 0, 20, 0],
         });
       }
     }
@@ -694,33 +716,38 @@ export class Export implements OnInit {
     if (profile.linkedin) {
       try {
         const linkedinIconUrl = await this.getIconFromPublicFolder('linkedin');
-        linkItems.push({
-          columns: [
+        linkColumns.push({
+          stack: [
             {
-              width: 16,
-              image: linkedinIconUrl,
-              fit: [12, 12],
-              alignment: 'center',
-            },
-            {
-              width: 'auto',
-              text: this.showHyperlinkUrls ? profile.linkedin : 'LinkedIn',
-              link: profile.linkedin,
-              style: 'smallText',
-              color: '#0366d6',
-              margin: [5, 0, 15, 0],
+              columns: [
+                {
+                  width: 16,
+                  image: linkedinIconUrl,
+                  fit: [12, 12],
+                  alignment: 'center',
+                },
+                {
+                  width: 'auto',
+                  text: this.showHyperlinkUrls ? profile.linkedin : 'LinkedIn',
+                  link: profile.linkedin,
+                  style: 'smallText',
+                  color: '#0366d6',
+                  margin: [2, 0, 0, 0],
+                },
+              ],
             },
           ],
-          margin: [0, 0, 0, 3],
+          width: 'auto',
+          margin: [0, 0, 20, 0], // Add right margin for spacing between items
         });
       } catch (e) {
-        // Fallback without icon
-        linkItems.push({
+        linkColumns.push({
           text: this.showHyperlinkUrls ? profile.linkedin : 'LinkedIn',
           link: profile.linkedin,
           style: 'smallText',
           color: '#0366d6',
-          margin: [0, 0, 0, 3],
+          width: 'auto',
+          margin: [0, 0, 20, 0],
         });
       }
     }
@@ -729,39 +756,45 @@ export class Export implements OnInit {
     if (profile.portfolio) {
       try {
         const websiteIconUrl = await this.getIconFromPublicFolder('website');
-        linkItems.push({
-          columns: [
+        linkColumns.push({
+          stack: [
             {
-              width: 16,
-              image: websiteIconUrl,
-              fit: [12, 12],
-              alignment: 'center',
-            },
-            {
-              width: 'auto',
-              text: this.showHyperlinkUrls ? profile.portfolio : 'Portfolio',
-              link: profile.portfolio,
-              style: 'smallText',
-              color: '#0366d6',
-              margin: [5, 0, 0, 0],
+              columns: [
+                {
+                  width: 16,
+                  image: websiteIconUrl,
+                  fit: [12, 12],
+                  alignment: 'center',
+                },
+                {
+                  width: 'auto',
+                  text: this.showHyperlinkUrls ? profile.portfolio : 'Portfolio',
+                  link: profile.portfolio,
+                  style: 'smallText',
+                  color: '#0366d6',
+                  margin: [2, 0, 0, 0],
+                },
+              ],
             },
           ],
+          width: 'auto',
         });
       } catch (e) {
-        // Fallback without icon
-        linkItems.push({
+        linkColumns.push({
           text: this.showHyperlinkUrls ? profile.portfolio : 'Portfolio',
           link: profile.portfolio,
           style: 'smallText',
           color: '#0366d6',
+          width: 'auto',
         });
       }
     }
 
-    if (linkItems.length === 0) return null;
+    if (linkColumns.length === 0) return null;
 
     return {
-      stack: linkItems,
+      columns: linkColumns,
+      alignment: 'center',
       margin: [0, 0, 0, 5],
     };
   }
