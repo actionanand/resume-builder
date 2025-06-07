@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Injectable } from '@angular/core';
 
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 import { ProfileInfo } from '../models';
 
@@ -19,7 +19,10 @@ export class ResumeService {
   };
 
   private resumeDataSubject = new BehaviorSubject<any>(this.resumeData);
-  resumeData$ = this.resumeDataSubject.asObservable();
+  public resumeData$ = this.resumeDataSubject.asObservable();
+
+  private dataChangedSubject = new Subject<void>();
+  public dataChanged$ = this.dataChangedSubject.asObservable();
 
   private _qrCodeData = new BehaviorSubject<{
     qrDataString: string;
@@ -45,6 +48,11 @@ export class ResumeService {
     }
   }
 
+  // Add this call to the end of each save method
+  private notifyDataChanged(): void {
+    this.dataChangedSubject.next();
+  }
+
   private saveResumeData() {
     localStorage.setItem('resumeData', JSON.stringify(this.resumeData));
     this.resumeDataSubject.next(this.resumeData);
@@ -57,6 +65,7 @@ export class ResumeService {
   saveProfile(profile: any) {
     this.resumeData.profile = profile;
     this.saveResumeData();
+    this.notifyDataChanged();
   }
 
   updateQrCodeData(data: { qrDataString: string; darkColor: string; customFields: any[] }): void {
@@ -85,16 +94,19 @@ export class ResumeService {
   addExperience(experience: any) {
     this.resumeData.experience.push(experience);
     this.saveResumeData();
+    this.notifyDataChanged();
   }
 
   updateExperience(index: number, experience: any) {
     this.resumeData.experience[index] = experience;
     this.saveResumeData();
+    this.notifyDataChanged();
   }
 
   deleteExperience(index: number) {
     this.resumeData.experience.splice(index, 1);
     this.saveResumeData();
+    this.notifyDataChanged();
   }
 
   getEducation() {
@@ -104,16 +116,19 @@ export class ResumeService {
   addEducation(education: any) {
     this.resumeData.education.push(education);
     this.saveResumeData();
+    this.notifyDataChanged();
   }
 
   updateEducation(index: number, education: any) {
     this.resumeData.education[index] = education;
     this.saveResumeData();
+    this.notifyDataChanged();
   }
 
   deleteEducation(index: number) {
     this.resumeData.education.splice(index, 1);
     this.saveResumeData();
+    this.notifyDataChanged();
   }
 
   getSkills() {
@@ -123,6 +138,7 @@ export class ResumeService {
   saveSkills(skills: any) {
     this.resumeData.skills = skills;
     this.saveResumeData();
+    this.notifyDataChanged();
   }
 
   getProjects() {
@@ -132,16 +148,19 @@ export class ResumeService {
   addProject(project: any) {
     this.resumeData.projects.push(project);
     this.saveResumeData();
+    this.notifyDataChanged();
   }
 
   updateProject(index: number, project: any) {
     this.resumeData.projects[index] = project;
     this.saveResumeData();
+    this.notifyDataChanged();
   }
 
   deleteProject(index: number) {
     this.resumeData.projects.splice(index, 1);
     this.saveResumeData();
+    this.notifyDataChanged();
   }
 
   getAbout() {
@@ -151,6 +170,7 @@ export class ResumeService {
   saveAbout(about: string) {
     this.resumeData.about = about;
     this.saveResumeData();
+    this.notifyDataChanged();
   }
 
   getResumeData() {

@@ -1,7 +1,9 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, DestroyRef, OnInit, inject } from '@angular/core';
 // import { RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { Profile } from './components/profile/profile';
 import { Education } from './components/education/education';
@@ -14,6 +16,7 @@ import { Export } from './components/export/export';
 import { Breadcrumb } from './components/breadcrumb/breadcrumb';
 import { ResumeService } from './services/resume';
 import { BreadcrumbItem } from './models';
+import { BreadcrumbService } from './services/breadcrumb';
 
 @Component({
   selector: 'app-root',
@@ -39,6 +42,10 @@ export class App implements OnInit {
   title = 'Resume Builder';
   currentSection = 'profile'; // Default section
 
+  private breadcrumbServ = inject(BreadcrumbService);
+  private resumeService = inject(ResumeService);
+  private destroyRef = inject(DestroyRef);
+
   // Define breadcrumb sections
   breadcrumbSections: BreadcrumbItem[] = [
     { id: 'profile', label: 'Profile', icon: 'person', complete: false },
@@ -50,14 +57,30 @@ export class App implements OnInit {
     { id: 'qr-code', label: 'QR Code', icon: 'qr_code', complete: false },
   ];
 
-  private resumeService = inject(ResumeService);
-
   ngOnInit(): void {
+    // Initial update
     this.updateCompletionStatus();
+
+    // Subscribe to data change events from ResumeService
+    this.resumeService.dataChanged$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+      console.log('Data changed, updating breadcrumb status');
+      this.updateCompletionStatus();
+    });
+
+    // Subscribe to breadcrumb section changes
+    this.breadcrumbServ.currentSection$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((sectionId: string) => {
+      if (sectionId) {
+        this.currentSection = sectionId;
+      }
+    });
+
+    // Initialize breadcrumb service with sections
+    this.breadcrumbServ.setSections(this.breadcrumbSections);
   }
 
   onSectionChange(sectionId: string): void {
     this.currentSection = sectionId;
+    this.breadcrumbServ.setCurrentSection(sectionId);
   }
 
   // Method to update completion status of sections
@@ -84,5 +107,8 @@ export class App implements OnInit {
     this.breadcrumbSections[6].complete = this.breadcrumbSections.some(
       (section, index) => index < 6 && section.complete,
     );
+
+    // Update the breadcrumb service with the new status
+    this.breadcrumbServ.setSections([...this.breadcrumbSections]);
   }
 }

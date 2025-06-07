@@ -14,6 +14,7 @@ export class About implements OnInit {
   aboutText = '';
   editableText = '';
   isEditing = false;
+  contentChanged = false;
 
   @Output() navigate = new EventEmitter<string>();
 
@@ -21,6 +22,7 @@ export class About implements OnInit {
 
   ngOnInit(): void {
     this.aboutText = this.resumeService.getAbout() || '';
+    this.editableText = this.aboutText;
   }
 
   startEditing(): void {
@@ -29,13 +31,22 @@ export class About implements OnInit {
   }
 
   cancelEditing(): void {
+    this.editableText = this.aboutText; // Reset to original value
     this.isEditing = false;
+    this.contentChanged = false;
+  }
+
+  onTextChange(): void {
+    this.contentChanged = true;
   }
 
   saveAbout(): void {
-    this.aboutText = this.editableText;
-    this.resumeService.saveAbout(this.aboutText);
-    this.isEditing = false;
+    if (this.isEditing || this.contentChanged) {
+      this.aboutText = this.editableText;
+      this.resumeService.saveAbout(this.aboutText);
+      this.isEditing = false;
+      this.contentChanged = false;
+    }
   }
 
   saveAndNavigate(): void {

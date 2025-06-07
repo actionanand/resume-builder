@@ -15,6 +15,7 @@
       <textarea
         id="about"
         [(ngModel)]="editableText"
+        (ngModelChange)="onTextChange()"
         name="about"
         rows="6"
         placeholder="Write a concise summary of your professional background, key skills, and career objectives. This is often the first section recruiters read."></textarea>
