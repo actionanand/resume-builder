@@ -294,7 +294,7 @@ export class Export implements OnInit {
           fontSize: baseFontSize * 1.4,
           bold: true,
           color: colors.primaryColor,
-          margin: [0, 10, 0, 5],
+          margin: [0, 10, 0, 0],
         },
         sectionTitle: {
           fontSize: baseFontSize * 1.2,
@@ -320,6 +320,7 @@ export class Export implements OnInit {
           fontSize: baseFontSize * 0.9,
           margin: [0, 1, 0, 1],
           color: colors.subtitleColor,
+          italics: true, // Make dates italicized to match preview
         },
       },
       pageSize: 'A4',
@@ -330,10 +331,10 @@ export class Export implements OnInit {
     await this.addProfileSection(docDefinition, colors);
 
     // Add about section
-    this.addAboutSection(docDefinition);
+    this.addAboutSection(docDefinition, colors);
 
     // Add skills section
-    this.addSkillsSection(docDefinition);
+    this.addSkillsSection(docDefinition, colors);
 
     // Add experience section
     this.addExperienceSection(docDefinition, colors);
@@ -342,7 +343,7 @@ export class Export implements OnInit {
     this.addProjectsSection(docDefinition, colors);
 
     // Add education section
-    this.addEducationSection(docDefinition);
+    this.addEducationSection(docDefinition, colors);
 
     // Add footer with QR code and signature
     await this.addFooterSection(docDefinition);
@@ -350,40 +351,62 @@ export class Export implements OnInit {
     return docDefinition;
   }
 
+  // Add a helper method to create a line below section titles
+  private addSectionTitleLine(docDefinition: any, colors: any): void {
+    docDefinition.content.push({
+      canvas: [
+        {
+          type: 'line',
+          x1: 0,
+          y1: 0,
+          x2: 515, // Width of content area
+          y2: 0,
+          lineWidth: 0.7, // line thickness
+          lineColor: colors.primaryColor, // Use primary color to match the title
+        },
+      ],
+      margin: [0, 0, 0, 8], // Smaller margins than section dividers
+    });
+  }
+
   // Helper method for theme colors
   private getThemeColors(): any {
     switch (this.selectedTheme) {
       case 'modern':
         return {
-          primaryColor: '#3498db',
-          secondaryColor: '#2c3e50',
-          accentColor: '#2980b9',
-          textColor: '#333333',
-          subtitleColor: '#7f8c8d', // Add this color for titles, dates, etc.
+          primaryColor: '#3498db', // Blue for headings and lines
+          secondaryColor: '#2c3e50', // Dark blue for section titles
+          accentColor: '#2980b9', // Medium blue for links
+          textColor: '#333333', // Near-black for normal text
+          subtitleColor: '#7f8c8d', // Gray for dates and small text
+          lineColor: '#3498db', // Make sure section lines match the primary color
         };
       case 'classic':
         return {
-          primaryColor: '#000000',
-          secondaryColor: '#333333',
-          accentColor: '#666666',
-          textColor: '#000000',
-          subtitleColor: '#555555', // Add similar color for classic theme
+          primaryColor: '#000000', // Pure black for headings
+          secondaryColor: '#333333', // Dark gray for section titles
+          accentColor: '#666666', // Medium gray for links
+          textColor: '#000000', // Black for normal text
+          subtitleColor: '#555555', // Gray for dates and small text
+          lineColor: '#000000', // Black for section lines
         };
       case 'minimal':
         return {
-          primaryColor: '#333333',
-          secondaryColor: '#555555',
-          accentColor: '#777777',
-          textColor: '#333333',
-          subtitleColor: '#7f8c8d', // Add for minimal theme
+          primaryColor: '#333333', // Dark gray for headings
+          secondaryColor: '#555555', // Medium gray for section titles
+          accentColor: '#777777', // Light gray for links
+          textColor: '#333333', // Dark gray for normal text
+          subtitleColor: '#7f8c8d', // Lighter gray for dates and small text
+          lineColor: '#333333', // Match heading color for lines
         };
       case 'professional':
         return {
-          primaryColor: '#2c3e50',
-          secondaryColor: '#34495e',
-          accentColor: '#2980b9',
-          textColor: '#333333',
-          subtitleColor: '#7f8c8d', // Add for professional theme
+          primaryColor: '#2c3e50', // Dark blue for headings
+          secondaryColor: '#34495e', // Medium blue for section titles
+          accentColor: '#2980b9', // Lighter blue for links
+          textColor: '#333333', // Near-black for normal text
+          subtitleColor: '#7f8c8d', // Gray for dates and small text
+          lineColor: '#2c3e50', // Match heading color for lines
         };
       default:
         return {
@@ -392,6 +415,7 @@ export class Export implements OnInit {
           accentColor: '#666666',
           textColor: '#000000',
           subtitleColor: '#555555',
+          lineColor: '#000000',
         };
     }
   }
@@ -815,22 +839,23 @@ export class Export implements OnInit {
   }
 
   // About section
-  private addAboutSection(docDefinition: any): void {
+  private addAboutSection(docDefinition: any, colors: any): void {
     const about = this.resumeService.getAbout();
     if (!about) return;
 
-    docDefinition.content.push(
-      { text: 'About', style: 'subheader' },
-      { text: about, style: 'normalText', margin: [0, 0, 0, 10] },
-    );
+    docDefinition.content.push({ text: 'About', style: 'subheader' });
+    this.addSectionTitleLine(docDefinition, colors); // Add line below title
+
+    docDefinition.content.push({ text: about, style: 'normalText', margin: [0, 0, 0, 10] });
   }
 
   // Skills section
-  private addSkillsSection(docDefinition: any): void {
+  private addSkillsSection(docDefinition: any, colors: any): void {
     const skills = this.resumeService.getSkills();
     if (!skills?.length) return;
 
     docDefinition.content.push({ text: 'Skills', style: 'subheader' });
+    this.addSectionTitleLine(docDefinition, colors); // Add line below title
 
     skills.forEach((skillGroup: any) => {
       docDefinition.content.push(
@@ -846,9 +871,10 @@ export class Export implements OnInit {
     if (!experiences?.length) return;
 
     docDefinition.content.push({ text: 'Experience', style: 'subheader' });
+    this.addSectionTitleLine(docDefinition, colors); // Add line below title
 
     experiences.forEach((exp: any) => {
-      // Create experience header with position and date
+      // Position and date in first row
       docDefinition.content.push({
         columns: [
           {
@@ -866,15 +892,25 @@ export class Export implements OnInit {
         margin: [0, 5, 0, 0],
       });
 
-      // Add company and location
-      const companyInfo = [exp.company];
-      if (exp.location) companyInfo.push(exp.location);
-
+      // Company and location in second row (company left, location right)
       docDefinition.content.push({
-        text: companyInfo.join(' • '),
-        style: 'smallText',
-        italics: true,
-        color: colors.subtitleColor,
+        columns: [
+          {
+            text: exp.company,
+            style: 'smallText',
+            italics: true,
+            color: colors.subtitleColor,
+            width: '*',
+          },
+          {
+            text: exp.location || '',
+            style: 'smallText',
+            italics: true,
+            color: colors.subtitleColor,
+            width: 'auto',
+            alignment: 'right',
+          },
+        ],
         margin: [0, 0, 0, 5],
       });
 
@@ -911,6 +947,7 @@ export class Export implements OnInit {
     if (!projects?.length) return;
 
     docDefinition.content.push({ text: 'Projects', style: 'subheader' });
+    this.addSectionTitleLine(docDefinition, colors); // Add line below title
 
     projects.forEach((project: any) => {
       // Create project header with name and link
@@ -964,11 +1001,12 @@ export class Export implements OnInit {
   }
 
   // Education section
-  private addEducationSection(docDefinition: any): void {
+  private addEducationSection(docDefinition: any, colors: any): void {
     const educations = this.resumeService.getEducation();
     if (!educations?.length) return;
 
     docDefinition.content.push({ text: 'Education', style: 'subheader' });
+    this.addSectionTitleLine(docDefinition, colors); // Add line below title
 
     educations.forEach((edu: any) => {
       // Create education header with degree and date
@@ -989,14 +1027,25 @@ export class Export implements OnInit {
         margin: [0, 5, 0, 0],
       });
 
-      // Add institution and location
-      const institutionInfo = [edu.institution];
-      if (edu.location) institutionInfo.push(edu.location);
-
+      // Institution and location in second row (institution left, location right)
       docDefinition.content.push({
-        text: institutionInfo.join(' • '),
-        style: 'smallText',
-        italics: true,
+        columns: [
+          {
+            text: edu.institution,
+            style: 'smallText',
+            italics: true,
+            color: colors.subtitleColor,
+            width: '*',
+          },
+          {
+            text: edu.location || '',
+            style: 'smallText',
+            italics: true,
+            color: colors.subtitleColor,
+            width: 'auto',
+            alignment: 'right',
+          },
+        ],
         margin: [0, 0, 0, 3],
       });
 
