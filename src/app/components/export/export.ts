@@ -4,12 +4,11 @@ import { Component, OnInit, ElementRef, ViewChild, inject, Input } from '@angula
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-// import jsPDF from 'jspdf';
-// import html2canvas from 'html2canvas';
 import { QRCodeComponent } from 'angularx-qrcode';
-
-import pdfMake from 'pdfmake/build/pdfmake';
-import pdfFonts from 'pdfmake/build/vfs_fonts';
+import * as pdfMake from 'pdfmake/build/pdfmake';
+import * as pdfFonts from 'pdfmake/build/vfs_fonts';
+// import pdfMake from 'pdfmake/build/pdfmake';
+// import pdfFonts from 'pdfmake/build/vfs_fonts';
 
 import { ResumeService } from '../../services/resume';
 
@@ -63,7 +62,8 @@ export class Export implements OnInit {
   ngOnInit(): void {
     this.generateMarkdown();
 
-    pdfMake.vfs = pdfFonts.vfs;
+    // pdfMake.vfs = pdfFonts.vfs;
+    (pdfMake as any).default.vfs = (pdfFonts as any).vfs;
 
     // Load signature preferences
     const signaturePreference = localStorage.getItem('resumeSignatureLine');
