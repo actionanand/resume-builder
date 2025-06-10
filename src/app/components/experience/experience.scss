@@ -147,7 +147,8 @@ h2 {
 
   input[type='text'],
   textarea {
-    width: 100%;
+    // width: 100%;
+    width: calc(100% - 24px); // Adjust for padding
     padding: 10px;
     border: 1px solid #dcdfe6;
     border-radius: 4px;

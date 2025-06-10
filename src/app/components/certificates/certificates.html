@@ -1,0 +1,96 @@
+<div class="section-container">
+  <div class="section-header">
+    <h2>Certifications</h2>
+    <p class="section-description">Add your professional certifications and licenses</p>
+  </div>
+
+  <form [formGroup]="certificateForm">
+    <div formArrayName="certificates">
+      <div *ngFor="let cert of certificatesArray.controls; let i = index" class="item-card">
+        <div [formGroupName]="i">
+          <div class="card-header">
+            <h3>Certificate {{i + 1}}</h3>
+            <button
+              type="button"
+              class="btn btn-icon"
+              (click)="removeCertificate(i)"
+              *ngIf="certificatesArray.length > 1">
+              <i class="material-icons">delete</i>
+            </button>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="name-{{i}}">Certificate Name *</label>
+              <input type="text" id="name-{{i}}" formControlName="name" required />
+              <div
+                *ngIf="certificatesArray.at(i).get('name')?.invalid && certificatesArray.at(i).get('name')?.touched"
+                class="error-message">
+                Certificate name is required
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="issuer-{{i}}">Issuing Organization *</label>
+              <input type="text" id="issuer-{{i}}" formControlName="issuer" required />
+              <div
+                *ngIf="certificatesArray.at(i).get('issuer')?.invalid && certificatesArray.at(i).get('issuer')?.touched"
+                class="error-message">
+                Issuer is required
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="date-{{i}}">Issue Date</label>
+              <input type="text" id="date-{{i}}" formControlName="date" placeholder="MM/YYYY" />
+            </div>
+
+            <div class="form-group">
+              <label for="expiration-{{i}}">Expiration Date (Optional)</label>
+              <input
+                type="text"
+                id="expiration-{{i}}"
+                formControlName="expiration"
+                placeholder="MM/YYYY or 'No Expiration'" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="credentialId-{{i}}">Credential ID (Optional)</label>
+              <input type="text" id="credentialId-{{i}}" formControlName="credentialId" />
+            </div>
+
+            <div class="form-group">
+              <label for="url-{{i}}">Credential URL (Optional)</label>
+              <input type="text" id="url-{{i}}" formControlName="url" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="description-{{i}}">Description (Optional)</label>
+            <textarea id="description-{{i}}" formControlName="description" rows="3"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button type="button" class="btn btn-add" (click)="addCertificate()">
+      <i class="material-icons">add</i> Add Another Certificate
+    </button>
+  </form>
+</div>
+
+<div class="section-navigation with-prev">
+  <button type="button" (click)="goToPreviousSection()" class="btn btn-prev">
+    <i class="material-icons">arrow_forward</i>
+    Previous: Education
+  </button>
+
+  <button type="button" (click)="goToNextSection()" class="btn btn-primary">
+    Next: Languages
+    <i class="material-icons">arrow_forward</i>
+  </button>
+</div>

@@ -1,0 +1,32 @@
+@use '../../shared/css/form.scss';
+@use '../../shared/css/navigation.scss';
+
+.form-container {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 10px; // Add some padding on small screens
+}
+
+.item-card {
+  width: 100%;
+  box-sizing: border-box; // Make sure padding doesn't expand width
+  overflow: hidden; // Prevent content from spilling out
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .form-row {
+    flex-direction: column;
+  }
+
+  .form-group {
+    width: 100%;
+  }
+
+  input,
+  select,
+  textarea {
+    max-width: 100%; // Ensure inputs don't overflow
+  }
+}

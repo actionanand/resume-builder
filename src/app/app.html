@@ -21,6 +21,14 @@
 
     <app-education *ngIf="currentSection === 'education'" (navigate)="onSectionChange($event)"> </app-education>
 
+    <app-certificates *ngIf="currentSection === 'certificates'" (navigate)="onSectionChange($event)"></app-certificates>
+
+    <app-languages *ngIf="currentSection === 'languages'" (navigate)="onSectionChange($event)"></app-languages>
+
+    <app-personal-details
+      *ngIf="currentSection === 'personalDetails'"
+      (navigate)="onSectionChange($event)"></app-personal-details>
+
     <app-qr-code *ngIf="currentSection === 'qr-code'" (navigate)="onSectionChange($event)"> </app-qr-code>
 
     <app-export *ngIf="currentSection === 'export'"> </app-export>

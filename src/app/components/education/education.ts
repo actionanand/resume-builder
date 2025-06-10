@@ -40,7 +40,7 @@ export class Education implements OnInit {
   }
 
   goToNextSection(): void {
-    this.navigate.emit('qr-code');
+    this.navigate.emit('certificates');
   }
 
   openAddEducationForm(): void {

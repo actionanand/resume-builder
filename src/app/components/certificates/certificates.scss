@@ -1,0 +1,8 @@
+@use '../../shared/css/form.scss';
+@use '../../shared/css/navigation.scss';
+
+.error-message {
+  color: #e74c3c;
+  font-size: 12px;
+  margin-top: 4px;
+}

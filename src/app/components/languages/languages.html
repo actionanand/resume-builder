@@ -1,0 +1,56 @@
+<div class="section-container">
+  <div class="section-header">
+    <h2>Languages</h2>
+    <p class="section-description">Add languages you speak and your proficiency level</p>
+  </div>
+
+  <form [formGroup]="languageForm">
+    <div formArrayName="languages">
+      <div *ngFor="let lang of languagesArray.controls; let i = index" class="item-card">
+        <div [formGroupName]="i">
+          <div class="card-header">
+            <h3>Language {{i + 1}}</h3>
+            <button type="button" class="btn btn-icon" (click)="removeLanguage(i)" *ngIf="languagesArray.length > 1">
+              <i class="material-icons">delete</i>
+            </button>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="name-{{i}}">Language Name *</label>
+              <input type="text" id="name-{{i}}" formControlName="name" required />
+              <div
+                *ngIf="languagesArray.at(i).get('name')?.invalid && languagesArray.at(i).get('name')?.touched"
+                class="error-message">
+                Language name is required
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="proficiency-{{i}}">Proficiency Level *</label>
+              <select id="proficiency-{{i}}" formControlName="proficiency">
+                <option *ngFor="let level of proficiencyLevels" [value]="level">{{level}}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button type="button" class="btn btn-add" (click)="addLanguage()">
+      <i class="material-icons">add</i> Add Another Language
+    </button>
+  </form>
+</div>
+
+<div class="section-navigation with-prev">
+  <button type="button" (click)="goToPreviousSection()" class="btn btn-prev">
+    <i class="material-icons">arrow_forward</i>
+    Previous: Certificates
+  </button>
+
+  <button type="button" (click)="goToNextSection()" class="btn btn-primary">
+    Next: Personal Details
+    <i class="material-icons">arrow_forward</i>
+  </button>
+</div>

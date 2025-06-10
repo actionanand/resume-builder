@@ -43,3 +43,33 @@ export interface ProfileInfo {
   portfolio: string;
   photoUrl?: string;
 }
+
+export interface Certificate {
+  name: string;
+  issuer: string;
+  date: string;
+  expiration?: string;
+  credentialId?: string;
+  url?: string;
+  description?: string;
+}
+
+export interface Language {
+  name: string;
+  proficiency: 'Native' | 'Fluent' | 'Professional' | 'Intermediate' | 'Basic';
+}
+
+export interface PersonalDetails {
+  dateOfBirth?: string;
+  placeOfBirth?: string;
+  nationality?: string;
+  maritalStatus?: string;
+  gender?: string;
+  fathersName?: string;
+  mothersName?: string;
+  hobbies?: string[];
+  religion?: string;
+  passportNumber?: string;
+  drivingLicense?: string;
+  bloodGroup?: string;
+}

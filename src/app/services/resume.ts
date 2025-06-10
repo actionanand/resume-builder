@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 
 import { BehaviorSubject, Subject } from 'rxjs';
 
-import { ProfileInfo } from '../models';
+import { Certificate, Language, PersonalDetails, ProfileInfo } from '../models';
 
 @Injectable({
   providedIn: 'root',
@@ -189,6 +189,39 @@ export class ResumeService {
       portfolio: '',
       photoUrl: '',
     };
+  }
+
+  // Certificate methods
+  saveCertificates(certificates: Certificate[]): void {
+    localStorage.setItem('resumeCertificates', JSON.stringify(certificates));
+    this.notifyDataChanged();
+  }
+
+  getCertificates(): Certificate[] {
+    const certificates = localStorage.getItem('resumeCertificates');
+    return certificates ? JSON.parse(certificates) : [];
+  }
+
+  // Language methods
+  saveLanguages(languages: Language[]): void {
+    localStorage.setItem('resumeLanguages', JSON.stringify(languages));
+    this.notifyDataChanged();
+  }
+
+  getLanguages(): Language[] {
+    const languages = localStorage.getItem('resumeLanguages');
+    return languages ? JSON.parse(languages) : [];
+  }
+
+  // Personal details methods
+  savePersonalDetails(details: PersonalDetails): void {
+    localStorage.setItem('resumePersonalDetails', JSON.stringify(details));
+    this.notifyDataChanged();
+  }
+
+  getPersonalDetails(): PersonalDetails {
+    const details = localStorage.getItem('resumePersonalDetails');
+    return details ? JSON.parse(details) : {};
   }
 
   exportAsMarkdown(): string {

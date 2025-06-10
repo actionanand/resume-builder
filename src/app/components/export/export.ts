@@ -345,10 +345,214 @@ export class Export implements OnInit {
     // Add education section
     this.addEducationSection(docDefinition, colors);
 
+    // Add certificates section
+    this.addCertificatesSection(docDefinition, colors);
+
+    // Add languages section
+    this.addLanguagesSection(docDefinition, colors);
+
+    // Add personal details section
+    this.addPersonalDetailsSection(docDefinition, colors);
+
     // Add footer with QR code and signature
     await this.addFooterSection(docDefinition);
 
     return docDefinition;
+  }
+
+  // Add certificates section
+  private addCertificatesSection(docDefinition: any, colors: any): void {
+    const certificates = this.resumeService.getCertificates();
+    if (!certificates?.length) return;
+
+    docDefinition.content.push({ text: 'Certifications', style: 'subheader' });
+    this.addSectionTitleLine(docDefinition, colors);
+
+    certificates.forEach((cert: any) => {
+      // Certificate name and date
+      docDefinition.content.push({
+        columns: [
+          {
+            text: cert.name,
+            style: 'sectionTitle',
+            width: '*',
+          },
+          {
+            text: cert.date + (cert.expiration ? ` - ${cert.expiration}` : ''),
+            style: 'dateText',
+            width: 'auto',
+            alignment: 'right',
+          },
+        ],
+        margin: [0, 5, 0, 0],
+      });
+
+      // Issuer
+      docDefinition.content.push({
+        text: cert.issuer,
+        style: 'smallText',
+        italics: true,
+        color: colors.subtitleColor,
+        margin: [0, 0, 0, 3],
+      });
+
+      // Credential ID if available
+      if (cert.credentialId) {
+        docDefinition.content.push({
+          text: [{ text: 'Credential ID: ', bold: true }, cert.credentialId],
+          style: 'smallText',
+          margin: [0, 3, 0, 0],
+        });
+      }
+
+      // URL if available
+      if (cert.url) {
+        docDefinition.content.push({
+          text: cert.url,
+          link: cert.url,
+          style: 'smallText',
+          color: colors.accentColor,
+          margin: [0, 3, 0, 0],
+        });
+      }
+
+      // Description if available
+      if (cert.description) {
+        docDefinition.content.push({
+          text: cert.description,
+          style: 'normalText',
+          margin: [0, 3, 0, 10],
+        });
+      } else {
+        // Add spacing after the certificate
+        docDefinition.content.push({ text: '', margin: [0, 0, 0, 10] });
+      }
+    });
+  }
+
+  // Add languages section
+  private addLanguagesSection(docDefinition: any, colors: any): void {
+    const languages = this.resumeService.getLanguages();
+    if (!languages?.length) return;
+
+    docDefinition.content.push({ text: 'Languages', style: 'subheader' });
+    this.addSectionTitleLine(docDefinition, colors);
+
+    const languageEntries = languages.map((lang: any) => {
+      return `${lang.name} (${lang.proficiency})`;
+    });
+
+    docDefinition.content.push({
+      text: languageEntries.join(', '),
+      style: 'normalText',
+      margin: [0, 0, 0, 10],
+    });
+  }
+
+  // Add personal details section
+  private addPersonalDetailsSection(docDefinition: any, colors: any): void {
+    const personalDetails = this.resumeService.getPersonalDetails();
+    if (!personalDetails || Object.keys(personalDetails).length === 0) return;
+
+    docDefinition.content.push({ text: 'Personal Details', style: 'subheader' });
+    this.addSectionTitleLine(docDefinition, colors);
+
+    const detailsTable = {
+      table: {
+        widths: ['30%', '70%'],
+        body: [] as any[],
+      },
+      layout: 'noBorders',
+      margin: [0, 0, 0, 10],
+    };
+
+    // Add each detail to the table
+    if (personalDetails.dateOfBirth) {
+      detailsTable.table.body.push([
+        { text: 'Date of Birth', style: 'smallText', bold: true },
+        { text: personalDetails.dateOfBirth, style: 'smallText' },
+      ]);
+    }
+
+    if (personalDetails.placeOfBirth) {
+      detailsTable.table.body.push([
+        { text: 'Place of Birth', style: 'smallText', bold: true },
+        { text: personalDetails.placeOfBirth, style: 'smallText' },
+      ]);
+    }
+
+    if (personalDetails.nationality) {
+      detailsTable.table.body.push([
+        { text: 'Nationality', style: 'smallText', bold: true },
+        { text: personalDetails.nationality, style: 'smallText' },
+      ]);
+    }
+
+    if (personalDetails.gender) {
+      detailsTable.table.body.push([
+        { text: 'Gender', style: 'smallText', bold: true },
+        { text: personalDetails.gender, style: 'smallText' },
+      ]);
+    }
+
+    if (personalDetails.maritalStatus) {
+      detailsTable.table.body.push([
+        { text: 'Marital Status', style: 'smallText', bold: true },
+        { text: personalDetails.maritalStatus, style: 'smallText' },
+      ]);
+    }
+
+    if (personalDetails.fathersName) {
+      detailsTable.table.body.push([
+        { text: "Father's Name", style: 'smallText', bold: true },
+        { text: personalDetails.fathersName, style: 'smallText' },
+      ]);
+    }
+
+    if (personalDetails.mothersName) {
+      detailsTable.table.body.push([
+        { text: "Mother's Name", style: 'smallText', bold: true },
+        { text: personalDetails.mothersName, style: 'smallText' },
+      ]);
+    }
+
+    if (personalDetails.religion) {
+      detailsTable.table.body.push([
+        { text: 'Religion', style: 'smallText', bold: true },
+        { text: personalDetails.religion, style: 'smallText' },
+      ]);
+    }
+
+    if (personalDetails.passportNumber) {
+      detailsTable.table.body.push([
+        { text: 'Passport Number', style: 'smallText', bold: true },
+        { text: personalDetails.passportNumber, style: 'smallText' },
+      ]);
+    }
+
+    if (personalDetails.drivingLicense) {
+      detailsTable.table.body.push([
+        { text: 'Driving License', style: 'smallText', bold: true },
+        { text: personalDetails.drivingLicense, style: 'smallText' },
+      ]);
+    }
+
+    if (personalDetails.bloodGroup) {
+      detailsTable.table.body.push([
+        { text: 'Blood Group', style: 'smallText', bold: true },
+        { text: personalDetails.bloodGroup, style: 'smallText' },
+      ]);
+    }
+
+    if (personalDetails.hobbies && personalDetails.hobbies.length) {
+      detailsTable.table.body.push([
+        { text: 'Hobbies', style: 'smallText', bold: true },
+        { text: personalDetails.hobbies.join(', '), style: 'smallText' },
+      ]);
+    }
+
+    // Add the table to the document
+    docDefinition.content.push(detailsTable);
   }
 
   // Add a helper method to create a line below section titles

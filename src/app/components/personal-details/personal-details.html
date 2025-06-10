@@ -1,0 +1,103 @@
+<div class="section-container">
+  <div class="section-header">
+    <h2>Personal Details</h2>
+    <p class="section-description">Add additional personal information (all fields are optional)</p>
+  </div>
+
+  <div class="form-container">
+    <form [formGroup]="detailsForm" class="item-card">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="dateOfBirth">Date of Birth</label>
+          <input type="text" id="dateOfBirth" formControlName="dateOfBirth" placeholder="DD/MM/YYYY" />
+        </div>
+
+        <div class="form-group">
+          <label for="placeOfBirth">Place of Birth</label>
+          <input type="text" id="placeOfBirth" formControlName="placeOfBirth" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="nationality">Nationality</label>
+          <input type="text" id="nationality" formControlName="nationality" />
+        </div>
+
+        <div class="form-group">
+          <label for="maritalStatus">Marital Status</label>
+          <select id="maritalStatus" formControlName="maritalStatus">
+            <option value="">Select status...</option>
+            <option *ngFor="let status of maritalStatusOptions" [value]="status">{{status}}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="gender">Gender</label>
+          <select id="gender" formControlName="gender">
+            <option value="">Select gender...</option>
+            <option *ngFor="let gender of genderOptions" [value]="gender">{{gender}}</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="religion">Religion</label>
+          <input type="text" id="religion" formControlName="religion" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="fathersName">Father's Name</label>
+          <input type="text" id="fathersName" formControlName="fathersName" />
+        </div>
+
+        <div class="form-group">
+          <label for="mothersName">Mother's Name</label>
+          <input type="text" id="mothersName" formControlName="mothersName" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="passportNumber">Passport Number</label>
+          <input type="text" id="passportNumber" formControlName="passportNumber" />
+        </div>
+
+        <div class="form-group">
+          <label for="drivingLicense">Driving License</label>
+          <input type="text" id="drivingLicense" formControlName="drivingLicense" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="bloodGroup">Blood Group</label>
+          <select id="bloodGroup" formControlName="bloodGroup">
+            <option value="">Select blood group...</option>
+            <option *ngFor="let group of bloodGroupOptions" [value]="group">{{group}}</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="hobbies">Hobbies (comma separated)</label>
+          <input type="text" id="hobbies" formControlName="hobbies" placeholder="Reading, Swimming, Photography" />
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="section-navigation with-prev">
+  <button type="button" (click)="goToPreviousSection()" class="btn btn-prev">
+    <i class="material-icons">arrow_forward</i>
+    Previous: Languages
+  </button>
+
+  <button type="button" (click)="goToNextSection()" class="btn btn-primary">
+    Next: QR Code
+    <i class="material-icons">arrow_forward</i>
+  </button>
+</div>

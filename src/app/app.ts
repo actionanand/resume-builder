@@ -17,6 +17,9 @@ import { Breadcrumb } from './components/breadcrumb/breadcrumb';
 import { ResumeService } from './services/resume';
 import { BreadcrumbItem } from './models';
 import { BreadcrumbService } from './services/breadcrumb';
+import { Certificates } from './components/certificates/certificates';
+import { Languages } from './components/languages/languages';
+import { PersonalDetailsComponent } from './components/personal-details/personal-details';
 
 @Component({
   selector: 'app-root',
@@ -33,6 +36,9 @@ import { BreadcrumbService } from './services/breadcrumb';
     About,
     QrCode,
     Export,
+    Certificates,
+    Languages,
+    PersonalDetailsComponent,
   ],
   providers: [],
   templateUrl: './app.html',
@@ -54,6 +60,9 @@ export class App implements OnInit {
     { id: 'experience', label: 'Experience', icon: 'work', complete: false },
     { id: 'projects', label: 'Projects', icon: 'assignment', complete: false },
     { id: 'education', label: 'Education', icon: 'school', complete: false },
+    { id: 'certificates', label: 'Certificates', icon: 'card_membership', complete: false },
+    { id: 'languages', label: 'Languages', icon: 'translate', complete: false },
+    { id: 'personalDetails', label: 'Personal', icon: 'person_outline', complete: false },
     { id: 'qr-code', label: 'QR Code', icon: 'qr_code', complete: false },
   ];
 
@@ -103,9 +112,23 @@ export class App implements OnInit {
     const education = this.resumeService.getEducation();
     this.breadcrumbSections[5].complete = !!(education && education.length > 0);
 
+    // For certificates, check if there is at least one complete certificate
+    const certificates = this.resumeService.getCertificates();
+    this.breadcrumbSections[6].complete = !!(
+      certificates &&
+      certificates.length > 0 &&
+      certificates.some(cert => cert.name && cert.issuer)
+    );
+
+    const languages = this.resumeService.getLanguages();
+    this.breadcrumbSections[7].complete = !!(languages && languages.length > 0 && languages.some(lang => lang.name));
+
+    const personalDetails = this.resumeService.getPersonalDetails();
+    this.breadcrumbSections[8].complete = !!(personalDetails && Object.keys(personalDetails).length > 0);
+
     // QR code is considered complete if any section is complete
-    this.breadcrumbSections[6].complete = this.breadcrumbSections.some(
-      (section, index) => index < 6 && section.complete,
+    this.breadcrumbSections[9].complete = this.breadcrumbSections.some(
+      (section, index) => index < 9 && section.complete,
     );
 
     // Update the breadcrumb service with the new status
