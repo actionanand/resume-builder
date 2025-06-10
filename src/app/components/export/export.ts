@@ -459,7 +459,7 @@ export class Export implements OnInit {
 
     const detailsTable = {
       table: {
-        widths: ['30%', '70%'],
+        widths: ['30%', '5%', '65%'], // Three columns: key, colon, value
         body: [] as any[],
       },
       layout: 'noBorders',
@@ -469,85 +469,164 @@ export class Export implements OnInit {
     // Add each detail to the table
     if (personalDetails.dateOfBirth) {
       detailsTable.table.body.push([
-        { text: 'Date of Birth', style: 'smallText', bold: true },
-        { text: personalDetails.dateOfBirth, style: 'smallText' },
+        {
+          text: 'Date of Birth',
+          style: 'smallText',
+          bold: true,
+          color: colors.secondaryColor, // Key color
+          alignment: 'left', // Right align all keys
+        },
+        {
+          text: ':',
+          style: 'smallText',
+          bold: true,
+          color: colors.secondaryColor,
+        },
+        {
+          text: personalDetails.dateOfBirth,
+          style: 'smallText',
+          color: colors.textColor, // Value color
+        },
       ]);
     }
 
     if (personalDetails.placeOfBirth) {
       detailsTable.table.body.push([
-        { text: 'Place of Birth', style: 'smallText', bold: true },
-        { text: personalDetails.placeOfBirth, style: 'smallText' },
+        {
+          text: 'Place of Birth',
+          style: 'smallText',
+          bold: true,
+          color: colors.secondaryColor,
+          alignment: 'left',
+        },
+        {
+          text: ':',
+          style: 'smallText',
+          bold: true,
+          color: colors.secondaryColor,
+        },
+        {
+          text: personalDetails.placeOfBirth,
+          style: 'smallText',
+          color: colors.textColor,
+        },
       ]);
     }
 
     if (personalDetails.nationality) {
       detailsTable.table.body.push([
-        { text: 'Nationality', style: 'smallText', bold: true },
-        { text: personalDetails.nationality, style: 'smallText' },
+        { text: 'Nationality', style: 'smallText', bold: true, color: colors.secondaryColor, alignment: 'left' },
+        { text: ':', style: 'smallText', bold: true, color: colors.secondaryColor },
+        { text: personalDetails.nationality, style: 'smallText', color: colors.textColor },
       ]);
     }
 
     if (personalDetails.gender) {
       detailsTable.table.body.push([
-        { text: 'Gender', style: 'smallText', bold: true },
-        { text: personalDetails.gender, style: 'smallText' },
+        { text: 'Gender', style: 'smallText', bold: true, color: colors.secondaryColor, alignment: 'left' },
+        { text: ':', style: 'smallText', bold: true, color: colors.secondaryColor },
+        { text: personalDetails.gender, style: 'smallText', color: colors.textColor },
       ]);
     }
 
     if (personalDetails.maritalStatus) {
       detailsTable.table.body.push([
-        { text: 'Marital Status', style: 'smallText', bold: true },
-        { text: personalDetails.maritalStatus, style: 'smallText' },
+        { text: 'Marital Status', style: 'smallText', bold: true, color: colors.secondaryColor, alignment: 'left' },
+        { text: ':', style: 'smallText', bold: true, color: colors.secondaryColor },
+        { text: personalDetails.maritalStatus, style: 'smallText', color: colors.textColor },
       ]);
     }
 
-    if (personalDetails.fathersName) {
+    // Check if person is female and married
+    const isMarriedFemale = personalDetails.gender === 'Female' && personalDetails.maritalStatus === 'Married';
+
+    // Show Husband's name instead of Father's name for married females
+    if (isMarriedFemale && personalDetails.husbandName) {
       detailsTable.table.body.push([
-        { text: "Father's Name", style: 'smallText', bold: true },
-        { text: personalDetails.fathersName, style: 'smallText' },
+        { text: "Husband's Name", style: 'smallText', bold: true, color: colors.secondaryColor, alignment: 'left' },
+        { text: ':', style: 'smallText', bold: true, color: colors.secondaryColor },
+        { text: personalDetails.husbandName, style: 'smallText', color: colors.textColor },
+      ]);
+    }
+    // Otherwise show Father's name if available
+    else if (personalDetails.fathersName) {
+      detailsTable.table.body.push([
+        { text: "Father's Name", style: 'smallText', bold: true, color: colors.secondaryColor, alignment: 'left' },
+        { text: ':', style: 'smallText', bold: true, color: colors.secondaryColor },
+        { text: personalDetails.fathersName, style: 'smallText', color: colors.textColor },
       ]);
     }
 
-    if (personalDetails.mothersName) {
+    // Only show Mother's name if not a married female
+    if (!isMarriedFemale && personalDetails.mothersName) {
       detailsTable.table.body.push([
-        { text: "Mother's Name", style: 'smallText', bold: true },
-        { text: personalDetails.mothersName, style: 'smallText' },
+        { text: "Mother's Name", style: 'smallText', bold: true, color: colors.secondaryColor, alignment: 'left' },
+        { text: ':', style: 'smallText', bold: true, color: colors.secondaryColor },
+        { text: personalDetails.mothersName, style: 'smallText', color: colors.textColor },
+      ]);
+    }
+
+    // Add sibling information if applicable
+    if (personalDetails.hasSiblings === true && (personalDetails.siblingCount ?? 0) > 0) {
+      detailsTable.table.body.push([
+        {
+          text: 'Number of Siblings',
+          style: 'smallText',
+          bold: true,
+          color: colors.secondaryColor,
+          alignment: 'left',
+        },
+        {
+          text: ':',
+          style: 'smallText',
+          bold: true,
+          color: colors.secondaryColor,
+        },
+        {
+          text: (personalDetails.siblingCount ?? 0).toString(),
+          style: 'smallText',
+          color: colors.textColor,
+        },
       ]);
     }
 
     if (personalDetails.religion) {
       detailsTable.table.body.push([
-        { text: 'Religion', style: 'smallText', bold: true },
-        { text: personalDetails.religion, style: 'smallText' },
+        { text: 'Religion', style: 'smallText', bold: true, color: colors.secondaryColor, alignment: 'left' },
+        { text: ':', style: 'smallText', bold: true, color: colors.secondaryColor },
+        { text: personalDetails.religion, style: 'smallText', color: colors.textColor },
       ]);
     }
 
     if (personalDetails.passportNumber) {
       detailsTable.table.body.push([
-        { text: 'Passport Number', style: 'smallText', bold: true },
-        { text: personalDetails.passportNumber, style: 'smallText' },
+        { text: 'Passport Number', style: 'smallText', bold: true, color: colors.secondaryColor, alignment: 'left' },
+        { text: ':', style: 'smallText', bold: true, color: colors.secondaryColor },
+        { text: personalDetails.passportNumber, style: 'smallText', color: colors.textColor },
       ]);
     }
 
     if (personalDetails.drivingLicense) {
       detailsTable.table.body.push([
-        { text: 'Driving License', style: 'smallText', bold: true },
-        { text: personalDetails.drivingLicense, style: 'smallText' },
+        { text: 'Driving License', style: 'smallText', bold: true, color: colors.secondaryColor, alignment: 'left' },
+        { text: ':', style: 'smallText', bold: true, color: colors.secondaryColor },
+        { text: personalDetails.drivingLicense, style: 'smallText', color: colors.textColor },
       ]);
     }
 
     if (personalDetails.bloodGroup) {
       detailsTable.table.body.push([
-        { text: 'Blood Group', style: 'smallText', bold: true },
-        { text: personalDetails.bloodGroup, style: 'smallText' },
+        { text: 'Blood Group', style: 'smallText', bold: true, color: colors.secondaryColor, alignment: 'left' },
+        { text: ':', style: 'smallText', bold: true, color: colors.secondaryColor },
+        { text: personalDetails.bloodGroup, style: 'smallText', color: colors.textColor },
       ]);
     }
 
     if (personalDetails.hobbies && personalDetails.hobbies.length) {
       detailsTable.table.body.push([
-        { text: 'Hobbies', style: 'smallText', bold: true },
-        { text: personalDetails.hobbies.join(', '), style: 'smallText' },
+        { text: 'Hobbies', style: 'smallText', bold: true, color: colors.secondaryColor, alignment: 'left' },
+        { text: ':', style: 'smallText', bold: true, color: colors.secondaryColor },
+        { text: personalDetails.hobbies.join(', '), style: 'smallText', color: colors.textColor },
       ]);
     }
 

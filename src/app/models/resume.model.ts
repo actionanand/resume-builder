@@ -67,9 +67,12 @@ export interface PersonalDetails {
   gender?: string;
   fathersName?: string;
   mothersName?: string;
+  husbandName?: string;
   hobbies?: string[];
   religion?: string;
   passportNumber?: string;
   drivingLicense?: string;
   bloodGroup?: string;
+  hasSiblings?: boolean;
+  siblingCount?: number;
 }

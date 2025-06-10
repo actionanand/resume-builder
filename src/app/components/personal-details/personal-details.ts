@@ -2,7 +2,6 @@
 import { Component, EventEmitter, OnInit, Output, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormGroup, FormBuilder } from '@angular/forms';
-
 import { ResumeService } from '../../services/resume';
 import { PersonalDetails } from '../../models';
 
@@ -39,26 +38,58 @@ export class PersonalDetailsComponent implements OnInit {
       nationality: [''],
       maritalStatus: [''],
       gender: [''],
-      fathersName: [''],
+      parentName: [''], // Combined field for father's or husband's name
       mothersName: [''],
-      hobbies: [''], // Will be split by comma
+      hasSiblings: [false],
+      siblingCount: [0],
       religion: [''],
       passportNumber: [''],
       drivingLicense: [''],
       bloodGroup: [''],
+      hobbies: [''], // Will be split by comma
     });
   }
 
   private loadDetails(): void {
-    const savedDetails = this.resumeService.getPersonalDetails();
+    const savedDetails = this.resumeService.getPersonalDetails() as PersonalDetails & { husbandName?: string };
 
     if (savedDetails) {
+      // Handle conditionally named fields
+      let parentName = '';
+      if (savedDetails.fathersName) {
+        parentName = savedDetails.fathersName;
+      } else if (savedDetails.husbandName) {
+        parentName = savedDetails.husbandName;
+      }
+
       // For hobbies, join the array back to a string for the form
       const formValue = {
         ...savedDetails,
+        parentName: parentName,
         hobbies: savedDetails.hobbies ? savedDetails.hobbies.join(', ') : '',
       };
+
       this.detailsForm.patchValue(formValue);
+      this.updateSiblingsField();
+    }
+  }
+
+  shouldShowHusbandName(): boolean {
+    const gender = this.detailsForm.get('gender')?.value;
+    const maritalStatus = this.detailsForm.get('maritalStatus')?.value;
+    return gender === 'Female' && maritalStatus === 'Married';
+  }
+
+  updateFormFields(): void {
+    // This will update the form fields display based on conditions
+    // No actual code needed here, Angular's change detection will handle it
+  }
+
+  updateSiblingsField(): void {
+    const hasSiblings = this.detailsForm.get('hasSiblings')?.value;
+
+    if (!hasSiblings) {
+      this.detailsForm.get('siblingCount')?.setValue(0);
     }
   }
 
@@ -66,15 +97,26 @@ export class PersonalDetailsComponent implements OnInit {
     // Since all fields are optional, we just save whatever data is present
     const formValue = this.detailsForm.value;
 
-    // Only process fields that have values
-    const personalDetails: PersonalDetails = Object.keys(formValue).reduce((result: any, key) => {
-      if (formValue[key]) {
+    // Only process fields that have meaningful values
+    const personalDetails: any = Object.keys(formValue).reduce((result: any, key) => {
+      // Skip empty strings, null values, default boolean false, and default number 0
+      if (
+        formValue[key] !== '' &&
+        formValue[key] !== null &&
+        !(key === 'hasSiblings' && formValue[key] === false) &&
+        !(key === 'siblingCount' && formValue[key] === 0)
+      ) {
         if (key === 'hobbies') {
           // Convert comma-separated hobbies string to array
-          result[key] = formValue[key]
+          const hobbies = formValue[key]
             .split(',')
             .map((hobby: string) => hobby.trim())
             .filter((hobby: string) => hobby);
+
+          // Only add if there are actual hobbies
+          if (hobbies.length > 0) {
+            result[key] = hobbies;
+          }
         } else {
           result[key] = formValue[key];
         }
@@ -82,10 +124,24 @@ export class PersonalDetailsComponent implements OnInit {
       return result;
     }, {});
 
-    // Only save if there's at least one field filled out
-    if (Object.keys(personalDetails).length > 0) {
-      this.resumeService.savePersonalDetails(personalDetails);
+    // Map parentName to the correct field name based on gender and marital status
+    if (personalDetails.parentName) {
+      if (this.shouldShowHusbandName()) {
+        personalDetails.husbandName = personalDetails.parentName;
+      } else {
+        personalDetails.fathersName = personalDetails.parentName;
+      }
+      delete personalDetails.parentName;
     }
+
+    // Clear stored details if nothing was entered
+    if (Object.keys(personalDetails).length === 0) {
+      this.resumeService.savePersonalDetails({});
+      return;
+    }
+
+    // Save the details
+    this.resumeService.savePersonalDetails(personalDetails);
   }
 
   goToPreviousSection(): void {

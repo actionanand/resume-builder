@@ -18,36 +18,48 @@ h2 {
 
 .about-content {
   position: relative;
+  padding-right: 60px; // Space for the edit button
+  margin-bottom: 20px;
 
   .about-text {
-    color: #34495e;
-    font-size: 16px;
-    line-height: 1.6;
-    white-space: pre-line;
-    padding: 15px;
-    border: 1px solid transparent;
-    border-radius: 4px;
+    // color: #34495e;
+    // font-size: 16px;
+    // line-height: 1.6;
+    // white-space: pre-line;
+    // padding: 15px;
+    // border: 1px solid transparent;
+    // border-radius: 4px;
+    min-height: 80px;
+    width: 100%;
 
     &.placeholder {
-      color: #95a5a6;
+      color: #adb5bd;
       font-style: italic;
+    }
+
+    &:hover {
+      .btn-edit {
+        opacity: 1; // Full visibility on hover
+      }
     }
   }
 
   .btn-edit {
     position: absolute;
-    top: 10px;
-    right: 10px;
-    background: none;
-    border: none;
-    color: #3498db;
-    font-size: 14px;
-    cursor: pointer;
-    padding: 5px 10px;
+    top: 0;
+    right: 0;
+    padding: 6px 12px;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
     border-radius: 4px;
+    color: #495057;
+    cursor: pointer;
+    opacity: 0.3; // Dimmed by default
+    transition: opacity 0.2s ease; // Smooth transition
 
     &:hover {
-      background-color: rgba(52, 152, 219, 0.1);
+      background-color: #e9ecef;
+      opacity: 1; // Full visibility when hovering directly over button
     }
   }
 }

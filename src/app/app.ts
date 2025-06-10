@@ -123,8 +123,14 @@ export class App implements OnInit {
     const languages = this.resumeService.getLanguages();
     this.breadcrumbSections[7].complete = !!(languages && languages.length > 0 && languages.some(lang => lang.name));
 
+    // For personal details, check if any MEANINGFUL field has been filled
     const personalDetails = this.resumeService.getPersonalDetails();
-    this.breadcrumbSections[8].complete = !!(personalDetails && Object.keys(personalDetails).length > 0);
+    const hasRealPersonalDetails =
+      personalDetails &&
+      Object.keys(personalDetails).length > 0 &&
+      // Check that it's not just default values
+      Object.keys(personalDetails).some(key => key !== 'hasSiblings' && key !== 'siblingCount');
+    this.breadcrumbSections[8].complete = !!hasRealPersonalDetails;
 
     // QR code is considered complete if any section is complete
     this.breadcrumbSections[9].complete = this.breadcrumbSections.some(

@@ -24,39 +24,84 @@
           <input type="text" id="nationality" formControlName="nationality" />
         </div>
 
-        <div class="form-group">
-          <label for="maritalStatus">Marital Status</label>
-          <select id="maritalStatus" formControlName="maritalStatus">
-            <option value="">Select status...</option>
-            <option *ngFor="let status of maritalStatusOptions" [value]="status">{{status}}</option>
-          </select>
-        </div>
+        <!-- Add an empty div to maintain the grid layout -->
+        <div class="form-group"></div>
       </div>
 
+      <!-- Gender and Marital Status Row -->
       <div class="form-row">
         <div class="form-group">
           <label for="gender">Gender</label>
-          <select id="gender" formControlName="gender">
+          <select id="gender" formControlName="gender" (change)="updateFormFields()">
             <option value="">Select gender...</option>
             <option *ngFor="let gender of genderOptions" [value]="gender">{{gender}}</option>
           </select>
         </div>
 
         <div class="form-group">
-          <label for="religion">Religion</label>
-          <input type="text" id="religion" formControlName="religion" />
+          <label for="maritalStatus">Marital Status</label>
+          <select id="maritalStatus" formControlName="maritalStatus" (change)="updateFormFields()">
+            <option value="">Select status...</option>
+            <option *ngFor="let status of maritalStatusOptions" [value]="status">{{status}}</option>
+          </select>
         </div>
       </div>
 
+      <!-- Religion Row -->
       <div class="form-row">
         <div class="form-group">
-          <label for="fathersName">Father's Name</label>
-          <input type="text" id="fathersName" formControlName="fathersName" />
+          <label for="religion">Religion</label>
+          <input type="text" id="religion" formControlName="religion" />
         </div>
 
+        <!-- Conditional field based on gender & marital status -->
+        <div class="form-group">
+          <label *ngIf="shouldShowHusbandName()" for="parentName">Husband's Name</label>
+          <label *ngIf="!shouldShowHusbandName()" for="parentName">Father's Name</label>
+          <input type="text" id="parentName" formControlName="parentName" />
+        </div>
+      </div>
+
+      <!-- Mother's name conditionally shown -->
+      <div class="form-row" *ngIf="!shouldShowHusbandName()">
         <div class="form-group">
           <label for="mothersName">Mother's Name</label>
           <input type="text" id="mothersName" formControlName="mothersName" />
+        </div>
+
+        <!-- Empty space to maintain grid layout -->
+        <div class="form-group"></div>
+      </div>
+
+      <!-- Siblings information section -->
+      <div class="form-row">
+        <div class="form-group">
+          <label for="hasSiblingsYes">Do you have siblings?</label>
+          <div class="radio-group">
+            <label class="radio-label">
+              <input
+                type="radio"
+                id="hasSiblingsYes"
+                formControlName="hasSiblings"
+                [value]="true"
+                (change)="updateSiblingsField()" />
+              Yes
+            </label>
+            <label class="radio-label">
+              <input
+                type="radio"
+                id="hasSiblingsNo"
+                formControlName="hasSiblings"
+                [value]="false"
+                (change)="updateSiblingsField()" />
+              No
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group" *ngIf="detailsForm.get('hasSiblings')?.value">
+          <label for="siblingCount">Number of Siblings</label>
+          <input type="number" id="siblingCount" formControlName="siblingCount" min="0" />
         </div>
       </div>
 
