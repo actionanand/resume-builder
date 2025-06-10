@@ -658,27 +658,29 @@ export class Export implements OnInit {
       ]);
     }
 
-    if (personalDetails.otherInfoKey && personalDetails.otherInfoValue) {
-      detailsTable.table.body.push([
-        {
-          text: personalDetails.otherInfoKey,
-          style: 'smallText',
-          bold: true,
-          color: colors.secondaryColor,
-          alignment: 'left',
-        },
-        {
-          text: ':',
-          style: 'smallText',
-          bold: true,
-          color: colors.secondaryColor,
-        },
-        {
-          text: personalDetails.otherInfoValue,
-          style: 'smallText',
-          color: colors.textColor,
-        },
-      ]);
+    if (personalDetails.otherInfo && personalDetails.otherInfo.length > 0) {
+      personalDetails.otherInfo.forEach((info: any) => {
+        detailsTable.table.body.push([
+          {
+            text: info.key,
+            style: 'smallText',
+            bold: true,
+            color: colors.secondaryColor,
+            alignment: 'left',
+          },
+          {
+            text: ':',
+            style: 'smallText',
+            bold: true,
+            color: colors.secondaryColor,
+          },
+          {
+            text: info.value,
+            style: 'smallText',
+            color: colors.textColor,
+          },
+        ]);
+      });
     }
 
     // Add the table to the document

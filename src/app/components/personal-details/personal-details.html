@@ -142,20 +142,34 @@
         <h3>Additional Information</h3>
         <p class="section-description">Add any other information you'd like to include</p>
 
-        <div class="form-row">
-          <div class="form-group">
-            <label for="otherInfoKey">Information Type</label>
-            <input
-              type="text"
-              id="otherInfoKey"
-              formControlName="otherInfoKey"
-              placeholder="e.g., Professional Association, Social Security Number, etc." />
-          </div>
+        <div formArrayName="otherInfo">
+          <div *ngFor="let info of otherInfoArray.controls; let i = index" class="other-info-item">
+            <div [formGroupName]="i" class="form-row">
+              <div class="form-group">
+                <label [for]="'otherInfoKey-' + i">Information Type</label>
+                <input
+                  type="text"
+                  [id]="'otherInfoKey-' + i"
+                  formControlName="key"
+                  placeholder="e.g., Professional Association, Social Security Number" />
+              </div>
 
-          <div class="form-group">
-            <label for="otherInfoValue">Information Value</label>
-            <input type="text" id="otherInfoValue" formControlName="otherInfoValue" />
+              <div class="form-group">
+                <label [for]="'otherInfoValue-' + i">Information Value</label>
+                <input type="text" [id]="'otherInfoValue-' + i" formControlName="value" />
+              </div>
+
+              <button type="button" class="btn-remove" (click)="removeInfoField(i)">
+                <i class="material-icons">delete</i>
+              </button>
+            </div>
           </div>
+        </div>
+
+        <div class="form-row">
+          <button type="button" class="btn btn-add" (click)="addInfoField()">
+            <i class="material-icons">add</i> Add More Information
+          </button>
         </div>
       </div>
     </form>

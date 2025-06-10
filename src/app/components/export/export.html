@@ -345,12 +345,12 @@
               <span class="detail-value">{{ resumeService.getPersonalDetails().hobbies?.join(', ') }}</span>
             </div>
 
-            <!-- Add this to your personal details preview section -->
-            <div
-              *ngIf="resumeService.getPersonalDetails()?.otherInfoKey && resumeService.getPersonalDetails()?.otherInfoValue"
-              class="detail-row">
-              <span class="detail-label">{{resumeService.getPersonalDetails().otherInfoKey}}</span>
-              <span class="detail-value">{{resumeService.getPersonalDetails().otherInfoValue}}</span>
+            <!-- Other info details -->
+            <div *ngIf="resumeService.getPersonalDetails().otherInfo?.length" class="details-other-info">
+              <div *ngFor="let info of resumeService.getPersonalDetails().otherInfo" class="detail-row">
+                <span class="detail-label">{{info.key}}</span>
+                <span class="detail-value">{{info.value}}</span>
+              </div>
             </div>
           </div>
         </div>

@@ -38,10 +38,60 @@
   }
 }
 
-/*
-.restricted-width {
-  flex: 0 0 auto;
-  width: 40%; // You can adjust this value as needed
-  max-width: 300px;
+// Styles for other info items
+.other-info-item {
+  position: relative;
+  margin-bottom: 15px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #eee;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  .form-row {
+    position: relative;
+    padding-right: 40px; // Space for remove button
+  }
+
+  .btn-remove {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #e74c3c;
+    cursor: pointer;
+    padding: 5px;
+
+    &:hover {
+      color: darken(#e74c3c, 10%);
+    }
+
+    .material-icons {
+      font-size: 20px;
+    }
+  }
 }
-*/
+
+.btn-add {
+  margin-top: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background-color: #ecf0f1;
+  color: #2c3e50;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: darken(#ecf0f1, 5%);
+  }
+
+  .material-icons {
+    font-size: 18px;
+  }
+}

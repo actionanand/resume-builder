@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, EventEmitter, OnInit, Output, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule, FormGroup, FormBuilder } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormGroup, FormBuilder, FormArray } from '@angular/forms';
 import { ResumeService } from '../../services/resume';
 import { PersonalDetails } from '../../models';
 
@@ -69,16 +69,18 @@ export class PersonalDetailsComponent implements OnInit {
       drivingLicense: [''],
       bloodGroup: [''],
       hobbies: [''], // Will be split by comma
-      otherInfoKey: [''],
-      otherInfoValue: [''],
+      otherInfo: this.fb.array([]),
     });
   }
 
   private loadDetails(): void {
-    const savedDetails = this.resumeService.getPersonalDetails() as PersonalDetails & { husbandName?: string };
+    const savedDetails = this.resumeService.getPersonalDetails() as PersonalDetails & {
+      husbandName?: string;
+      otherInfo?: Array<{ key: string; value: string }>;
+    };
 
     if (savedDetails) {
-      // Handle conditionally named fields
+      // Handle conditionally named fields as before...
       let parentName = '';
       if (savedDetails.fathersName) {
         parentName = savedDetails.fathersName;
@@ -93,9 +95,34 @@ export class PersonalDetailsComponent implements OnInit {
         hobbies: savedDetails.hobbies ? savedDetails.hobbies.join(', ') : '',
       };
 
+      // Remove the otherInfo field from the form value to prevent conflicts with FormArray
+      delete formValue.otherInfo;
+
+      // Update the form with the basic fields
       this.detailsForm.patchValue(formValue);
+
+      // Add other info fields if they exist
+      if (savedDetails.otherInfo && savedDetails.otherInfo.length > 0) {
+        // Clear any existing entries
+        while (this.otherInfoArray.length) {
+          this.otherInfoArray.removeAt(0);
+        }
+
+        // Add saved info fields
+        savedDetails.otherInfo.forEach(info => {
+          const infoGroup = this.createInfoField();
+          infoGroup.patchValue(info);
+          this.otherInfoArray.push(infoGroup);
+        });
+      }
+
       this.updateSiblingsField();
     }
+  }
+
+  // Add getter for easy access to the FormArray
+  get otherInfoArray(): FormArray {
+    return this.detailsForm.get('otherInfo') as FormArray;
   }
 
   shouldShowHusbandName(): boolean {
@@ -117,11 +144,32 @@ export class PersonalDetailsComponent implements OnInit {
     }
   }
 
+  // Add method to create a new info field group
+  createInfoField(): FormGroup {
+    return this.fb.group({
+      key: [''],
+      value: [''],
+    });
+  }
+
+  // Add method to add a new info field
+  addInfoField(): void {
+    this.otherInfoArray.push(this.createInfoField());
+  }
+
+  // Add method to remove an info field
+  removeInfoField(index: number): void {
+    this.otherInfoArray.removeAt(index);
+  }
+
   saveDetails(): void {
-    // Since all fields are optional, we just save whatever data is present
     const formValue = this.detailsForm.value;
 
-    // Only process fields that have meaningful values
+    // Process the other info array separately
+    const otherInfoArray = formValue.otherInfo || [];
+    delete formValue.otherInfo;
+
+    // Use the existing logic for other fields
     const personalDetails: any = Object.keys(formValue).reduce((result: any, key) => {
       // Skip empty strings, null values, default boolean false, and default number 0
       if (
@@ -148,7 +196,7 @@ export class PersonalDetailsComponent implements OnInit {
       return result;
     }, {});
 
-    // Map parentName to the correct field name based on gender and marital status
+    // Process parent name field as before
     if (personalDetails.parentName) {
       if (this.shouldShowHusbandName()) {
         personalDetails.husbandName = personalDetails.parentName;
@@ -156,6 +204,18 @@ export class PersonalDetailsComponent implements OnInit {
         personalDetails.fathersName = personalDetails.parentName;
       }
       delete personalDetails.parentName;
+    }
+
+    // Add the filtered other info array
+    const validOtherInfo = otherInfoArray
+      .filter((info: any) => info.key && info.value)
+      .map((info: any) => ({
+        key: info.key.trim(),
+        value: info.value.trim(),
+      }));
+
+    if (validOtherInfo.length > 0) {
+      personalDetails.otherInfo = validOtherInfo;
     }
 
     // Clear stored details if nothing was entered

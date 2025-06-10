@@ -75,6 +75,5 @@ export interface PersonalDetails {
   bloodGroup?: string;
   hasSiblings?: boolean;
   siblingCount?: number;
-  otherInfoKey?: string;
-  otherInfoValue?: string;
+  otherInfo?: { key: string; value: string }[];
 }
