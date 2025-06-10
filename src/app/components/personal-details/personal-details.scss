@@ -18,6 +18,26 @@
   }
 }
 
+.blood-group-select {
+  option {
+    color: #333; // Reset the color for regular options
+    font-weight: normal;
+    padding: 5px;
+  }
+
+  optgroup {
+    font-weight: 600;
+    padding-top: 5px;
+    padding-bottom: 5px;
+
+    // Add spacing between groups
+    &:not(:first-of-type) {
+      margin-top: 5px;
+      border-top: 1px solid #eee;
+    }
+  }
+}
+
 /*
 .restricted-width {
   flex: 0 0 auto;

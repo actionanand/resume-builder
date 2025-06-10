@@ -266,6 +266,16 @@ export class Export implements OnInit {
     }, 3000);
   }
 
+  hasPersonalDetails(): boolean {
+    const details = this.resumeService.getPersonalDetails();
+    return !!details && Object.keys(details).length > 0;
+  }
+
+  isMarriedFemale(): boolean {
+    const details = this.resumeService.getPersonalDetails();
+    return details?.gender === 'Female' && details?.maritalStatus === 'Married';
+  }
+
   // This method creates the pdfmake document definition
   private async createPdfDefinition(): Promise<any> {
     // Get color scheme based on theme
@@ -645,6 +655,29 @@ export class Export implements OnInit {
         { text: 'Hobbies', style: 'smallText', bold: true, color: colors.secondaryColor, alignment: 'left' },
         { text: ':', style: 'smallText', bold: true, color: colors.secondaryColor },
         { text: personalDetails.hobbies.join(', '), style: 'smallText', color: colors.textColor },
+      ]);
+    }
+
+    if (personalDetails.otherInfoKey && personalDetails.otherInfoValue) {
+      detailsTable.table.body.push([
+        {
+          text: personalDetails.otherInfoKey,
+          style: 'smallText',
+          bold: true,
+          color: colors.secondaryColor,
+          alignment: 'left',
+        },
+        {
+          text: ':',
+          style: 'smallText',
+          bold: true,
+          color: colors.secondaryColor,
+        },
+        {
+          text: personalDetails.otherInfoValue,
+          style: 'smallText',
+          color: colors.textColor,
+        },
       ]);
     }
 

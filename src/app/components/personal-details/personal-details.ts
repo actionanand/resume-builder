@@ -22,27 +22,27 @@ export class PersonalDetailsComponent implements OnInit {
   genderOptions = ['Male', 'Female', 'Non-binary', 'Prefer not to say'];
 
   // Organize blood groups more logically
-  bloodGroupOptions = [
-    // Common groups first
-    'A+',
-    'B+',
-    'AB+',
-    'O+',
-    'A-',
-    'B-',
-    'AB-',
-    'O-',
-    // Less common groups
-    'A1+',
-    'A1-',
-    'A1B+',
-    'A1B-',
-    // Special cases
-    'Bombay Phenotype (hh)',
-    'RH-null (Golden Blood)',
-    'Other Rare Group',
-    'Unknown',
-    'Prefer not to say',
+  bloodGroupCategories = [
+    {
+      name: 'Common Blood Groups',
+      color: '#95a5a6',
+      options: ['A+', 'B+', 'AB+', 'O+', 'A-', 'B-', 'AB-', 'O-'],
+    },
+    {
+      name: 'Less Common Blood Groups',
+      color: '#95a5a6',
+      options: ['A1+', 'A1-', 'A1B+', 'A1B-'],
+    },
+    {
+      name: 'Rare Blood Groups',
+      color: '#95a5a6',
+      options: ['Bombay Phenotype (hh)', 'RH-null (Golden Blood)', 'Other Rare Group'],
+    },
+    {
+      name: 'Other',
+      color: '#95a5a6', // Gray
+      options: ['Unknown', 'Prefer not to say'],
+    },
   ];
 
   private resumeService = inject(ResumeService);
@@ -69,6 +69,8 @@ export class PersonalDetailsComponent implements OnInit {
       drivingLicense: [''],
       bloodGroup: [''],
       hobbies: [''], // Will be split by comma
+      otherInfoKey: [''],
+      otherInfoValue: [''],
     });
   }
 

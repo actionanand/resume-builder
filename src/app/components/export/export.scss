@@ -733,6 +733,89 @@ h2 {
   }
 }
 
+// Personal Details styles
+.preview-personal-details {
+  .details-table {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .detail-row {
+    display: grid;
+    grid-template-columns: 150px 15px 1fr; // Label, colon, value
+    align-items: baseline;
+  }
+
+  .detail-label {
+    position: relative;
+    font-weight: 500;
+    text-align: left;
+
+    &::after {
+      // This adds colon after each label
+      content: ':';
+      position: absolute;
+      right: -15px;
+    }
+  }
+
+  .detail-value {
+    grid-column: 3; // Place in third column
+    margin-left: 5px;
+  }
+}
+
+// Certificates styles
+.preview-certificates {
+  .certificate-item {
+    margin-bottom: 15px;
+
+    .item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      h3 {
+        margin: 0;
+      }
+    }
+
+    .item-subheader {
+      display: flex;
+      justify-content: space-between;
+      color: #666;
+      font-style: italic;
+      margin-bottom: 5px;
+    }
+
+    .cert-link {
+      display: block;
+      margin-bottom: 5px;
+      color: #3498db;
+    }
+  }
+}
+
+// Languages styles
+.preview-languages {
+  .languages-list {
+    display: flex;
+    flex-wrap: wrap;
+
+    .language-item {
+      .language-name {
+        font-weight: 500;
+      }
+
+      .language-proficiency {
+        color: #7f8c8d;
+        margin-left: 4px;
+      }
+    }
+  }
+}
+
 @media print {
   .profile-photo-container {
     print-color-adjust: exact;

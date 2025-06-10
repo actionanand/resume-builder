@@ -260,6 +260,101 @@
           </div>
         </div>
 
+        <!-- Certificates Section -->
+        <div *ngIf="resumeService.getCertificates()?.length" class="preview-section preview-certificates">
+          <h2>Certifications</h2>
+          <div *ngFor="let cert of resumeService.getCertificates()" class="certificate-item">
+            <div class="item-header">
+              <h3>{{ cert.name }}</h3>
+              <span class="item-date" *ngIf="cert.date">{{ cert.date }}</span>
+            </div>
+            <div class="item-subheader">
+              <span>{{ cert.issuer }}</span>
+              <span *ngIf="cert.credentialId" class="credential-id">ID: {{ cert.credentialId }}</span>
+            </div>
+            <a *ngIf="cert.url" [href]="cert.url" target="_blank" class="cert-link">
+              {{ showHyperlinkUrls ? cert.url : 'Verify Certificate' }}
+            </a>
+            <p *ngIf="cert.description">{{ cert.description }}</p>
+          </div>
+        </div>
+
+        <!-- Languages Section -->
+        <div *ngIf="resumeService.getLanguages()?.length" class="preview-section preview-languages">
+          <h2>Languages</h2>
+          <div class="languages-list">
+            <div *ngFor="let lang of resumeService.getLanguages(); let last = last" class="language-item">
+              <span class="language-name">{{ lang.name }}</span>
+              <span class="language-proficiency">({{ lang.proficiency }})</span>
+              <span *ngIf="!last">, </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Personal Details Section -->
+        <div *ngIf="hasPersonalDetails()" class="preview-section preview-personal-details">
+          <h2>Personal Details</h2>
+          <div class="details-table">
+            <div *ngIf="resumeService.getPersonalDetails()?.dateOfBirth" class="detail-row">
+              <span class="detail-label">Date of Birth</span>
+              <span class="detail-value">{{ resumeService.getPersonalDetails().dateOfBirth }}</span>
+            </div>
+            <div *ngIf="resumeService.getPersonalDetails()?.placeOfBirth" class="detail-row">
+              <span class="detail-label">Place of Birth</span>
+              <span class="detail-value">{{ resumeService.getPersonalDetails().placeOfBirth }}</span>
+            </div>
+            <div *ngIf="resumeService.getPersonalDetails()?.nationality" class="detail-row">
+              <span class="detail-label">Nationality</span>
+              <span class="detail-value">{{ resumeService.getPersonalDetails().nationality }}</span>
+            </div>
+            <!-- Handle married female case -->
+            <div *ngIf="isMarriedFemale() && resumeService.getPersonalDetails().husbandName" class="detail-row">
+              <span class="detail-label">Husband's Name</span>
+              <span class="detail-value">{{ resumeService.getPersonalDetails().husbandName }}</span>
+            </div>
+            <!-- Show father's name if not a married female or husband's name not set -->
+            <div
+              *ngIf="(!isMarriedFemale() || !resumeService.getPersonalDetails()?.husbandName) && resumeService.getPersonalDetails()?.fathersName"
+              class="detail-row">
+              <span class="detail-label">Father's Name</span>
+              <span class="detail-value">{{ resumeService.getPersonalDetails().fathersName }}</span>
+            </div>
+            <!-- Only show mother's name if not a married female -->
+            <div *ngIf="!isMarriedFemale() && resumeService.getPersonalDetails().mothersName" class="detail-row">
+              <span class="detail-label">Mother's Name</span>
+              <span class="detail-value">{{ resumeService.getPersonalDetails().mothersName }}</span>
+            </div>
+            <!-- Show siblings if applicable -->
+            <div
+              *ngIf="resumeService.getPersonalDetails()?.hasSiblings && (resumeService.getPersonalDetails()?.siblingCount ?? 0) > 0"
+              class="detail-row">
+              <span class="detail-label">Number of Siblings</span>
+              <span class="detail-value">{{ resumeService.getPersonalDetails().siblingCount }}</span>
+            </div>
+            <!-- Other details -->
+            <div *ngIf="resumeService.getPersonalDetails()?.bloodGroup" class="detail-row">
+              <span class="detail-label">Blood Group</span>
+              <span class="detail-value">{{ resumeService.getPersonalDetails().bloodGroup }}</span>
+            </div>
+            <div *ngIf="resumeService.getPersonalDetails()?.religion" class="detail-row">
+              <span class="detail-label">Religion</span>
+              <span class="detail-value">{{ resumeService.getPersonalDetails().religion }}</span>
+            </div>
+            <div *ngIf="resumeService.getPersonalDetails()?.hobbies?.length" class="detail-row">
+              <span class="detail-label">Hobbies</span>
+              <span class="detail-value">{{ resumeService.getPersonalDetails().hobbies?.join(', ') }}</span>
+            </div>
+
+            <!-- Add this to your personal details preview section -->
+            <div
+              *ngIf="resumeService.getPersonalDetails()?.otherInfoKey && resumeService.getPersonalDetails()?.otherInfoValue"
+              class="detail-row">
+              <span class="detail-label">{{resumeService.getPersonalDetails().otherInfoKey}}</span>
+              <span class="detail-value">{{resumeService.getPersonalDetails().otherInfoValue}}</span>
+            </div>
+          </div>
+        </div>
+
         <!-- Resume Footer with QR Code and Signature -->
         <div class="resume-footer" [ngClass]="{'signature-only': includeSignatureLine && !includeQrCode}">
           <!-- Left side: QR Code -->
