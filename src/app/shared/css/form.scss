@@ -185,20 +185,27 @@
   }
 }
 
-/*
-.section-navigation {
+.form-actions {
   display: flex;
   justify-content: flex-end;
-  margin-top: 30px;
-  padding-top: 20px;
-  border-top: 1px solid #eee;
-  
-  &.with-prev {
-    justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.btn-clear-all {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+  border-radius: 4px;
+  cursor: pointer;
+
+  i {
+    margin-right: 5px;
   }
-  
-  button + button {
-    margin-left: 10px;
+
+  &:hover {
+    background-color: #f1bec6;
   }
 }
-*/

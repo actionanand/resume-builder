@@ -4,19 +4,26 @@
     <p class="section-description">Add your professional certifications and licenses</p>
   </div>
 
+  <div class="form-actions">
+    <button type="button" class="btn-clear-all" (click)="clearAllCertificates()">
+      <i class="material-icons">delete_sweep</i> Clear All Certificates
+    </button>
+  </div>
+
   <form [formGroup]="certificateForm">
     <div formArrayName="certificates">
       <div *ngFor="let cert of certificatesArray.controls; let i = index" class="item-card">
         <div [formGroupName]="i">
           <div class="card-header">
             <h3>Certificate {{i + 1}}</h3>
-            <button
-              type="button"
-              class="btn btn-icon"
-              (click)="removeCertificate(i)"
-              *ngIf="certificatesArray.length > 1">
-              <i class="material-icons">delete</i>
-            </button>
+            <div class="certificate-actions">
+              <button type="button" class="btn-reset" (click)="resetCertificate(i)" title="Clear this certificate">
+                <i class="material-icons">refresh</i>
+              </button>
+              <button type="button" class="btn-remove" (click)="removeCertificate(i)" title="Remove this certificate">
+                <i class="material-icons">delete</i>
+              </button>
+            </div>
           </div>
 
           <div class="form-row">

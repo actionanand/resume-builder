@@ -77,6 +77,24 @@ export class Languages implements OnInit {
     }
   }
 
+  clearAllLanguages(): void {
+    if (confirm('Are you sure you want to clear all languages? This action cannot be undone.')) {
+      // Remove all languages from the form array
+      while (this.languagesArray.length) {
+        this.languagesArray.removeAt(0);
+      }
+
+      // Add one empty language form
+      this.addLanguage();
+
+      // Reset form submission state if you have one
+      this.formSubmitted = false;
+
+      // Clear data in storage
+      this.resumeService.saveLanguages([]);
+    }
+  }
+
   goToPreviousSection(): void {
     this.saveLanguages();
     this.navigate.emit('certificates');

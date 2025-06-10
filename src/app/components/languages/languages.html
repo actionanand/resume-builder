@@ -2,6 +2,11 @@
   <div class="section-header">
     <h2>Languages</h2>
     <p class="section-description">Add languages you speak and your proficiency level</p>
+    <div class="form-actions">
+      <button type="button" class="btn-clear-all" (click)="clearAllLanguages()">
+        <i class="material-icons">delete_sweep</i> Clear All Languages
+      </button>
+    </div>
   </div>
 
   <form [formGroup]="languageForm">

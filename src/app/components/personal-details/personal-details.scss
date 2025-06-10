@@ -66,7 +66,8 @@
     padding: 5px;
 
     &:hover {
-      color: darken(#e74c3c, 10%);
+      // color: darken(#e74c3c, 10%);
+      color: #c0392b; // Manually darkened value instead of using darken(#e74c3c, 10%)
     }
 
     .material-icons {
@@ -88,7 +89,8 @@
   cursor: pointer;
 
   &:hover {
-    background-color: darken(#ecf0f1, 5%);
+    // background-color: darken(#ecf0f1, 5%);
+    background-color: #dfe4e5; // Manually darkened value instead of using darken()
   }
 
   .material-icons {

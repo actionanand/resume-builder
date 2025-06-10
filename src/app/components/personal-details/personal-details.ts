@@ -228,6 +228,36 @@ export class PersonalDetailsComponent implements OnInit {
     this.resumeService.savePersonalDetails(personalDetails);
   }
 
+  clearAllDetails(): void {
+    if (confirm('Are you sure you want to clear all personal details? This action cannot be undone.')) {
+      // Reset the form to empty values
+      this.detailsForm.reset({
+        dateOfBirth: '',
+        placeOfBirth: '',
+        nationality: '',
+        maritalStatus: '',
+        gender: '',
+        parentName: '',
+        mothersName: '',
+        hasSiblings: false,
+        siblingCount: 0,
+        religion: '',
+        passportNumber: '',
+        drivingLicense: '',
+        bloodGroup: '',
+        hobbies: '',
+      });
+
+      // Clear the otherInfo array
+      while (this.otherInfoArray.length) {
+        this.otherInfoArray.removeAt(0);
+      }
+
+      // Clear data in storage
+      this.resumeService.savePersonalDetails({});
+    }
+  }
+
   goToPreviousSection(): void {
     this.saveDetails();
     this.navigate.emit('languages');

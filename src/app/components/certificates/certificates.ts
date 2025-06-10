@@ -82,6 +82,62 @@ export class Certificates implements OnInit {
     }
   }
 
+  // Reset a specific certificate to blank state
+  resetCertificate(index: number): void {
+    // Get the form group at the specified index
+    const certificateGroup = this.certificatesArray.at(index) as FormGroup;
+
+    if (confirm('Are you sure you want to clear this certificate? This action cannot be undone.')) {
+      // Reset each control to empty string
+      const currentCertificates = this.resumeService.getCertificates() || [];
+
+      certificateGroup.patchValue({
+        name: '',
+        issuer: '',
+        date: '',
+        expiration: '',
+        credentialId: '',
+        url: '',
+        description: '',
+      });
+
+      // Mark controls as untouched and pristine
+      Object.keys(certificateGroup.controls).forEach(key => {
+        const control = certificateGroup.get(key);
+        control?.markAsUntouched();
+        control?.markAsPristine();
+      });
+
+      // If the certificate exists in storage, remove it
+      if (currentCertificates[index]) {
+        // Either replace with empty certificate or remove it completely
+        const updatedCertificates = [...currentCertificates];
+        updatedCertificates.splice(index, 1, { name: '', issuer: '', date: '' });
+        this.resumeService.saveCertificates(updatedCertificates);
+      }
+    }
+  }
+
+  // Clear entire form
+  clearAllCertificates(): void {
+    // Add confirmation dialog to prevent accidental deletion
+    if (confirm('Are you sure you want to clear all certificates? This action cannot be undone.')) {
+      // Remove all certificates from the form array
+      while (this.certificatesArray.length) {
+        this.certificatesArray.removeAt(0);
+      }
+
+      // Add one empty certificate form
+      this.addCertificate();
+
+      // Reset form submission state
+      this.formSubmitted = false;
+
+      // IMPORTANT: Clear the certificates data in localStorage
+      this.resumeService.saveCertificates([]);
+    }
+  }
+
   goToPreviousSection(): void {
     this.saveCertificates();
     this.navigate.emit('education');
