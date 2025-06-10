@@ -681,7 +681,7 @@ export class Export implements OnInit {
             stack: [
               // Name and title centered within this column
               { text: profile.fullName, style: 'header', alignment: 'center' },
-              { text: profile.title, style: 'normalText', margin: [0, 0, 0, 10], alignment: 'center' },
+              { text: profile.title, style: 'normalText', margin: [0, -5, 0, 10], alignment: 'center' },
               // Contact info and links remain left-aligned
               await this.createContactInfo(profile),
               await this.createProfileLinks(profile, colors),
@@ -694,7 +694,7 @@ export class Export implements OnInit {
       // No photo, center everything within the page
       profileSection.push(
         { text: profile.fullName, style: 'header', alignment: 'center' },
-        { text: profile.title, style: 'normalText', margin: [0, 0, 0, 10], alignment: 'center' },
+        { text: profile.title, style: 'normalText', margin: [0, -5, 0, 10], alignment: 'center' },
         await this.createContactInfo(profile),
         await this.createProfileLinks(profile, colors),
       );
@@ -1096,23 +1096,20 @@ export class Export implements OnInit {
         margin: [0, 5, 0, 0],
       });
 
-      // Company and location in second row (company left, location right)
+      // Company and location in second row (both left-aligned)
       docDefinition.content.push({
-        columns: [
+        text: [
           {
             text: exp.company,
             style: 'smallText',
             italics: true,
             color: colors.subtitleColor,
-            width: '*',
           },
           {
-            text: exp.location || '',
+            text: exp.location ? ` | ${exp.location}` : '',
             style: 'smallText',
             italics: true,
             color: colors.subtitleColor,
-            width: 'auto',
-            alignment: 'right',
           },
         ],
         margin: [0, 0, 0, 5],
