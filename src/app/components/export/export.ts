@@ -32,6 +32,8 @@ export class Export implements OnInit {
   showContactIcons = true;
   showHyperlinkUrls = false;
 
+  exportFilename: string = '';
+
   includeSignatureLine = true;
   useDigitalSignature = false;
   signatureImageUrl: string | null = null;
@@ -203,13 +205,22 @@ export class Export implements OnInit {
 
   exportAsPDF(): void {
     this.isGeneratingPDF = true;
+    this.exportMessage = '';
     this.showMessage('Creating ATS-friendly PDF...');
+
+    // Get filename or use default
+    const filename = this.exportFilename
+      ? this.exportFilename.trim()
+      : `${this.resumeService.getProfile()?.fullName || 'Resume'}_${new Date().toISOString().slice(0, 10)}`;
+
+    // Add .pdf extension if not present
+    const finalFilename = filename.endsWith('.pdf') ? filename : `${filename}.pdf`;
 
     // Convert resume to pdfmake document definition
     this.createPdfDefinition()
       .then(docDefinition => {
         // Create and download the PDF
-        pdfMake.createPdf(docDefinition).download('resume.pdf');
+        pdfMake.createPdf(docDefinition).download(finalFilename);
 
         this.isGeneratingPDF = false;
         this.showMessage('ATS-friendly PDF downloaded successfully');
@@ -222,6 +233,14 @@ export class Export implements OnInit {
   }
 
   exportAsWord(): void {
+    // Get filename or use default
+    const filename = this.exportFilename
+      ? this.exportFilename.trim()
+      : `${this.resumeService.getProfile()?.fullName || 'Resume'}_${new Date().toISOString().slice(0, 10)}`;
+
+    // Add .docx extension if not present
+    const finalFilename = filename.endsWith('.docx') ? filename : `${filename}.docx`;
+
     // Create a blob with HTML content
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const resumeData = this.resumeService.getResumeData();
@@ -248,7 +267,7 @@ export class Export implements OnInit {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = 'resume.doc';
+    link.download = finalFilename;
     link.click();
     URL.revokeObjectURL(url);
 
@@ -996,15 +1015,28 @@ export class Export implements OnInit {
 
   // Create profile links row
   private async createProfileLinks(profile: any, colors: any): Promise<any> {
+    // If showing URLs, filter which links to show based on portfolio presence
+    let filteredProfile = { ...profile };
+
+    if (this.showHyperlinkUrls) {
+      filteredProfile = { ...profile };
+
+      // If portfolio exists, show portfolio and LinkedIn (hide GitHub)
+      if (profile.portfolio) {
+        filteredProfile.github = null; // Hide GitHub
+      }
+      // If no portfolio, show LinkedIn and GitHub (keep both)
+    }
+
     // If icons are disabled, use columns without bullet separators
     if (!this.showContactIcons) {
       const linkColumns = [];
 
-      if (profile.github) {
-        const text = this.showHyperlinkUrls ? profile.github : 'GitHub';
+      if (filteredProfile.github) {
+        const text = this.showHyperlinkUrls ? filteredProfile.github : 'GitHub';
         linkColumns.push({
           text: text,
-          link: profile.github,
+          link: filteredProfile.github,
           style: 'smallText',
           color: colors.accentColor,
           width: 'auto',
@@ -1012,11 +1044,11 @@ export class Export implements OnInit {
         });
       }
 
-      if (profile.linkedin) {
-        const text = this.showHyperlinkUrls ? profile.linkedin : 'LinkedIn';
+      if (filteredProfile.linkedin) {
+        const text = this.showHyperlinkUrls ? filteredProfile.linkedin : 'LinkedIn';
         linkColumns.push({
           text: text,
-          link: profile.linkedin,
+          link: filteredProfile.linkedin,
           style: 'smallText',
           color: colors.accentColor,
           width: 'auto',
@@ -1024,11 +1056,11 @@ export class Export implements OnInit {
         });
       }
 
-      if (profile.portfolio) {
-        const text = this.showHyperlinkUrls ? profile.portfolio : 'Portfolio';
+      if (filteredProfile.portfolio) {
+        const text = this.showHyperlinkUrls ? filteredProfile.portfolio : 'Portfolio';
         linkColumns.push({
           text: text,
-          link: profile.portfolio,
+          link: filteredProfile.portfolio,
           style: 'smallText',
           color: colors.accentColor,
           width: 'auto',
@@ -1048,7 +1080,7 @@ export class Export implements OnInit {
     const linkColumns = [];
 
     // Add GitHub with icon
-    if (profile.github) {
+    if (filteredProfile.github) {
       try {
         const githubIconUrl = await this.getIconFromPublicFolder('github');
         linkColumns.push({
@@ -1063,8 +1095,8 @@ export class Export implements OnInit {
                 },
                 {
                   width: 'auto',
-                  text: this.showHyperlinkUrls ? profile.github : 'GitHub',
-                  link: profile.github,
+                  text: this.showHyperlinkUrls ? filteredProfile.github : 'GitHub',
+                  link: filteredProfile.github,
                   style: 'smallText',
                   color: colors.accentColor,
                   margin: [2, 0, 0, 0], // space between icon and text in profile links
@@ -1077,8 +1109,8 @@ export class Export implements OnInit {
         });
       } catch (e) {
         linkColumns.push({
-          text: this.showHyperlinkUrls ? profile.github : 'GitHub',
-          link: profile.github,
+          text: this.showHyperlinkUrls ? filteredProfile.github : 'GitHub',
+          link: filteredProfile.github,
           style: 'smallText',
           color: colors.accentColor,
           width: 'auto',
@@ -1088,7 +1120,7 @@ export class Export implements OnInit {
     }
 
     // Add LinkedIn with icon
-    if (profile.linkedin) {
+    if (filteredProfile.linkedin) {
       try {
         const linkedinIconUrl = await this.getIconFromPublicFolder('linkedin');
         linkColumns.push({
@@ -1103,8 +1135,8 @@ export class Export implements OnInit {
                 },
                 {
                   width: 'auto',
-                  text: this.showHyperlinkUrls ? profile.linkedin : 'LinkedIn',
-                  link: profile.linkedin,
+                  text: this.showHyperlinkUrls ? filteredProfile.linkedin : 'LinkedIn',
+                  link: filteredProfile.linkedin,
                   style: 'smallText',
                   color: colors.accentColor,
                   margin: [2, 0, 0, 0],
@@ -1117,8 +1149,8 @@ export class Export implements OnInit {
         });
       } catch (e) {
         linkColumns.push({
-          text: this.showHyperlinkUrls ? profile.linkedin : 'LinkedIn',
-          link: profile.linkedin,
+          text: this.showHyperlinkUrls ? filteredProfile.linkedin : 'LinkedIn',
+          link: filteredProfile.linkedin,
           style: 'smallText',
           color: colors.accentColor,
           width: 'auto',
@@ -1128,7 +1160,7 @@ export class Export implements OnInit {
     }
 
     // Add Portfolio/website with icon
-    if (profile.portfolio) {
+    if (filteredProfile.portfolio) {
       try {
         const websiteIconUrl = await this.getIconFromPublicFolder('website');
         linkColumns.push({
@@ -1143,8 +1175,8 @@ export class Export implements OnInit {
                 },
                 {
                   width: 'auto',
-                  text: this.showHyperlinkUrls ? profile.portfolio : 'Portfolio',
-                  link: profile.portfolio,
+                  text: this.showHyperlinkUrls ? filteredProfile.portfolio : 'Portfolio',
+                  link: filteredProfile.portfolio,
                   style: 'smallText',
                   color: colors.accentColor,
                   margin: [2, 0, 0, 0],
@@ -1156,8 +1188,8 @@ export class Export implements OnInit {
         });
       } catch (e) {
         linkColumns.push({
-          text: this.showHyperlinkUrls ? profile.portfolio : 'Portfolio',
-          link: profile.portfolio,
+          text: this.showHyperlinkUrls ? filteredProfile.portfolio : 'Portfolio',
+          link: filteredProfile.portfolio,
           style: 'smallText',
           color: colors.accentColor,
           width: 'auto',

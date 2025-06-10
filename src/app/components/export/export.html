@@ -1,5 +1,17 @@
 <div class="section-container export-section">
-  <h2>Export Resume</h2>
+  <div class="export-header">
+    <h2>Export Resume</h2>
+    <div class="form-field filename-field">
+      <label for="exportFilename"> </label>
+      <input
+        type="text"
+        id="exportFilename"
+        [(ngModel)]="exportFilename"
+        placeholder="Enter filename or leave blank for default"
+        name="exportFilename"
+        class="styled-input" />
+    </div>
+  </div>
 
   <div class="export-options">
     <div class="export-sidebar" *ngIf="!previewOnly">
