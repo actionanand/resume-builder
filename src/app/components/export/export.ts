@@ -438,12 +438,30 @@ export class Export implements OnInit {
     docDefinition.content.push({ text: 'Languages', style: 'subheader' });
     this.addSectionTitleLine(docDefinition, colors);
 
-    const languageEntries = languages.map((lang: any) => {
-      return `${lang.name} (${lang.proficiency})`;
+    // Create text array with different colors for languages and proficiency levels
+    const languageTexts: { text: any; color: any }[] = [];
+
+    languages.forEach((lang: any, index: number) => {
+      // Add language name in normal text color
+      languageTexts.push({
+        text: lang.name,
+        color: colors.textColor,
+      });
+
+      // Add proficiency in parentheses with subtitle color
+      languageTexts.push({
+        text: ` (${lang.proficiency})`,
+        color: colors.subtitleColor,
+      });
+
+      // Add comma separator except for the last item
+      if (index < languages.length - 1) {
+        languageTexts.push({ text: ', ', color: colors.textColor });
+      }
     });
 
     docDefinition.content.push({
-      text: languageEntries.join(', '),
+      text: languageTexts,
       style: 'normalText',
       margin: [0, 0, 0, 10],
     });

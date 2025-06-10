@@ -21,7 +21,29 @@ export class PersonalDetailsComponent implements OnInit {
 
   genderOptions = ['Male', 'Female', 'Non-binary', 'Prefer not to say'];
 
-  bloodGroupOptions = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
+  // Organize blood groups more logically
+  bloodGroupOptions = [
+    // Common groups first
+    'A+',
+    'B+',
+    'AB+',
+    'O+',
+    'A-',
+    'B-',
+    'AB-',
+    'O-',
+    // Less common groups
+    'A1+',
+    'A1-',
+    'A1B+',
+    'A1B-',
+    // Special cases
+    'Bombay Phenotype (hh)',
+    'RH-null (Golden Blood)',
+    'Other Rare Group',
+    'Unknown',
+    'Prefer not to say',
+  ];
 
   private resumeService = inject(ResumeService);
   private fb = inject(FormBuilder);
