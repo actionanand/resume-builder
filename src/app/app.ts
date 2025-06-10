@@ -45,7 +45,7 @@ import { PersonalDetailsComponent } from './components/personal-details/personal
   styleUrl: './app.scss',
 })
 export class App implements OnInit {
-  title = 'Resume Builder';
+  title = 'Résumé Builder';
   currentSection = 'profile'; // Default section
 
   private breadcrumbServ = inject(BreadcrumbService);

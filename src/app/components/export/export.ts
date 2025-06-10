@@ -306,6 +306,15 @@ export class Export implements OnInit {
     // Create document definition
     const docDefinition: any = {
       content: [],
+      info: {
+        title: `Resume - ${this.exportFilename || 'Anand'}`,
+        author: 'Anand Raja',
+        subject: 'Professional Resume',
+        keywords: this.getResumeKeywords(),
+        creator: 'Resume Builder App - Anand',
+        producer: 'Resume Builder App -Anand',
+        creationDate: new Date(),
+      },
       defaultStyle: {
         // Use default Roboto font instead of Helvetica
         fontSize: baseFontSize,
@@ -457,6 +466,30 @@ export class Export implements OnInit {
         docDefinition.content.push({ text: '', margin: [0, 0, 0, 10] });
       }
     });
+  }
+
+  private getResumeKeywords(): string {
+    const skills = this.resumeService.getSkills();
+    const profile = this.resumeService.getProfile();
+    const keywords = [];
+
+    // Add job title if available
+    if (profile?.title) {
+      keywords.push(profile.title);
+    }
+
+    // Add top skills from each category
+    if (skills?.length) {
+      skills.forEach((skillGroup: { skills: string | any[] }) => {
+        if (skillGroup.skills?.length) {
+          // Add first 3 skills from each category
+          const topSkills = skillGroup.skills.slice(0, 3);
+          keywords.push(...topSkills);
+        }
+      });
+    }
+
+    return keywords.join(', ');
   }
 
   // Add languages section
