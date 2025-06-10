@@ -1575,4 +1575,32 @@ export class Export implements OnInit {
       img.src = url;
     });
   }
+
+  clearAllResumeData(): void {
+    if (
+      confirm('WARNING: This will permanently delete ALL your resume data. This action cannot be undone. Are you sure?')
+    ) {
+      // Double-confirm due to the destructive nature
+      if (confirm('Please confirm one more time. All your data will be deleted.')) {
+        this.resumeService.cleanLocalStorage();
+
+        // Reset component state
+        this.includeQrCode = false;
+        this.includeSignatureLine = false;
+        this.useDigitalSignature = false;
+        this.signatureImageUrl = '';
+
+        // Notify user
+        alert('All resume data has been cleared successfully.');
+
+        // Force refresh preview if showing
+        if (this.showPreview) {
+          this.showPreview = false;
+          setTimeout(() => {
+            this.showPreview = true;
+          }, 100);
+        }
+      }
+    }
+  }
 }

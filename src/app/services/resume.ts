@@ -177,6 +177,27 @@ export class ResumeService {
     return this.resumeData;
   }
 
+  cleanLocalStorage(): void {
+    localStorage.removeItem('resumeData');
+    localStorage.removeItem('resumeCertificates');
+    localStorage.removeItem('resumeQrCodeData');
+    localStorage.removeItem('resumeLanguages');
+    localStorage.removeItem('resumePersonalDetails');
+    localStorage.removeItem('resumeDigitalSignature');
+    localStorage.removeItem('resumeQrCustomFields');
+
+    this.resumeData = {
+      profile: null,
+      experience: [],
+      education: [],
+      skills: [],
+      projects: [],
+      about: '',
+    };
+    this.resumeDataSubject.next(this.resumeData);
+    this.notifyDataChanged();
+  }
+
   getEmptyProfile(): ProfileInfo {
     return {
       fullName: '',

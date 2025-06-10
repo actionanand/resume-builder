@@ -125,6 +125,15 @@
         </div>
       </div>
 
+      <div class="data-management-section">
+        <h3>Data Management</h3>
+        <p class="warning-text">This action will permanently delete all your resume data.</p>
+
+        <button type="button" class="btn-reset-all" (click)="clearAllResumeData()">
+          <i class="material-icons">delete_forever</i> Reset All Resume Data
+        </button>
+      </div>
+
       <div *ngIf="exportMessage" class="export-message">{{ exportMessage }}</div>
     </div>
 
