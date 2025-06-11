@@ -189,10 +189,218 @@ export class Export implements OnInit {
   }
 
   generateMarkdown(): void {
-    this.markdownContent = this.resumeService.exportAsMarkdown();
+    // Generate markdown directly in the component to have more control
+    const profile = this.resumeService.getProfile();
+    const skills = this.resumeService.getSkills();
+    const experiences = this.resumeService.getExperiences();
+    const education = this.resumeService.getEducation();
+    const projects = this.resumeService.getProjects();
+    const certificates = this.resumeService.getCertificates();
+    const languages = this.resumeService.getLanguages();
+    const personalDetails = this.resumeService.getPersonalDetails();
+    const about = this.resumeService.getAbout();
+
+    let markdown = '';
+
+    // Header with name and title
+    if (profile) {
+      markdown += `# ${profile.fullName}\n`;
+      if (profile.title) markdown += `## ${profile.title}\n`;
+
+      // Contact information with emojis instead of icons
+      const contactLines = [];
+      if (profile.email) contactLines.push(`📧 ${profile.email}`);
+      if (profile.phone) contactLines.push(`📱 ${profile.phone}`);
+      if (profile.location) contactLines.push(`📍 ${profile.location}`);
+
+      if (contactLines.length > 0) {
+        markdown += '\n' + contactLines.join(' | ') + '\n';
+      }
+
+      // Social links with emojis
+      const socialLines = [];
+      if (profile.linkedin) socialLines.push(`[💼 LinkedIn](${profile.linkedin})`);
+      if (profile.github) socialLines.push(`[💻 GitHub](${profile.github})`);
+      if (profile.portfolio) socialLines.push(`[🌐 Portfolio](${profile.portfolio})`);
+
+      if (socialLines.length > 0) {
+        markdown += '\n' + socialLines.join(' | ') + '\n';
+      }
+    }
+
+    // About section
+    if (about) {
+      markdown += '\n## About\n\n';
+      markdown += about + '\n';
+    }
+
+    // Skills section
+    if (skills?.length) {
+      markdown += '\n## Skills\n\n';
+      skills.forEach((skillGroup: { category: any; skills: any[] }) => {
+        markdown += `### ${skillGroup.category}\n`;
+        markdown += skillGroup.skills.join(', ') + '\n\n';
+      });
+    }
+
+    // Experience section
+    if (experiences?.length) {
+      markdown += '\n## Experience\n\n';
+      experiences.forEach(
+        (exp: {
+          position: any;
+          company: any;
+          startDate: any;
+          endDate: any;
+          location: any;
+          description: string;
+          achievements: any[];
+        }) => {
+          markdown += `### ${exp.position}\n`;
+          markdown += `*${exp.company}* | ${exp.startDate} - ${exp.endDate || 'Present'}`;
+          if (exp.location) markdown += ` | ${exp.location}`;
+          markdown += '\n\n';
+
+          if (exp.description) {
+            markdown += exp.description + '\n\n';
+          }
+
+          if (exp.achievements?.length) {
+            exp.achievements.forEach(achievement => {
+              markdown += `- ${achievement}\n`;
+            });
+            markdown += '\n';
+          }
+        },
+      );
+    }
+
+    // Projects section
+    if (projects?.length) {
+      markdown += '\n## Projects\n\n';
+      projects.forEach((project: { name: any; link: any; description: string; technologies: any }) => {
+        markdown += `### ${project.name}`;
+        if (project.link) markdown += ` [🔗](${project.link})`;
+        markdown += '\n\n';
+
+        markdown += project.description + '\n\n';
+
+        if (project.technologies) {
+          markdown += `**Technologies:** ${project.technologies}\n\n`;
+        }
+      });
+    }
+
+    // Education section
+    if (education?.length) {
+      markdown += '\n## Education\n\n';
+      education.forEach(
+        (edu: {
+          degree: any;
+          institution: any;
+          startDate: any;
+          endDate: any;
+          location: any;
+          cgpa: any;
+          description: string;
+        }) => {
+          markdown += `### ${edu.degree}\n`;
+          markdown += `*${edu.institution}* | ${edu.startDate} - ${edu.endDate}`;
+          if (edu.location) markdown += ` | ${edu.location}`;
+          markdown += '\n\n';
+
+          if (edu.cgpa) {
+            markdown += `**CGPA/Percentage:** ${edu.cgpa}\n\n`;
+          }
+
+          if (edu.description) {
+            markdown += edu.description + '\n\n';
+          }
+        },
+      );
+    }
+
+    // Certifications section
+    if (certificates?.length) {
+      markdown += '\n## Certifications\n\n';
+      certificates.forEach(cert => {
+        markdown += `### ${cert.name}\n`;
+        markdown += `*${cert.issuer}* | ${cert.date}`;
+        if (cert.expiration) markdown += ` - ${cert.expiration}`;
+        markdown += '\n\n';
+
+        if (cert.credentialId) {
+          markdown += `**Credential ID:** ${cert.credentialId}\n\n`;
+        }
+
+        if (cert.url) {
+          markdown += `**URL:** [${cert.url}](${cert.url})\n\n`;
+        }
+
+        if (cert.description) {
+          markdown += cert.description + '\n\n';
+        }
+      });
+    }
+
+    // Languages section
+    if (languages?.length) {
+      markdown += '\n## Languages\n\n';
+      const languagesList = languages.map(lang => `- ${lang.name} (${lang.proficiency})`);
+      markdown += languagesList.join('\n') + '\n';
+    }
+
+    // Personal details section
+    if (personalDetails && Object.keys(personalDetails).length > 0) {
+      markdown += '\n## Personal Details\n\n';
+
+      const addDetail = (label: string, value: any) => {
+        if (value) markdown += `**${label}:** ${value}\n\n`;
+      };
+
+      addDetail('Date of Birth', personalDetails.dateOfBirth);
+      addDetail('Place of Birth', personalDetails.placeOfBirth);
+      addDetail('Nationality', personalDetails.nationality);
+      addDetail('Gender', personalDetails.gender);
+      addDetail('Marital Status', personalDetails.maritalStatus);
+
+      // Check if person is female and married
+      const isMarriedFemale = personalDetails.gender === 'Female' && personalDetails.maritalStatus === 'Married';
+
+      if (isMarriedFemale && personalDetails.husbandName) {
+        addDetail("Husband's Name", personalDetails.husbandName);
+      } else if (personalDetails.fathersName) {
+        addDetail("Father's Name", personalDetails.fathersName);
+      }
+
+      if (!isMarriedFemale && personalDetails.mothersName) {
+        addDetail("Mother's Name", personalDetails.mothersName);
+      }
+
+      addDetail('Religion', personalDetails.religion);
+      addDetail('Passport Number', personalDetails.passportNumber);
+      addDetail('Driving License', personalDetails.drivingLicense);
+      addDetail('Blood Group', personalDetails.bloodGroup);
+
+      if (personalDetails.hobbies?.length) {
+        addDetail('Hobbies', personalDetails.hobbies.join(', '));
+      }
+
+      // Add additional custom fields
+      if (personalDetails.otherInfo && personalDetails.otherInfo.length > 0) {
+        personalDetails.otherInfo.forEach((info: any) => {
+          addDetail(info.key, info.value);
+        });
+      }
+    }
+
+    this.markdownContent = markdown;
   }
 
   copyMarkdown(): void {
+    // First ensure we have the latest content
+    this.generateMarkdown();
+
     navigator.clipboard.writeText(this.markdownContent).then(
       () => {
         this.showMessage('Markdown copied to clipboard');
@@ -241,37 +449,372 @@ export class Export implements OnInit {
     // Add .docx extension if not present
     const finalFilename = filename.endsWith('.docx') ? filename : `${filename}.docx`;
 
-    // Create a blob with HTML content
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const resumeData = this.resumeService.getResumeData();
-    const preHtml = `<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
-      <head>
-        <meta charset='utf-8'>
-        <title>Resume</title>
-        <style>
-          body { font-family: Arial, sans-serif; }
-          h1 { color: #333; }
-          h2 { color: #444; border-bottom: 1px solid #ddd; padding-bottom: 5px; }
-        </style>
-      </head>
-      <body>`;
+    const profile = this.resumeService.getProfile();
+    const skills = this.resumeService.getSkills();
+    const experiences = this.resumeService.getExperiences();
+    const education = this.resumeService.getEducation();
+    const projects = this.resumeService.getProjects();
+    const certificates = this.resumeService.getCertificates();
+    const languages = this.resumeService.getLanguages();
+    const personalDetails = this.resumeService.getPersonalDetails();
+    const about = this.resumeService.getAbout();
 
-    // Get the HTML content from the preview
+    // Create HTML content with proper Word compatibility
+    const preHtml = `<!DOCTYPE html>
+    <html xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+    <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <meta name="ProgId" content="Word.Document">
+      <meta name="Generator" content="Microsoft Word">
+      <meta name="Originator" content="Microsoft Word">
+      <title>${profile?.fullName || 'Resume'}</title>
+      <style>
+        /* Base styles */
+        body { 
+          font-family: Arial, sans-serif; 
+          width: 100%;
+          margin: 0 auto;
+          padding: 30px;
+          line-height: 1.3;
+          color: #333;
+        }
+        
+        /* Header styles */
+        .header { 
+          text-align: center;
+          margin-bottom: 15px;
+        }
+        .header h1 { 
+          font-size: 24pt;
+          color: #333;
+          margin: 0;
+          padding: 0;
+        }
+        .header h2 {
+          font-size: 14pt;
+          font-weight: normal;
+          margin: 0;
+          padding: 0;
+          color: #666;
+        }
+        .contact-info {
+          text-align: center;
+          margin: 8px 0;
+          font-size: 11pt;
+        }
+        .contact-info span {
+          margin: 0 8px;
+        }
+        .social-links {
+          text-align: center;
+          margin-bottom: 15px;
+          font-size: 11pt;
+        }
+        .social-links a {
+          margin: 0 8px;
+          color: #2980b9;
+        }
+        
+        /* Section styles */
+        h2 { 
+          color: #444; 
+          border-bottom: 1px solid #444;
+          padding-bottom: 5px;
+          font-size: 16pt;
+          margin-top: 20px;
+          margin-bottom: 10px;
+        }
+        h3 {
+          font-size: 14pt;
+          margin: 15px 0 5px 0;
+          color: #333;
+        }
+        p {
+          margin: 5px 0;
+        }
+        
+        /* Experience and Education styles */
+        .org-header {
+          margin-top: 12px;
+        }
+        .org-title {
+          font-weight: bold;
+          font-size: 13pt;
+        }
+        .org-date {
+          font-style: italic;
+          color: #666;
+          float: right;
+        }
+        .org-subtitle {
+          font-style: italic;
+          color: #666;
+          margin-bottom: 8px;
+        }
+        
+        /* Lists */
+        ul {
+          margin-top: 5px;
+          margin-bottom: 15px;
+          padding-left: 25px;
+        }
+        li {
+          margin-bottom: 5px;
+        }
+        
+        /* Tables for skills and personal details */
+        table {
+          width: 100%;
+          border-collapse: collapse;
+          margin: 10px 0;
+        }
+        table td {
+          padding: 5px;
+          vertical-align: top;
+        }
+        .skills-table td:first-child {
+          font-weight: bold;
+          width: 30%;
+        }
+        
+        /* Footer styles */
+        .footer {
+          margin-top: 30px;
+          font-size: 10pt;
+        }
+        .signature-line {
+          border-top: 1px solid #000;
+          width: 200px;
+          margin-left: auto;
+          padding-top: 5px;
+          text-align: center;
+        }
+      </style>
+    </head>
+    <body>`;
+
+    let contentHtml = '';
+
+    // Add Profile Section
+    if (profile) {
+      contentHtml += `<div class="header">
+        <h1>${profile.fullName || ''}</h1>
+        <h2>${profile.title || ''}</h2>
+        
+        <div class="contact-info">
+          ${profile.email ? `<span>${profile.email}</span>` : ''}
+          ${profile.phone ? `<span>${profile.phone}</span>` : ''}
+          ${profile.location ? `<span>${profile.location}</span>` : ''}
+        </div>
+        
+        <div class="social-links">
+          ${profile.linkedin ? `<a href="${profile.linkedin}">${this.showHyperlinkUrls ? profile.linkedin : 'LinkedIn'}</a>` : ''}
+          ${profile.github ? `<a href="${profile.github}">${this.showHyperlinkUrls ? profile.github : 'GitHub'}</a>` : ''}
+          ${profile.portfolio ? `<a href="${profile.portfolio}">${this.showHyperlinkUrls ? profile.portfolio : 'Portfolio'}</a>` : ''}
+        </div>
+      </div>`;
+    }
+
+    // Add About Section
+    if (about) {
+      contentHtml += `<h2>About</h2>
+      <p>${about}</p>`;
+    }
+
+    // Add Skills Section
+    if (skills && skills.length > 0) {
+      contentHtml += `<h2>Skills</h2>
+      <table class="skills-table">`;
+
+      skills.forEach((skillGroup: { category: any; skills: any[] }) => {
+        contentHtml += `<tr>
+          <td>${skillGroup.category}</td>
+          <td>${skillGroup.skills.join(', ')}</td>
+        </tr>`;
+      });
+
+      contentHtml += `</table>`;
+    }
+
+    // Add Experience Section
+    if (experiences && experiences.length > 0) {
+      contentHtml += `<h2>Experience</h2>`;
+
+      experiences.forEach(
+        (exp: {
+          startDate: any;
+          endDate: any;
+          position: any;
+          company: any;
+          location: string;
+          description: any;
+          achievements: any[];
+        }) => {
+          contentHtml += `<div class="org-header">
+          <span class="org-date">${exp.startDate} - ${exp.endDate || 'Present'}</span>
+          <div class="org-title">${exp.position}</div>
+        </div>
+        <div class="org-subtitle">${exp.company}${exp.location ? ' | ' + exp.location : ''}</div>
+        ${exp.description ? `<p>${exp.description}</p>` : ''}`;
+
+          if (exp.achievements && exp.achievements.length > 0) {
+            contentHtml += `<ul>`;
+            exp.achievements.forEach(achievement => {
+              contentHtml += `<li>${achievement}</li>`;
+            });
+            contentHtml += `</ul>`;
+          }
+        },
+      );
+    }
+
+    // Add Projects Section
+    if (projects && projects.length > 0) {
+      contentHtml += `<h2>Projects</h2>`;
+
+      projects.forEach((project: { name: any; link: any; description: any; technologies: any }) => {
+        contentHtml += `<h3>${project.name}
+          ${project.link ? ` <a href="${project.link}">${this.showHyperlinkUrls ? project.link : 'View Project'}</a>` : ''}
+        </h3>
+        <p>${project.description}</p>
+        ${project.technologies ? `<p><strong>Technologies:</strong> ${project.technologies}</p>` : ''}`;
+      });
+    }
+
+    // Add Education Section
+    if (education && education.length > 0) {
+      contentHtml += `<h2>Education</h2>`;
+
+      education.forEach(
+        (edu: {
+          startDate: any;
+          endDate: any;
+          degree: any;
+          institution: any;
+          location: string;
+          cgpa: any;
+          description: any;
+        }) => {
+          contentHtml += `<div class="org-header">
+          <span class="org-date">${edu.startDate} - ${edu.endDate}</span>
+          <div class="org-title">${edu.degree}</div>
+        </div>
+        <div class="org-subtitle">${edu.institution}${edu.location ? ' | ' + edu.location : ''}</div>
+        ${edu.cgpa ? `<p><strong>CGPA/Percentage:</strong> ${edu.cgpa}</p>` : ''}
+        ${edu.description ? `<p>${edu.description}</p>` : ''}`;
+        },
+      );
+    }
+
+    // Add Certificates Section
+    if (certificates && certificates.length > 0) {
+      contentHtml += `<h2>Certifications</h2>`;
+
+      certificates.forEach(cert => {
+        contentHtml += `<div class="org-header">
+          <span class="org-date">${cert.date}${cert.expiration ? ` - ${cert.expiration}` : ''}</span>
+          <div class="org-title">${cert.name}</div>
+        </div>
+        <div class="org-subtitle">${cert.issuer}</div>
+        ${cert.credentialId ? `<p><strong>Credential ID:</strong> ${cert.credentialId}</p>` : ''}
+        ${cert.url ? `<p><a href="${cert.url}">${cert.url}</a></p>` : ''}
+        ${cert.description ? `<p>${cert.description}</p>` : ''}`;
+      });
+    }
+
+    // Add Languages Section
+    if (languages && languages.length > 0) {
+      contentHtml += `<h2>Languages</h2>
+      <p>${languages.map(lang => `${lang.name} (${lang.proficiency})`).join(', ')}</p>`;
+    }
+
+    // Add Personal Details Section
+    if (personalDetails && Object.keys(personalDetails).length > 0) {
+      contentHtml += `<h2>Personal Details</h2>
+      <table class="details-table">`;
+
+      // Helper function to add a row if the value exists
+      const addDetailRow = (label: string, value: string | undefined) => {
+        if (value) {
+          contentHtml += `<tr>
+            <td style="width: 30%; font-weight: bold;">${label}</td>
+            <td>${value}</td>
+          </tr>`;
+        }
+      };
+
+      addDetailRow('Date of Birth', personalDetails.dateOfBirth);
+      addDetailRow('Place of Birth', personalDetails.placeOfBirth);
+      addDetailRow('Nationality', personalDetails.nationality);
+      addDetailRow('Gender', personalDetails.gender);
+      addDetailRow('Marital Status', personalDetails.maritalStatus);
+
+      // Check if person is female and married
+      const isMarriedFemale = personalDetails.gender === 'Female' && personalDetails.maritalStatus === 'Married';
+
+      if (isMarriedFemale && personalDetails.husbandName) {
+        addDetailRow("Husband's Name", personalDetails.husbandName);
+      } else if (personalDetails.fathersName) {
+        addDetailRow("Father's Name", personalDetails.fathersName);
+      }
+
+      if (!isMarriedFemale && personalDetails.mothersName) {
+        addDetailRow("Mother's Name", personalDetails.mothersName);
+      }
+
+      addDetailRow('Religion', personalDetails.religion);
+      addDetailRow('Passport Number', personalDetails.passportNumber);
+      addDetailRow('Driving License', personalDetails.drivingLicense);
+      addDetailRow('Blood Group', personalDetails.bloodGroup);
+
+      if (personalDetails.hobbies && personalDetails.hobbies.length) {
+        addDetailRow('Hobbies', personalDetails.hobbies.join(', '));
+      }
+
+      // Add additional custom fields
+      if (personalDetails.otherInfo && personalDetails.otherInfo.length > 0) {
+        personalDetails.otherInfo.forEach(info => {
+          addDetailRow(info.key, info.value);
+        });
+      }
+
+      contentHtml += `</table>`;
+    }
+
+    // Add Footer with Signature
+    if (this.includeSignatureLine) {
+      contentHtml += `<div class="footer">
+        <div class="signature-line">Signature (${profile?.fullName || 'Candidate'})</div>
+      </div>`;
+    }
+
     const postHtml = '</body></html>';
-    const previewHtml = this.resumePreview.nativeElement.innerHTML;
+    const html = preHtml + contentHtml + postHtml;
 
-    const html = preHtml + previewHtml + postHtml;
-    const blob = new Blob([html], { type: 'application/msword' });
+    // Save as MS Word document
+    try {
+      // Create Word doc blob with proper content type
+      const blob = new Blob(['\ufeff', html], {
+        type: 'application/msword;charset=utf-8',
+      });
 
-    // Create download link
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = finalFilename;
-    link.click();
-    URL.revokeObjectURL(url);
+      // Create download link
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
 
-    this.showMessage('Word document downloaded');
+      // Use .doc extension for better compatibility
+      const docFilename = finalFilename.replace('.docx', '.doc');
+
+      link.download = docFilename;
+      link.click();
+      URL.revokeObjectURL(url);
+
+      this.showMessage('Word document downloaded');
+    } catch (error) {
+      console.error('Error exporting Word document:', error);
+      this.showMessage('Error creating Word document');
+    }
   }
 
   togglePreview(): void {
