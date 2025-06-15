@@ -11,6 +11,7 @@ import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 // import pdfFonts from 'pdfmake/build/vfs_fonts';
 
 import { ResumeService } from '../../services/resume';
+import { ThemeColors } from '../../models';
 
 @Component({
   selector: 'app-export',
@@ -1073,213 +1074,116 @@ export class Export implements OnInit {
   }
 
   // Add personal details section
-  private addPersonalDetailsSection(docDefinition: any, colors: any): void {
+  private addPersonalDetailsSection(docDefinition: any, colors: ThemeColors): void {
     const personalDetails = this.resumeService.getPersonalDetails();
     if (!personalDetails || Object.keys(personalDetails).length === 0) return;
 
     docDefinition.content.push({ text: 'Personal Details', style: 'subheader' });
     this.addSectionTitleLine(docDefinition, colors);
 
-    const detailsTable = {
+    // Create a two-column layout for personal details
+    docDefinition.content.push(this.createTwoColumnPersonalDetailsTable(personalDetails, colors));
+  }
+
+  private createTwoColumnPersonalDetailsTable(personalDetails: any, colors: ThemeColors): any {
+    // First collect all detail rows
+    const allDetails = this.collectPersonalDetails(personalDetails);
+
+    // Calculate middle index to split details into two columns
+    const halfIndex = Math.ceil(allDetails.length / 2);
+
+    // Split details into left and right columns
+    const leftColumnDetails = allDetails.slice(0, halfIndex);
+    const rightColumnDetails = allDetails.slice(halfIndex);
+
+    // Create left column table
+    const leftTable = {
       table: {
-        widths: ['30%', '5%', '65%'], // Three columns: key, colon, value
-        body: [] as any[],
+        widths: ['40%', '5%', '55%'], // Label, colon, value
+        body: this.createDetailRows(leftColumnDetails, colors),
       },
       layout: 'noBorders',
-      margin: [0, 0, 0, 10],
     };
 
-    // Add each detail to the table
-    if (personalDetails.dateOfBirth) {
-      detailsTable.table.body.push([
-        {
-          text: 'Date of Birth',
-          style: 'smallText',
-          bold: true,
-          color: colors.secondaryColor, // Key color
-          alignment: 'left', // Right align all keys
-        },
-        {
-          text: ':',
-          style: 'smallText',
-          bold: true,
-          color: colors.secondaryColor,
-        },
-        {
-          text: personalDetails.dateOfBirth,
-          style: 'smallText',
-          color: colors.textColor, // Value color
-        },
-      ]);
-    }
+    // Create right column table
+    const rightTable = {
+      table: {
+        widths: ['40%', '5%', '55%'], // Label, colon, value
+        body: this.createDetailRows(rightColumnDetails, colors),
+      },
+      layout: 'noBorders',
+    };
 
-    if (personalDetails.placeOfBirth) {
-      detailsTable.table.body.push([
-        {
-          text: 'Place of Birth',
-          style: 'smallText',
-          bold: true,
-          color: colors.secondaryColor,
-          alignment: 'left',
-        },
-        {
-          text: ':',
-          style: 'smallText',
-          bold: true,
-          color: colors.secondaryColor,
-        },
-        {
-          text: personalDetails.placeOfBirth,
-          style: 'smallText',
-          color: colors.textColor,
-        },
-      ]);
-    }
+    // Return a columns layout containing both tables
+    return {
+      columns: [
+        { width: '48%', stack: [leftTable] },
+        { width: '4%', text: '' }, // Spacer column
+        { width: '48%', stack: [rightTable] },
+      ],
+      margin: [0, 0, 0, 10],
+    };
+  }
 
-    if (personalDetails.nationality) {
-      detailsTable.table.body.push([
-        { text: 'Nationality', style: 'smallText', bold: true, color: colors.secondaryColor, alignment: 'left' },
-        { text: ':', style: 'smallText', bold: true, color: colors.secondaryColor },
-        { text: personalDetails.nationality, style: 'smallText', color: colors.textColor },
-      ]);
-    }
+  private collectPersonalDetails(personalDetails: any): Array<[string, string]> {
+    const details: Array<[string, string]> = [];
 
-    if (personalDetails.gender) {
-      detailsTable.table.body.push([
-        { text: 'Gender', style: 'smallText', bold: true, color: colors.secondaryColor, alignment: 'left' },
-        { text: ':', style: 'smallText', bold: true, color: colors.secondaryColor },
-        { text: personalDetails.gender, style: 'smallText', color: colors.textColor },
-      ]);
-    }
+    // Helper function to add a detail if value exists
+    const addDetail = (label: string, value: any) => {
+      if (value) details.push([label, value]);
+    };
 
-    if (personalDetails.maritalStatus) {
-      detailsTable.table.body.push([
-        { text: 'Marital Status', style: 'smallText', bold: true, color: colors.secondaryColor, alignment: 'left' },
-        { text: ':', style: 'smallText', bold: true, color: colors.secondaryColor },
-        { text: personalDetails.maritalStatus, style: 'smallText', color: colors.textColor },
-      ]);
-    }
+    // Basic details
+    addDetail('Date of Birth', personalDetails.dateOfBirth);
+    addDetail('Place of Birth', personalDetails.placeOfBirth);
+    addDetail('Nationality', personalDetails.nationality);
+    addDetail('Gender', personalDetails.gender);
+    addDetail('Marital Status', personalDetails.maritalStatus);
 
-    // Check if person is female and married
+    // Family details - handle married females differently
     const isMarriedFemale = personalDetails.gender === 'Female' && personalDetails.maritalStatus === 'Married';
 
-    // Show Husband's name instead of Father's name for married females
     if (isMarriedFemale && personalDetails.husbandName) {
-      detailsTable.table.body.push([
-        { text: "Husband's Name", style: 'smallText', bold: true, color: colors.secondaryColor, alignment: 'left' },
-        { text: ':', style: 'smallText', bold: true, color: colors.secondaryColor },
-        { text: personalDetails.husbandName, style: 'smallText', color: colors.textColor },
-      ]);
-    }
-    // Otherwise show Father's name if available
-    else if (personalDetails.fathersName) {
-      detailsTable.table.body.push([
-        { text: "Father's Name", style: 'smallText', bold: true, color: colors.secondaryColor, alignment: 'left' },
-        { text: ':', style: 'smallText', bold: true, color: colors.secondaryColor },
-        { text: personalDetails.fathersName, style: 'smallText', color: colors.textColor },
-      ]);
+      addDetail("Husband's Name", personalDetails.husbandName);
+    } else if (personalDetails.fathersName) {
+      addDetail("Father's Name", personalDetails.fathersName);
     }
 
-    // Only show Mother's name if not a married female
     if (!isMarriedFemale && personalDetails.mothersName) {
-      detailsTable.table.body.push([
-        { text: "Mother's Name", style: 'smallText', bold: true, color: colors.secondaryColor, alignment: 'left' },
-        { text: ':', style: 'smallText', bold: true, color: colors.secondaryColor },
-        { text: personalDetails.mothersName, style: 'smallText', color: colors.textColor },
-      ]);
+      addDetail("Mother's Name", personalDetails.mothersName);
     }
 
-    // Add sibling information if applicable
+    // Siblings
     if (personalDetails.hasSiblings === true && (personalDetails.siblingCount ?? 0) > 0) {
-      detailsTable.table.body.push([
-        {
-          text: 'Number of Siblings',
-          style: 'smallText',
-          bold: true,
-          color: colors.secondaryColor,
-          alignment: 'left',
-        },
-        {
-          text: ':',
-          style: 'smallText',
-          bold: true,
-          color: colors.secondaryColor,
-        },
-        {
-          text: (personalDetails.siblingCount ?? 0).toString(),
-          style: 'smallText',
-          color: colors.textColor,
-        },
-      ]);
+      addDetail('Number of Siblings', (personalDetails.siblingCount ?? 0).toString());
     }
 
-    if (personalDetails.religion) {
-      detailsTable.table.body.push([
-        { text: 'Religion', style: 'smallText', bold: true, color: colors.secondaryColor, alignment: 'left' },
-        { text: ':', style: 'smallText', bold: true, color: colors.secondaryColor },
-        { text: personalDetails.religion, style: 'smallText', color: colors.textColor },
-      ]);
-    }
-
-    if (personalDetails.passportNumber) {
-      detailsTable.table.body.push([
-        { text: 'Passport Number', style: 'smallText', bold: true, color: colors.secondaryColor, alignment: 'left' },
-        { text: ':', style: 'smallText', bold: true, color: colors.secondaryColor },
-        { text: personalDetails.passportNumber, style: 'smallText', color: colors.textColor },
-      ]);
-    }
-
-    if (personalDetails.drivingLicense) {
-      detailsTable.table.body.push([
-        { text: 'Driving License', style: 'smallText', bold: true, color: colors.secondaryColor, alignment: 'left' },
-        { text: ':', style: 'smallText', bold: true, color: colors.secondaryColor },
-        { text: personalDetails.drivingLicense, style: 'smallText', color: colors.textColor },
-      ]);
-    }
-
-    if (personalDetails.bloodGroup) {
-      detailsTable.table.body.push([
-        { text: 'Blood Group', style: 'smallText', bold: true, color: colors.secondaryColor, alignment: 'left' },
-        { text: ':', style: 'smallText', bold: true, color: colors.secondaryColor },
-        { text: personalDetails.bloodGroup, style: 'smallText', color: colors.textColor },
-      ]);
-    }
+    // Other details
+    addDetail('Religion', personalDetails.religion);
+    addDetail('Passport Number', personalDetails.passportNumber);
+    addDetail('Driving License', personalDetails.drivingLicense);
+    addDetail('Blood Group', personalDetails.bloodGroup);
 
     if (personalDetails.hobbies && personalDetails.hobbies.length) {
-      detailsTable.table.body.push([
-        { text: 'Hobbies', style: 'smallText', bold: true, color: colors.secondaryColor, alignment: 'left' },
-        { text: ':', style: 'smallText', bold: true, color: colors.secondaryColor },
-        { text: personalDetails.hobbies.join(', '), style: 'smallText', color: colors.textColor },
-      ]);
+      addDetail('Hobbies', personalDetails.hobbies.join(', '));
     }
 
+    // Custom fields
     if (personalDetails.otherInfo && personalDetails.otherInfo.length > 0) {
       personalDetails.otherInfo.forEach((info: any) => {
-        detailsTable.table.body.push([
-          {
-            text: info.key,
-            style: 'smallText',
-            bold: true,
-            color: colors.secondaryColor,
-            alignment: 'left',
-          },
-          {
-            text: ':',
-            style: 'smallText',
-            bold: true,
-            color: colors.secondaryColor,
-          },
-          {
-            text: info.value,
-            style: 'smallText',
-            color: colors.textColor,
-          },
-        ]);
+        addDetail(info.key, info.value);
       });
     }
 
-    // Add the table to the document
-    docDefinition.content.push(detailsTable);
+    return details;
+  }
+
+  private createDetailRows(details: Array<[string, string]>, colors: ThemeColors): any[] {
+    return details.map(([label, value]) => [
+      { text: label, style: 'smallText', bold: true, color: colors.secondaryColor, alignment: 'left' },
+      { text: ':', style: 'smallText', bold: true, color: colors.secondaryColor },
+      { text: value, style: 'smallText', color: colors.textColor },
+    ]);
   }
 
   // Add a helper method to create a line below section titles

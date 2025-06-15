@@ -925,6 +925,80 @@ h2 {
   box-shadow: 0 0 0 1px rgba(74, 111, 165, 0.2);
 }
 
+/* Two-column personal details with perfect alignment */
+.personal-details-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  // margin-bottom: 10px;
+}
+
+.personal-details-column {
+  flex: 1;
+  min-width: 45%;
+  max-width: 48%;
+}
+
+/* Perfect alignment using grid with fixed column widths */
+.detail-item {
+  display: grid;
+  grid-template-columns: minmax(150px, auto) 20px 1fr;
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+
+.detail-label {
+  font-weight: bold;
+  color: #444;
+  text-align: left;
+  padding-right: 5px; /* Consistent spacing before colon */
+}
+
+.detail-colon {
+  text-align: center;
+  color: #444;
+  padding: 0 5px; /* Consistent spacing around colon */
+  width: 10px;
+  justify-self: center; /* Center the colon in its column */
+}
+
+.detail-value {
+  color: #333;
+  padding-left: 5px; /* Consistent spacing after colon */
+}
+
+/* Custom fields section (below the columns) */
+// .custom-fields {
+//   margin-top: 10px;
+// }
+
+.custom-fields .detail-item {
+  max-width: 100%;
+}
+
+/* Ensure columns stack nicely on smaller screens */
+@media (max-width: 950px) {
+  .personal-details-container {
+    flex-direction: column;
+  }
+
+  .personal-details-column {
+    max-width: 100%;
+  }
+}
+
+/* Print-specific styles */
+@media print {
+  .detail-item {
+    margin-bottom: 5px;
+    line-height: 1.3;
+  }
+
+  .personal-details-container {
+    gap: 15px;
+  }
+}
+
 /* For responsive design */
 @media (max-width: 768px) {
   .export-header {

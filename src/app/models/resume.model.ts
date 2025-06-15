@@ -77,3 +77,12 @@ export interface PersonalDetails {
   siblingCount?: number;
   otherInfo?: { key: string; value: string }[];
 }
+
+export interface ThemeColors {
+  primaryColor: string;
+  secondaryColor: string;
+  accentColor: string;
+  textColor: string;
+  subtitleColor: string;
+  lineColor: string;
+}
