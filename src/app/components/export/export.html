@@ -424,6 +424,11 @@
           </div>
         </section>
 
+        <!-- Declaration Section -->
+        <section class="resume-section" *ngIf="declaration.enabled && declaration.text">
+          <p class="declaration-text">{{declaration.text}}</p>
+        </section>
+
         <!-- Resume Footer with QR Code and Signature -->
         <div class="resume-footer" [ngClass]="{'signature-only': includeSignatureLine && !includeQrCode}">
           <!-- Left side: QR Code -->

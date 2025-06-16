@@ -63,7 +63,7 @@ export class QrCode implements OnInit, OnDestroy {
   }
 
   goToPreviousSection(): void {
-    this.navigate.emit('education');
+    this.navigate.emit('declaration');
   }
 
   finishAndExport(): void {

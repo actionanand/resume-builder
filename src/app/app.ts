@@ -20,6 +20,7 @@ import { BreadcrumbService } from './services/breadcrumb';
 import { Certificates } from './components/certificates/certificates';
 import { Languages } from './components/languages/languages';
 import { PersonalDetailsComponent } from './components/personal-details/personal-details';
+import { Declaration } from './components/declaration/declaration';
 
 @Component({
   selector: 'app-root',
@@ -39,6 +40,7 @@ import { PersonalDetailsComponent } from './components/personal-details/personal
     Certificates,
     Languages,
     PersonalDetailsComponent,
+    Declaration,
   ],
   providers: [],
   templateUrl: './app.html',
@@ -63,6 +65,7 @@ export class App implements OnInit {
     { id: 'certificates', label: 'Certificates', icon: 'card_membership', complete: false },
     { id: 'languages', label: 'Languages', icon: 'translate', complete: false },
     { id: 'personalDetails', label: 'Personal', icon: 'person_outline', complete: false },
+    { id: 'declaration', label: 'Declaration', icon: 'gavel', complete: false },
     { id: 'qr-code', label: 'QR Code', icon: 'qr_code', complete: false },
   ];
 
@@ -132,9 +135,13 @@ export class App implements OnInit {
       Object.keys(personalDetails).some(key => key !== 'hasSiblings' && key !== 'siblingCount');
     this.breadcrumbSections[8].complete = !!hasRealPersonalDetails;
 
+    // For declaration, check if the text is not empty
+    const declaration = this.resumeService.getDeclaration();
+    this.breadcrumbSections[9].complete = !!(declaration && declaration.text && declaration.text.trim() !== '');
+
     // QR code is considered complete if any section is complete
-    this.breadcrumbSections[9].complete = this.breadcrumbSections.some(
-      (section, index) => index < 9 && section.complete,
+    this.breadcrumbSections[10].complete = this.breadcrumbSections.some(
+      (section, index) => index < 10 && section.complete,
     );
 
     // Update the breadcrumb service with the new status

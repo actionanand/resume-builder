@@ -1,0 +1,110 @@
+@use '../../shared/css/navigation.scss';
+
+* {
+  box-sizing: border-box;
+}
+
+/* Card styling */
+.declaration-card {
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+  border: none;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  margin-bottom: 30px;
+  width: 100%; /* Ensure card takes full width */
+}
+
+.card-header {
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #eee;
+  border-radius: 8px 8px 0 0 !important;
+  padding: 1.25rem;
+}
+
+.card-body {
+  padding: 1.5rem;
+}
+
+/* Editor container - full width */
+.editor-container {
+  position: relative;
+  transition: all 0.3s ease;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  padding: 10px;
+  width: 100%; /* Ensure 100% width */
+}
+
+/* Focus mode styling */
+.focus-mode {
+  background-color: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* Text editor styling */
+.text-editor-wrapper {
+  position: relative;
+  width: 100%; /* Full width */
+}
+
+.declaration-editor {
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+  padding: 15px;
+  transition: all 0.3s ease;
+  font-family: 'Georgia', serif;
+  font-size: 1rem;
+  line-height: 1.5;
+  resize: vertical;
+  min-height: 120px;
+  color: #333;
+  width: 100%; /* Full width */
+
+  &:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    outline: none;
+  }
+}
+
+.form-label {
+  margin-bottom: 0.75rem;
+  display: block;
+}
+
+/* Editor actions */
+.editor-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
+
+  .btn-outline-secondary {
+    transition: all 0.2s ease-in-out;
+    border-color: #6c757d;
+
+    &:hover {
+      background-color: #6c757d;
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    &:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+  }
+}
+
+/* Toggle switch styling */
+.form-check {
+  margin-bottom: 0; /* Ensure no bottom margin */
+}
+
+.form-switch .form-check-input {
+  width: 3em;
+  height: 1.5em;
+  margin-top: 0.2em;
+}

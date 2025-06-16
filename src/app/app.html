@@ -29,6 +29,8 @@
       *ngIf="currentSection === 'personalDetails'"
       (navigate)="onSectionChange($event)"></app-personal-details>
 
+    <app-declaration *ngIf="currentSection === 'declaration'" (navigate)="onSectionChange($event)"> </app-declaration>
+
     <app-qr-code *ngIf="currentSection === 'qr-code'" (navigate)="onSectionChange($event)"> </app-qr-code>
 
     <app-export *ngIf="currentSection === 'export'"> </app-export>

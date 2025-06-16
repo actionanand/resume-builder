@@ -1,0 +1,62 @@
+<div class="container mt-4">
+  <div class="card declaration-card">
+    <div class="card-header">
+      <h2>Declaration Statement</h2>
+      <p class="text-muted">Add a declaration statement to your resume</p>
+    </div>
+
+    <div class="card-body">
+      <!-- Enable declaration toggle -->
+      <div class="form-group">
+        <div class="form-check form-switch">
+          <input
+            type="checkbox"
+            class="form-check-input"
+            id="enableDeclaration"
+            [(ngModel)]="declaration.enabled"
+            (change)="saveDeclaration()"
+            name="enableDeclaration" />
+          <label class="form-check-label" for="enableDeclaration"> Include declaration statement in resume </label>
+        </div>
+      </div>
+
+      <!-- Text editor with focus mode - only shown when enabled -->
+      <div class="editor-container mt-3" *ngIf="declaration.enabled" [class.focus-mode]="isEditorFocused">
+        <label for="declarationText" class="form-label">Declaration Text:</label>
+
+        <div class="text-editor-wrapper">
+          <textarea
+            class="form-control declaration-editor"
+            id="declarationText"
+            rows="5"
+            [(ngModel)]="declaration.text"
+            (focus)="onEditorFocus()"
+            (blur)="onEditorBlur()"
+            (input)="autoSave()"
+            name="declarationText"
+            placeholder="Write your declaration statement here...">
+          </textarea>
+        </div>
+
+        <div class="editor-actions">
+          <button type="button" class="btn btn-sm btn-outline-secondary" (click)="resetToDefault()">
+            Reset to Default Text
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Navigation buttons -->
+<div class="section-navigation with-prev">
+  <button type="button" (click)="goToPreviousSection()" class="btn btn-prev">
+    <i class="material-icons">arrow_forward</i>
+    Previous: Personal Details
+  </button>
+
+  <button type="button" (click)="goToNextSection()" class="btn btn-primary">
+    Next: QR Code
+    <i class="material-icons">arrow_forward</i>
+  </button>
+</div>

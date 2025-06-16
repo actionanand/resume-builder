@@ -265,6 +265,6 @@ export class PersonalDetailsComponent implements OnInit {
 
   goToNextSection(): void {
     this.saveDetails();
-    this.navigate.emit('qr-code');
+    this.navigate.emit('declaration');
   }
 }

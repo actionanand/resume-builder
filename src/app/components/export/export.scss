@@ -976,6 +976,13 @@ h2 {
   max-width: 100%;
 }
 
+.declaration-text {
+  font-style: italic;
+  margin: 15px 0;
+  line-height: 1.5;
+  color: #444;
+}
+
 /* Ensure columns stack nicely on smaller screens */
 @media (max-width: 950px) {
   .personal-details-container {

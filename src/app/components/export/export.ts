@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, OnInit, ElementRef, ViewChild, inject, Input } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, inject, Input, DestroyRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -11,11 +11,11 @@ import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 // import pdfFonts from 'pdfmake/build/vfs_fonts';
 
 import { ResumeService } from '../../services/resume';
-import { ThemeColors } from '../../models';
+import { DeclarationDef, ThemeColors } from '../../models';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-export',
-  standalone: true,
   imports: [CommonModule, FormsModule, QRCodeComponent],
   templateUrl: './export.html',
   styleUrls: ['./export.scss'],
@@ -60,7 +60,11 @@ export class Export implements OnInit {
     { id: 'large', name: 'Large' },
   ];
 
+  declaration: DeclarationDef = { enabled: false, text: '' };
+  private subscription: Subscription = new Subscription();
+
   protected resumeService = inject(ResumeService);
+  private destroyRef = inject(DestroyRef);
 
   ngOnInit(): void {
     this.generateMarkdown();
@@ -115,6 +119,18 @@ export class Export implements OnInit {
     this.resumeService.qrCodeData$.subscribe(data => {
       this.qrData = data;
     });
+
+    // Subscribe to declaration changes
+    this.subscription.add(
+      this.resumeService.declaration$.subscribe(declaration => {
+        this.declaration = declaration;
+      }),
+    );
+
+    this.destroyRef.onDestroy(() => {
+      // Clean up subscriptions
+      this.subscription.unsubscribe();
+    });
   }
 
   private async getIconFromPublicFolder(iconName: string): Promise<string> {
@@ -127,6 +143,20 @@ export class Export implements OnInit {
     } catch (error) {
       console.error(`Error loading icon '${iconName}':`, error);
       return ''; // Return empty string on error which will skip the icon
+    }
+  }
+
+  private addDeclarationSection(docDefinition: any, colors: ThemeColors): void {
+    if (this.declaration.enabled && this.declaration.text) {
+      docDefinition.content.push({
+        text: this.declaration.text,
+        style: {
+          fontSize: 10,
+          italics: true,
+          color: colors.textColor || '#444444',
+        },
+        margin: [0, 15, 0, 10],
+      });
     }
   }
 
@@ -935,6 +965,8 @@ export class Export implements OnInit {
 
     // Add personal details section
     this.addPersonalDetailsSection(docDefinition, colors);
+
+    this.addDeclarationSection(docDefinition, colors);
 
     // Add footer with QR code and signature
     await this.addFooterSection(docDefinition);

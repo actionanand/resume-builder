@@ -86,3 +86,8 @@ export interface ThemeColors {
   subtitleColor: string;
   lineColor: string;
 }
+
+export interface DeclarationDef {
+  enabled: boolean;
+  text: string;
+}

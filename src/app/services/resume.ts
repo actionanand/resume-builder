@@ -1,14 +1,21 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Injectable } from '@angular/core';
 
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 
-import { Certificate, Language, PersonalDetails, ProfileInfo } from '../models';
+import { Certificate, DeclarationDef, Language, PersonalDetails, ProfileInfo } from '../models';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ResumeService {
+  private readonly DEFAULT_DECLARATION: DeclarationDef = {
+    enabled: false,
+    text: 'I hereby declare that the information provided above is true to the best of my knowledge and belief.',
+  };
+
+  readonly DEFAULT_DECLARATION_TEXT = this.DEFAULT_DECLARATION.text;
+
   private resumeData: any = {
     profile: null,
     experience: [],
@@ -16,6 +23,7 @@ export class ResumeService {
     skills: [],
     projects: [],
     about: '',
+    declaration: this.DEFAULT_DECLARATION,
   };
 
   private resumeDataSubject = new BehaviorSubject<any>(this.resumeData);
@@ -36,6 +44,10 @@ export class ResumeService {
 
   qrCodeData$ = this._qrCodeData.asObservable();
 
+  private declarationSubject = new BehaviorSubject<DeclarationDef>(this.resumeData.declaration);
+
+  public declaration$: Observable<DeclarationDef> = this.declarationSubject.asObservable();
+
   constructor() {
     this.loadResumeData();
   }
@@ -45,6 +57,8 @@ export class ResumeService {
     if (savedData) {
       this.resumeData = JSON.parse(savedData);
       this.resumeDataSubject.next(this.resumeData);
+
+      this.declarationSubject.next(this.resumeData.declaration || this.DEFAULT_DECLARATION);
     }
   }
 
@@ -66,6 +80,16 @@ export class ResumeService {
     this.resumeData.profile = profile;
     this.saveResumeData();
     this.notifyDataChanged();
+  }
+
+  getDeclaration(): DeclarationDef {
+    return this.declarationSubject.getValue();
+  }
+
+  setDeclaration(declaration: DeclarationDef): void {
+    this.declarationSubject.next(declaration);
+    this.resumeData.declaration = declaration;
+    this.saveResumeData(); // Assuming you have a method to save the entire resume
   }
 
   updateQrCodeData(data: { qrDataString: string; darkColor: string; customFields: any[] }): void {
