@@ -1779,6 +1779,7 @@ export class Export implements OnInit {
   // Skills section
   private addSkillsSection(docDefinition: any, colors: ThemeColors): void {
     const skillsData = this.resumeService.getSkills();
+    if (!skillsData || (Array.isArray(skillsData) && skillsData.length === 0)) return;
 
     // Debug skills data structure
     console.log('Skills data received:', skillsData);
@@ -1810,17 +1811,6 @@ export class Export implements OnInit {
         name: categoryName,
         skills: skillsData[categoryName],
       }));
-    }
-
-    // If we still don't have skills, show placeholder
-    if (skillCategories.length === 0) {
-      docDefinition.content.push({
-        text: 'No skills added',
-        italics: true,
-        color: colors.textColor,
-        margin: [0, 0, 0, 10],
-      });
-      return;
     }
 
     // Create chunks of categories - 2 per row
@@ -1911,10 +1901,6 @@ export class Export implements OnInit {
 
   // Helper method to format individual skill items
   private formatSkillItems(skills: string[], colors: ThemeColors): any[] {
-    if (!Array.isArray(skills) || skills.length === 0) {
-      return [{ text: 'No skills specified', italics: true, color: colors.textColor }];
-    }
-
     let pillColors: { background: string; text: string; border: string };
 
     if (this.useDefaultPillColors) {
