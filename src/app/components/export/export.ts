@@ -40,6 +40,7 @@ export class Export implements OnInit {
   showPreview = true;
   showContactIcons = true;
   showHyperlinkUrls = false;
+  useDefaultPillColors = true;
 
   exportFilename: string = '';
 
@@ -1914,17 +1915,23 @@ export class Export implements OnInit {
       return [{ text: 'No skills specified', italics: true, color: colors.textColor }];
     }
 
-    const pillColors = {
-      background: colors.ultraLightShade || '#f0f9ff',
-      text: colors.primaryColor || '#0c4a6e',
-      border: colors.lightShade || '#bae6fd',
-    };
+    let pillColors: { background: string; text: string; border: string };
 
-    // const pillColors = {
-    //   background: '#f3f4f6',
-    //   text: '#374151',
-    //   border: '#d1d5db',
-    // };
+    if (this.useDefaultPillColors) {
+      // Use default professional colors
+      pillColors = {
+        background: '#f0f9ff', // Light sky blue background
+        text: '#0c4a6e', // Dark navy text
+        border: '#bae6fd', // Light blue border
+      };
+    } else {
+      // Use theme-based colors
+      pillColors = {
+        background: colors.ultraLightShade || '#f0f9ff',
+        text: colors.primaryColor || '#0c4a6e',
+        border: colors.lightShade || '#bae6fd',
+      };
+    }
 
     // You can replace with any of these professional combinations:
     // Default Blue:

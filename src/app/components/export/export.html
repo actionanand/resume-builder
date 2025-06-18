@@ -122,6 +122,17 @@
         </div>
       </div>
 
+      <div class="form-group">
+        <div class="checkbox-field">
+          <input
+            type="checkbox"
+            id="useDefaultPillColors"
+            [(ngModel)]="useDefaultPillColors"
+            name="useDefaultPillColors" />
+          <label for="useDefaultPillColors">Use default colors for skills (instead of theme colors)</label>
+        </div>
+      </div>
+
       <div class="export-actions">
         <button (click)="exportAsPDF()" [disabled]="isGeneratingPDF" class="btn-export">
           <span *ngIf="!isGeneratingPDF">Export as PDF</span>
