@@ -1914,14 +1914,22 @@ export class Export implements OnInit {
       return [{ text: 'No skills specified', italics: true, color: colors.textColor }];
     }
 
-    // Use professional color scheme
     const pillColors = {
-      background: '#f0f9ff', // Light sky blue background
-      text: '#0c4a6e', // Dark navy text
-      border: '#bae6fd', // Light blue border
+      background: colors.ultraLightShade || '#f0f9ff',
+      text: colors.primaryColor || '#0c4a6e',
+      border: colors.lightShade || '#bae6fd',
     };
 
+    // const pillColors = {
+    //   background: '#f3f4f6',
+    //   text: '#374151',
+    //   border: '#d1d5db',
+    // };
+
     // You can replace with any of these professional combinations:
+    // Default Blue:
+    // background: '#f0f9ff', text: '#0c4a6e', border: '#bae6fd'
+
     // Subtle Professional:
     // background: '#f2f2f7', text: '#2c3e50', border: '#d1d5db'
 
