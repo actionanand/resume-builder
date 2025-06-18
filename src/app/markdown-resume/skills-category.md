@@ -16,13 +16,14 @@
 - **Templating Engines**: PUG, Handlebars, EJS
 - **Micro-Frontends**: Single-Spa
 
-## SSG/SSR Frameworks
+## Web Frameworks
 
-- **Static & Server Rendering**: REMIX, Next.js, Nuxt.js, Gatsby, Astro
+- **Meta-Frameworks**: Next.js, Nuxt.js, SvelteKit, Remix, Analog, Gatsby
+- **Static Site Generators**: Astro, Scully
 
 ## Backend Technologies
 
-- **Server Frameworks**: Express, Ruby on Rails (ROR), Spring Boot, .NET
+- **Server Frameworks**: Express, Nest.js, Ruby on Rails (ROR), Spring Boot, .NET
 - **API Technologies**: GraphQL, REST API, WebSockets
 - **Authentication/Authorization**: OAuth, JWT, RBAC
 
@@ -42,6 +43,7 @@
 - **Package Managers**: NPM, Yarn, PNPM
 - **Version Managers**: NVM
 - **Build Tools**: Webpack, Vite, Rollup
+- **Monorepo Tools**: Nx
 - **Language Specifications**: ES6 (ES2015), Legacy Standard, ESNext (ES6+)
 - **Transpilers & Polyfills**: Babel
 
@@ -83,7 +85,7 @@
 
 ## Development Tools
 
-- **IDEs & Editors**: VS Code, Sublime, PyCharm, IntelliJ IDEA, WebStorm
+- **IDEs & Editors**: VS Code, Sublime, PyCharm, IntelliJ IDEA, WebStorm, Vim, Vi
 - **Version Control**: GIT
 - **Design Tools**: Invision, Figma
 
