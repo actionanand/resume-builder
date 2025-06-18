@@ -85,6 +85,8 @@ export interface ThemeColors {
   textColor: string;
   subtitleColor: string;
   lineColor: string;
+  lightShade: string;
+  ultraLightShade: string;
 }
 
 export interface DeclarationDef {

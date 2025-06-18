@@ -11,7 +11,15 @@ import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 // import pdfFonts from 'pdfmake/build/vfs_fonts';
 
 import { ResumeService } from '../../services/resume';
-import { DeclarationDef, ThemeColors } from '../../models';
+import {
+  DeclarationDef,
+  PdfDocDefinition,
+  SkillCategory,
+  SkillColumn,
+  SkillComma,
+  SkillPill,
+  ThemeColors,
+} from '../../models';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -878,7 +886,7 @@ export class Export implements OnInit {
     const baseFontSize = this.getFontSize();
 
     // Create document definition
-    const docDefinition: any = {
+    const docDefinition: PdfDocDefinition = {
       content: [],
       info: {
         title: `Resume - ${this.exportFilename || 'Anand'}`,
@@ -933,6 +941,34 @@ export class Export implements OnInit {
           margin: [0, 1, 0, 1],
           color: colors.subtitleColor,
           italics: true, // Make dates italicized to match preview
+        },
+      },
+      tableLayouts: {
+        skillsLayout: {
+          hLineWidth: function (i: number, node: any): number {
+            return 0.5;
+          },
+          vLineWidth: function (i: number, node: any): number {
+            return 0.5;
+          },
+          hLineColor: function (i: number, node: any): string {
+            return '#e0e0e0';
+          },
+          vLineColor: function (i: number, node: any): string {
+            return '#e0e0e0';
+          },
+          paddingLeft: function (i: number, node: any): number {
+            return 2;
+          },
+          paddingRight: function (i: number, node: any): number {
+            return 2;
+          },
+          paddingTop: function (i: number, node: any): number {
+            return 2;
+          },
+          paddingBottom: function (i: number, node: any): number {
+            return 2;
+          },
         },
       },
       pageSize: 'A4',
@@ -1237,7 +1273,7 @@ export class Export implements OnInit {
   }
 
   // Helper method for theme colors
-  private getThemeColors(): any {
+  private getThemeColors(): ThemeColors {
     switch (this.selectedTheme) {
       case 'modern':
         return {
@@ -1247,6 +1283,8 @@ export class Export implements OnInit {
           textColor: '#333333', // Near-black for normal text
           subtitleColor: '#7f8c8d', // Gray for dates and small text
           lineColor: '#3498db', // Make sure section lines match the primary color
+          lightShade: '#f5f5f5',
+          ultraLightShade: '#f9f9f9',
         };
       case 'classic':
         return {
@@ -1256,6 +1294,8 @@ export class Export implements OnInit {
           textColor: '#000000', // Black for normal text
           subtitleColor: '#555555', // Gray for dates and small text
           lineColor: '#000000', // Black for section lines
+          lightShade: '#f5f5f5',
+          ultraLightShade: '#f9f9f9',
         };
       case 'minimal':
         return {
@@ -1265,6 +1305,8 @@ export class Export implements OnInit {
           textColor: '#333333', // Dark gray for normal text
           subtitleColor: '#7f8c8d', // Lighter gray for dates and small text
           lineColor: '#333333', // Match heading color for lines
+          lightShade: '#f5f5f5',
+          ultraLightShade: '#f9f9f9',
         };
       case 'professional':
         return {
@@ -1274,6 +1316,8 @@ export class Export implements OnInit {
           textColor: '#333333', // Near-black for normal text
           subtitleColor: '#7f8c8d', // Gray for dates and small text
           lineColor: '#2c3e50', // Match heading color for lines
+          lightShade: '#f5f5f5',
+          ultraLightShade: '#f9f9f9',
         };
       default:
         return {
@@ -1283,6 +1327,8 @@ export class Export implements OnInit {
           textColor: '#000000',
           subtitleColor: '#555555',
           lineColor: '#000000',
+          lightShade: '#f5f5f5',
+          ultraLightShade: '#f9f9f9',
         };
     }
   }
@@ -1730,19 +1776,208 @@ export class Export implements OnInit {
   }
 
   // Skills section
-  private addSkillsSection(docDefinition: any, colors: any): void {
-    const skills = this.resumeService.getSkills();
-    if (!skills?.length) return;
+  private addSkillsSection(docDefinition: any, colors: ThemeColors): void {
+    const skillsData = this.resumeService.getSkills();
 
-    docDefinition.content.push({ text: 'Skills', style: 'subheader' });
+    // Debug skills data structure
+    console.log('Skills data received:', skillsData);
+
+    // Add section header
+    docDefinition.content.push({
+      text: 'Skills',
+      style: 'subheader',
+      color: colors.primaryColor,
+      // margin: [0, 15, 0, 10]
+    });
+
     this.addSectionTitleLine(docDefinition, colors); // Add line below title
 
-    skills.forEach((skillGroup: any) => {
-      docDefinition.content.push(
-        { text: skillGroup.category, style: 'sectionTitle' },
-        { text: skillGroup.skills.join(', '), style: 'normalText', margin: [0, 0, 0, 8] },
-      );
+    // Handle different possible data structures for skills
+    let skillCategories = [];
+
+    // Case 1: Data is directly an array of categories
+    if (Array.isArray(skillsData)) {
+      skillCategories = skillsData;
+    }
+    // Case 2: Data has a categories property that's an array
+    else if (skillsData && Array.isArray(skillsData.categories)) {
+      skillCategories = skillsData.categories;
+    }
+    // Case 3: Data is an object with category names as keys
+    else if (skillsData && typeof skillsData === 'object') {
+      skillCategories = Object.keys(skillsData).map(categoryName => ({
+        name: categoryName,
+        skills: skillsData[categoryName],
+      }));
+    }
+
+    // If we still don't have skills, show placeholder
+    if (skillCategories.length === 0) {
+      docDefinition.content.push({
+        text: 'No skills added',
+        italics: true,
+        color: colors.textColor,
+        margin: [0, 0, 0, 10],
+      });
+      return;
+    }
+
+    // Create chunks of categories - 2 per row
+    const categoryChunks = [];
+    for (let i = 0; i < skillCategories.length; i += 2) {
+      const chunk = skillCategories.slice(i, i + 2);
+      categoryChunks.push(chunk);
+    }
+
+    // Process each chunk (row) of categories
+    categoryChunks.forEach(chunk => {
+      const row = {
+        columns: [] as any[],
+        columnGap: 10,
+        margin: [0, 0, 0, 15],
+      };
+
+      // Process each category in this chunk
+      chunk.forEach((category: SkillCategory | string) => {
+        // Ensure we have the category name - use it directly if it's a string, or access the name property
+        const categoryName: string =
+          typeof category === 'string'
+            ? category
+            : category.name || category.category || category.title || 'Uncategorized Skills';
+
+        console.log('Processing category:', categoryName);
+
+        // Get the skills array, handling different possible structures
+        let skills: string[] = [];
+        if (typeof category !== 'string' && Array.isArray(category.skills)) {
+          skills = category.skills;
+        } else if (typeof category !== 'string' && typeof category.skills === 'string') {
+          skills = category.skills.split(',').map(s => s.trim());
+        } else if (typeof category !== 'string' && Array.isArray(category.items)) {
+          // Try alternative property names
+          skills = category.items;
+        }
+
+        // Create column for this category
+        const column: SkillColumn = {
+          width: '*',
+          stack: [
+            // Category header - use the extracted categoryName
+            {
+              text: categoryName,
+              bold: true,
+              fontSize: 10,
+              fillColor: colors.lightShade || '#f5f5f5',
+              color: colors.textColor,
+              margin: [0, 0, 0, 5],
+              padding: [5, 3, 5, 3],
+            },
+            // Skills container with border
+            {
+              table: {
+                widths: ['*'],
+                body: [
+                  [
+                    {
+                      stack: this.formatSkillItems(skills, colors),
+                      margin: [3, 3, 3, 3],
+                    },
+                  ],
+                ],
+              },
+              layout: {
+                hLineWidth: (i: number) => 0.5,
+                vLineWidth: (i: number) => 0.5,
+                hLineColor: () => colors.lightShade || '#e0e0e0',
+                vLineColor: () => colors.lightShade || '#e0e0e0',
+              },
+            },
+          ],
+        };
+
+        row.columns.push(column);
+      });
+
+      // If we have just one category in this row, adjust width
+      if (row.columns.length === 1) {
+        row.columns[0].width = '50%';
+      }
+
+      // Add the row to document content
+      docDefinition.content.push(row);
     });
+  }
+
+  // Helper method to format individual skill items
+  private formatSkillItems(skills: string[], colors: ThemeColors): any[] {
+    if (!Array.isArray(skills) || skills.length === 0) {
+      return [{ text: 'No skills specified', italics: true, color: colors.textColor }];
+    }
+
+    // Use professional color scheme
+    const pillColors = {
+      background: '#f0f9ff', // Light sky blue background
+      text: '#0c4a6e', // Dark navy text
+      border: '#bae6fd', // Light blue border
+    };
+
+    // You can replace with any of these professional combinations:
+    // Subtle Professional:
+    // background: '#f2f2f7', text: '#2c3e50', border: '#d1d5db'
+
+    // Modern Tech:
+    // background: '#eef2ff', text: '#3730a3', border: '#c7d2fe'
+
+    // Subdued Gray:
+    // background: '#f3f4f6', text: '#374151', border: '#d1d5db'
+
+    // Soft Green:
+    // background: '#ecfdf5', text: '#065f46', border: '#a7f3d0'
+
+    const rows: any[] = [];
+    const currentRow: { stack: any[]; margin: [number, number, number, number] } = {
+      stack: [],
+      margin: [0, 4, 0, 4],
+    };
+
+    const skillsWithCommas: (SkillPill | SkillComma)[] = [];
+
+    skills.forEach((skill, index) => {
+      // Create a pill for each skill with balanced vertical padding
+      const skillPill = {
+        text: skill,
+        fontSize: 9,
+        color: pillColors.text,
+        background: pillColors.background,
+        border: [0.75, 0.75, 0.75, 0.75] as [number, number, number, number],
+        borderColor: pillColors.border,
+        // Adjust padding to fix vertical centering (more on top, less on bottom)
+        padding: [8, 4, 8, 2] as [number, number, number, number],
+        margin: [0, 2, 0, 2] as [number, number, number, number],
+      };
+
+      // Add the pill
+      skillsWithCommas.push(skillPill);
+
+      // Add comma after each pill except the last one
+      if (index < skills.length - 1) {
+        skillsWithCommas.push({
+          text: ', ',
+          fontSize: 9,
+          color: colors.textColor || '#333333',
+          margin: [0, 0, 0, 0],
+        });
+      }
+    });
+
+    // Add all skills with commas to the row with adjusted line height
+    currentRow.stack.push({
+      text: skillsWithCommas,
+      lineHeight: 1.3, // Reduced from 1.5 for better vertical spacing
+    });
+
+    rows.push(currentRow);
+    return rows;
   }
 
   // Experience section
