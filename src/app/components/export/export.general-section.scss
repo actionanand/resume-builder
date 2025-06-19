@@ -1,0 +1,114 @@
+/* General Sections Preview Styles - With Specific Class Names */
+.general-sections-preview-wrapper {
+  margin-top: 30px;
+}
+
+.general-sections-preview-heading {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+}
+
+.general-sections-preview-heading::before {
+  content: '';
+  display: inline-block;
+  width: 4px;
+  height: 16px;
+  background-color: #4285f4;
+  margin-right: 8px;
+  border-radius: 2px;
+}
+
+.general-sections-preview-box {
+  padding: 15px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background-color: white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.general-section-preview-item {
+  margin-bottom: 20px;
+}
+
+.general-section-preview-item:last-child {
+  margin-bottom: 0;
+}
+
+.general-section-preview-title {
+  color: #4682b4;
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0 0 5px 0;
+}
+
+.general-section-preview-divider {
+  height: 1px;
+  background-color: #4682b4;
+  margin-bottom: 10px;
+}
+
+.general-section-entry-item {
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.general-section-entry-item:last-child {
+  padding-bottom: 0;
+  margin-bottom: 0;
+  border-bottom: none;
+}
+
+.general-section-entry-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+
+.general-section-entry-title {
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.general-section-entry-date {
+  font-size: 12px;
+  color: #555;
+}
+
+.general-section-entry-location {
+  font-style: italic;
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 5px;
+}
+
+.general-section-entry-description {
+  font-size: 12px;
+  color: #333;
+  line-height: 1.4;
+  white-space: pre-wrap;
+}
+
+.general-sections-empty-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 30px 20px;
+  color: #9e9e9e;
+  text-align: center;
+}
+
+.general-sections-empty-preview i {
+  font-size: 36px;
+  margin-bottom: 10px;
+}
+
+.general-sections-empty-preview p {
+  margin: 0;
+  font-size: 14px;
+}

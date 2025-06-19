@@ -30,7 +30,7 @@ import { Subscription } from 'rxjs';
   selector: 'app-export',
   imports: [CommonModule, FormsModule, QRCodeComponent],
   templateUrl: './export.html',
-  styleUrls: ['./export.scss'],
+  styleUrls: ['./export.scss', './export.general-section.scss'],
 })
 export class Export implements OnInit {
   @ViewChild('resumePreview') resumePreview!: ElementRef;
