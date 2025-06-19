@@ -95,12 +95,17 @@ export interface DeclarationDef {
 }
 
 export interface GeneralSection {
-  id: string; // Unique identifier for each section
+  id: string;
   sectionName: string;
-  location: string;
-  startDate: string; // Could be Date object instead if preferred
-  endDate: string; // Could be Date object instead if preferred
+  entries: SectionEntry[];
+}
+
+export interface SectionEntry {
+  id: string;
   title: string;
-  description: string;
+  location: string;
+  startDate: string;
+  endDate: string;
   currentPosition?: boolean;
+  description: string;
 }

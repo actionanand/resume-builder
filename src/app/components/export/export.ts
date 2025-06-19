@@ -21,6 +21,7 @@ import {
   SkillPill,
   ThemeColors,
   GeneralSection,
+  SectionEntry,
 } from '../../models';
 import { Subscription } from 'rxjs';
 
@@ -462,16 +463,13 @@ export class Export implements OnInit {
       return;
     }
 
-    // Group sections by sectionName
-    const sectionGroups = this.groupBy(generalSections, 'sectionName');
-
-    // Add each section group
-    Object.keys(sectionGroups).forEach(sectionName => {
-      if (!sectionName) return; // Skip sections with no name
+    // Process each section
+    generalSections.forEach(section => {
+      if (!section.sectionName || section.entries.length === 0) return;
 
       // Add section header
       docDefinition.content.push({
-        text: sectionName,
+        text: section.sectionName,
         style: 'sectionHeader',
         color: colors.primaryColor,
         margin: [0, 15, 0, 5],
@@ -493,20 +491,20 @@ export class Export implements OnInit {
         margin: [0, 0, 0, 10],
       });
 
-      // Add each item in this section
-      sectionGroups[sectionName].forEach((section: any) => {
-        // Create title and date/location row
+      // Add each entry in this section
+      section.entries.forEach(entry => {
+        // Create title and date row
         docDefinition.content.push({
           columns: [
             {
-              text: section.title,
+              text: entry.title,
               bold: true,
               width: '*',
               fontSize: 11,
               color: colors.textColor,
             },
             {
-              text: this.formatDate(section),
+              text: this.formatDate(entry),
               alignment: 'right',
               width: 'auto',
               fontSize: 10,
@@ -517,9 +515,9 @@ export class Export implements OnInit {
         });
 
         // Add location if present
-        if (section.location) {
+        if (entry.location) {
           docDefinition.content.push({
-            text: section.location,
+            text: entry.location,
             italics: true,
             fontSize: 10,
             color: colors.textColor,
@@ -528,12 +526,12 @@ export class Export implements OnInit {
         }
 
         // Add description if present
-        if (section.description) {
+        if (entry.description) {
           docDefinition.content.push({
-            text: section.description,
+            text: entry.description,
             fontSize: 10,
             color: colors.textColor,
-            margin: [0, 0, 0, 10],
+            margin: [0, 0, 0, 15],
           });
         }
       });
@@ -549,23 +547,23 @@ export class Export implements OnInit {
   }
 
   // Format date for display in PDF
-  private formatDate(section: GeneralSection): string {
+  private formatDate(entry: SectionEntry): string {
     // If currentPosition is true, show "Start Date - Present"
-    if (section.currentPosition) {
-      return section.startDate ? `${this.formatSingleDate(section.startDate)} - Present` : 'Present';
+    if (entry.currentPosition) {
+      return entry.startDate ? `${this.formatSingleDate(entry.startDate)} - Present` : 'Present';
     }
 
     // If both dates exist
-    if (section.startDate && section.endDate) {
-      return `${this.formatSingleDate(section.startDate)} - ${this.formatSingleDate(section.endDate)}`;
+    if (entry.startDate && entry.endDate) {
+      return `${this.formatSingleDate(entry.startDate)} - ${this.formatSingleDate(entry.endDate)}`;
     }
     // If only start date exists
-    else if (section.startDate) {
-      return this.formatSingleDate(section.startDate);
+    else if (entry.startDate) {
+      return this.formatSingleDate(entry.startDate);
     }
     // If only end date exists
-    else if (section.endDate) {
-      return this.formatSingleDate(section.endDate);
+    else if (entry.endDate) {
+      return this.formatSingleDate(entry.endDate);
     }
     // No dates
     return '';

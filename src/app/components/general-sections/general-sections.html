@@ -1,103 +1,143 @@
 <div class="general-sections-container">
-  <h3>General Sections</h3>
+  <h3 class="section-header">Additional Sections</h3>
 
-  <!-- Control to add more sections -->
-  <div class="d-flex justify-content-between mb-3">
-    <label class="form-label" for="section-count-input">How many sections do you want to add?</label>
-    <div class="d-flex align-items-center">
+  <!-- Add new section -->
+  <div class="add-section-container">
+    <div class="input-group">
       <input
-        id="section-count-input"
-        type="number"
-        class="form-control form-control-sm me-2"
-        style="width: 60px"
-        min="0"
-        [(ngModel)]="sectionCount"
-        (change)="updateSectionCount()" />
-      <button class="btn btn-sm btn-primary" (click)="addSection()"><i class="fas fa-plus"></i> Add Section</button>
+        type="text"
+        class="form-control custom-input"
+        [(ngModel)]="newSectionName"
+        placeholder="Section name (e.g., Awards, Projects, Certifications)"
+        [ngClass]="{'focus': newSectionNameFocused}"
+        (focus)="newSectionNameFocused = true"
+        (blur)="newSectionNameFocused = false" />
+      <button class="btn btn-primary" [disabled]="!newSectionName" (click)="addSection()">
+        <i class="material-icons">add</i> Add Section
+      </button>
     </div>
   </div>
 
-  <!-- Dynamically generated sections -->
-  <div class="sections-list">
-    <div *ngFor="let section of generalSections; let i = index" class="section-card mb-3">
-      <div class="card">
-        <div class="card-header d-flex justify-content-between align-items-center">
-          <h5 class="mb-0">Section {{i + 1}}</h5>
-          <button class="btn btn-sm btn-danger" (click)="removeSection(i)">
-            <i class="fas fa-trash"></i>
+  <!-- List of sections with their entries -->
+  <div *ngFor="let section of generalSections; let sectionIndex = index" class="section-container">
+    <div class="custom-card">
+      <div class="custom-card-header">
+        <h5>{{section.sectionName}}</h5>
+        <div class="header-actions">
+          <button class="btn btn-sm btn-outline-primary" (click)="addEntry(sectionIndex)">
+            <i class="material-icons">add</i> Add Entry
+          </button>
+          <button class="btn btn-sm btn-outline-danger" (click)="removeSection(sectionIndex)">
+            <i class="material-icons">delete</i> Remove Section
           </button>
         </div>
+      </div>
 
-        <div class="card-body">
-          <!-- Section Name -->
-          <div class="mb-3">
-            <label class="form-label" [for]="'section-name-' + i">Section Name</label>
-            <input
-              id="section-name-{{i}}"
-              type="text"
-              class="form-control"
-              [(ngModel)]="section.sectionName"
-              placeholder="e.g., Education, Experience, Project" />
-          </div>
+      <div class="custom-card-body">
+        <!-- Message if no entries -->
+        <div *ngIf="section.entries.length === 0" class="empty-state">
+          <i class="material-icons">info</i>
+          <p>No entries in this section yet</p>
+          <button class="btn btn-sm btn-primary" (click)="addEntry(sectionIndex)">Add Your First Entry</button>
+        </div>
 
-          <!-- Title -->
-          <div class="mb-3">
-            <label class="form-label" [for]="'section-title-' + i">Title</label>
-            <input
-              id="section-title-{{i}}"
-              type="text"
-              class="form-control"
-              [(ngModel)]="section.title"
-              placeholder="e.g., Software Engineer, Bachelor's Degree" />
-          </div>
-
-          <!-- Location -->
-          <div class="mb-3">
-            <label class="form-label" [for]="'section-location-' + i">Location</label>
-            <input
-              id="section-location-{{i}}"
-              type="text"
-              class="form-control"
-              [(ngModel)]="section.location"
-              placeholder="e.g., San Francisco, CA" />
-          </div>
-
-          <!-- Dates -->
-          <div class="row mb-3">
-            <div class="col-md-6">
-              <label class="form-label" [for]="'section-start-date-' + i">Start Date</label>
-              <input id="section-start-date-{{i}}" type="month" class="form-control" [(ngModel)]="section.startDate" />
+        <!-- List of entries in this section -->
+        <div *ngFor="let entry of section.entries; let entryIndex = index" class="entry-card">
+          <div class="entry-panel">
+            <div class="entry-panel-header">
+              <h6>Entry {{entryIndex + 1}}</h6>
+              <button class="btn-remove-entry" (click)="removeEntry(sectionIndex, entryIndex)">
+                <i class="material-icons">delete</i>
+              </button>
             </div>
-            <div class="col-md-6">
-              <label class="form-label" [for]="'section-end-date-' + i">End Date</label>
-              <div class="d-flex">
+
+            <div class="entry-panel-body">
+              <!-- Title -->
+              <div class="form-floating">
                 <input
-                  id="section-end-date-{{i}}"
-                  type="month"
+                  type="text"
                   class="form-control"
-                  [(ngModel)]="section.endDate"
-                  [disabled]="!!section.currentPosition" />
-                <div class="form-check ms-2 d-flex align-items-center">
-                  <input
-                    class="form-check-input"
-                    type="checkbox"
-                    [(ngModel)]="section.currentPosition"
-                    id="current-{{i}}" />
-                  <label class="form-check-label" for="current-{{i}}"> Current </label>
+                  id="title-{{sectionIndex}}-{{entryIndex}}"
+                  [(ngModel)]="entry.title"
+                  [ngClass]="{'focus': focusState['title-'+sectionIndex+'-'+entryIndex]}"
+                  (focus)="setFocus('title', sectionIndex, entryIndex, true)"
+                  (blur)="setFocus('title', sectionIndex, entryIndex, false)"
+                  placeholder="" />
+                <label for="title-{{sectionIndex}}-{{entryIndex}}">Title</label>
+              </div>
+
+              <!-- Location -->
+              <div class="form-floating">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="location-{{sectionIndex}}-{{entryIndex}}"
+                  [(ngModel)]="entry.location"
+                  [ngClass]="{'focus': focusState['location-'+sectionIndex+'-'+entryIndex]}"
+                  (focus)="setFocus('location', sectionIndex, entryIndex, true)"
+                  (blur)="setFocus('location', sectionIndex, entryIndex, false)"
+                  placeholder="" />
+                <label for="location-{{sectionIndex}}-{{entryIndex}}">Location</label>
+              </div>
+
+              <!-- Dates -->
+              <div class="date-row">
+                <div class="date-column">
+                  <div class="form-floating">
+                    <input
+                      type="month"
+                      class="form-control"
+                      id="startDate-{{sectionIndex}}-{{entryIndex}}"
+                      [(ngModel)]="entry.startDate"
+                      [ngClass]="{'focus': focusState['startDate-'+sectionIndex+'-'+entryIndex]}"
+                      (focus)="setFocus('startDate', sectionIndex, entryIndex, true)"
+                      (blur)="setFocus('startDate', sectionIndex, entryIndex, false)" />
+                    <label for="startDate-{{sectionIndex}}-{{entryIndex}}">Start Date</label>
+                  </div>
+                </div>
+                <div class="date-column">
+                  <div class="form-floating">
+                    <input
+                      type="month"
+                      class="form-control"
+                      id="endDate-{{sectionIndex}}-{{entryIndex}}"
+                      [(ngModel)]="entry.endDate"
+                      [disabled]="entry.currentPosition ?? false"
+                      [ngClass]="{'focus': focusState['endDate-'+sectionIndex+'-'+entryIndex]}"
+                      (focus)="setFocus('endDate', sectionIndex, entryIndex, true)"
+                      (blur)="setFocus('endDate', sectionIndex, entryIndex, false)" />
+                    <label for="endDate-{{sectionIndex}}-{{entryIndex}}">End Date</label>
+                  </div>
+                </div>
+                <div class="switch-column">
+                  <div class="form-check form-switch">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      [(ngModel)]="entry.currentPosition"
+                      [ngClass]="{'focus': focusState['current-'+sectionIndex+'-'+entryIndex]}"
+                      (focus)="setFocus('current', sectionIndex, entryIndex, true)"
+                      (blur)="setFocus('current', sectionIndex, entryIndex, false)"
+                      id="current-{{sectionIndex}}-{{entryIndex}}" />
+                    <label class="form-check-label" for="current-{{sectionIndex}}-{{entryIndex}}"> Current </label>
+                  </div>
                 </div>
               </div>
-            </div>
-          </div>
 
-          <!-- Description -->
-          <div class="mb-3">
-            <label class="form-label" [for]="'section-description-' + i">Description</label>
-            <textarea
-              id="section-description-{{i}}"
-              class="form-control"
-              rows="4"
-              [(ngModel)]="section.description"
-              placeholder="Enter details about this section"></textarea>
+              <!-- Description -->
+              <div class="form-floating description-container">
+                <textarea
+                  class="form-control custom-textarea"
+                  id="description-{{sectionIndex}}-{{entryIndex}}"
+                  rows="4"
+                  [(ngModel)]="entry.description"
+                  [ngClass]="{'focus': focusState['description-'+sectionIndex+'-'+entryIndex]}"
+                  (focus)="setFocus('description', sectionIndex, entryIndex, true)"
+                  (blur)="setFocus('description', sectionIndex, entryIndex, false)"
+                  placeholder=""></textarea>
+                <label for="description-{{sectionIndex}}-{{entryIndex}}">Description</label>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -105,8 +145,10 @@
   </div>
 
   <!-- No sections message -->
-  <div *ngIf="generalSections.length === 0" class="alert alert-info text-center">
-    Add general sections to your resume using the controls above.
+  <div *ngIf="generalSections.length === 0" class="empty-state no-sections">
+    <i class="material-icons">add_box</i>
+    <h5>No additional sections yet</h5>
+    <p>Add sections like Awards, Projects, or Certifications to enhance your resume</p>
   </div>
 </div>
 
