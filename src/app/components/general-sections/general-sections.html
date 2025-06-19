@@ -59,6 +59,7 @@
                   class="form-control"
                   id="title-{{sectionIndex}}-{{entryIndex}}"
                   [(ngModel)]="entry.title"
+                  (ngModelChange)="onFieldChange()"
                   [ngClass]="{'focus': focusState['title-'+sectionIndex+'-'+entryIndex]}"
                   (focus)="setFocus('title', sectionIndex, entryIndex, true)"
                   (blur)="setFocus('title', sectionIndex, entryIndex, false)"
@@ -73,11 +74,12 @@
                   class="form-control"
                   id="location-{{sectionIndex}}-{{entryIndex}}"
                   [(ngModel)]="entry.location"
+                  (ngModelChange)="onFieldChange()"
                   [ngClass]="{'focus': focusState['location-'+sectionIndex+'-'+entryIndex]}"
                   (focus)="setFocus('location', sectionIndex, entryIndex, true)"
                   (blur)="setFocus('location', sectionIndex, entryIndex, false)"
                   placeholder="" />
-                <label for="location-{{sectionIndex}}-{{entryIndex}}">Location</label>
+                <label for="location-{{sectionIndex}}-{{entryIndex}}">Location / Company Name</label>
               </div>
 
               <!-- Dates -->
@@ -89,6 +91,7 @@
                       class="form-control"
                       id="startDate-{{sectionIndex}}-{{entryIndex}}"
                       [(ngModel)]="entry.startDate"
+                      (ngModelChange)="onFieldChange()"
                       [ngClass]="{'focus': focusState['startDate-'+sectionIndex+'-'+entryIndex]}"
                       (focus)="setFocus('startDate', sectionIndex, entryIndex, true)"
                       (blur)="setFocus('startDate', sectionIndex, entryIndex, false)" />
@@ -102,6 +105,7 @@
                       class="form-control"
                       id="endDate-{{sectionIndex}}-{{entryIndex}}"
                       [(ngModel)]="entry.endDate"
+                      (ngModelChange)="onFieldChange()"
                       [disabled]="entry.currentPosition ?? false"
                       [ngClass]="{'focus': focusState['endDate-'+sectionIndex+'-'+entryIndex]}"
                       (focus)="setFocus('endDate', sectionIndex, entryIndex, true)"
@@ -115,6 +119,7 @@
                       class="form-check-input"
                       type="checkbox"
                       [(ngModel)]="entry.currentPosition"
+                      (ngModelChange)="onFieldChange()"
                       [ngClass]="{'focus': focusState['current-'+sectionIndex+'-'+entryIndex]}"
                       (focus)="setFocus('current', sectionIndex, entryIndex, true)"
                       (blur)="setFocus('current', sectionIndex, entryIndex, false)"
@@ -131,6 +136,7 @@
                   id="description-{{sectionIndex}}-{{entryIndex}}"
                   rows="4"
                   [(ngModel)]="entry.description"
+                  (ngModelChange)="onFieldChange()"
                   [ngClass]="{'focus': focusState['description-'+sectionIndex+'-'+entryIndex]}"
                   (focus)="setFocus('description', sectionIndex, entryIndex, true)"
                   (blur)="setFocus('description', sectionIndex, entryIndex, false)"
@@ -152,14 +158,21 @@
   </div>
 </div>
 
+<div class="save-container">
+  <button class="btn btn-success" (click)="persistToLocalStorage()">
+    <i class="material-icons">save</i> Save Changes
+  </button>
+</div>
+
+<!-- Navigation section -->
 <div class="section-navigation with-prev">
   <button type="button" (click)="goToPreviousSection()" class="btn btn-prev">
     <i class="material-icons">arrow_forward</i>
-    Previous: Personal Details
+    Previous: Languages
   </button>
 
   <button type="button" (click)="goToNextSection()" class="btn btn-primary">
-    Next: Declaration
+    Next: Personal Details
     <i class="material-icons">arrow_forward</i>
   </button>
 </div>

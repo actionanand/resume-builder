@@ -118,12 +118,34 @@ export class ResumeService {
   }
 
   saveGeneralSections(sections: GeneralSection[]): void {
-    localStorage.setItem(this.generalSectionsKey, JSON.stringify(sections));
+    try {
+      // Make sure we're saving the complete structure
+      const dataToSave = JSON.stringify(sections);
+      // console.log('Saving data to localStorage:', dataToSave);
+      localStorage.setItem(this.generalSectionsKey, dataToSave);
+      this.notifyDataChanged();
+
+      // Verify save
+      const savedData = localStorage.getItem(this.generalSectionsKey);
+      console.log('Verification - data in localStorage:', savedData);
+    } catch (error) {
+      console.error('Error saving general sections:', error);
+    }
   }
 
   getGeneralSections(): GeneralSection[] {
-    const sectionsData = localStorage.getItem(this.generalSectionsKey);
-    return sectionsData ? JSON.parse(sectionsData) : [];
+    try {
+      const sectionsData = localStorage.getItem(this.generalSectionsKey);
+      if (!sectionsData) {
+        return [];
+      }
+
+      const parsedData = JSON.parse(sectionsData);
+      return Array.isArray(parsedData) ? parsedData : [];
+    } catch (error) {
+      console.error('Error retrieving general sections:', error);
+      return [];
+    }
   }
 
   addExperience(experience: any) {

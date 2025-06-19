@@ -102,6 +102,6 @@ export class Languages implements OnInit {
 
   goToNextSection(): void {
     this.saveLanguages();
-    this.navigate.emit('personalDetails');
+    this.navigate.emit('generalSections');
   }
 }

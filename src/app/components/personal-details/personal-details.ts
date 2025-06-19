@@ -260,11 +260,11 @@ export class PersonalDetailsComponent implements OnInit {
 
   goToPreviousSection(): void {
     this.saveDetails();
-    this.navigate.emit('languages');
+    this.navigate.emit('generalSections');
   }
 
   goToNextSection(): void {
     this.saveDetails();
-    this.navigate.emit('generalSections');
+    this.navigate.emit('declaration');
   }
 }

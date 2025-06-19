@@ -231,7 +231,10 @@
         </div>
 
         <!-- Skills Section -->
-        <div class="skills-preview-section">
+        <div
+          class="skills-preview-section"
+          *ngIf="((leftColumnSkillGroups?.length && leftColumnSkillGroups.length > 0)  
+          || (rightColumnSkillGroups?.length && rightColumnSkillGroups.length > 0))">
           <h3 class="section-title">Skills</h3>
           <div class="skills-divider"></div>
 
@@ -349,7 +352,7 @@
         </div>
 
         <!-- Personal Details Section -->
-        <section *ngIf="resumeService.getPersonalDetails() as personalDetails" class="resume-section">
+        <section *ngIf="!!personalDetails && !isPersonalDetailsEmpty" class="resume-section">
           <h2>Personal Details</h2>
 
           <div class="personal-details-container">

@@ -22,6 +22,7 @@ import {
   ThemeColors,
   GeneralSection,
   SectionEntry,
+  PersonalDetails,
 } from '../../models';
 import { Subscription } from 'rxjs';
 
@@ -74,6 +75,8 @@ export class Export implements OnInit {
 
   leftColumnSkillGroups: SkillGroup[] = [];
   rightColumnSkillGroups: SkillGroup[] = [];
+  personalDetails: PersonalDetails = {};
+  isPersonalDetailsEmpty = false;
 
   declaration: DeclarationDef = { enabled: false, text: '' };
   private subscription: Subscription = new Subscription();
@@ -158,6 +161,9 @@ export class Export implements OnInit {
         this.rightColumnSkillGroups.push(skillGroup);
       }
     });
+
+    this.personalDetails = this.resumeService.getPersonalDetails();
+    this.isPersonalDetailsEmpty = Object.keys(this.personalDetails).length === 0;
   }
 
   private async getIconFromPublicFolder(iconName: string): Promise<string> {
@@ -470,26 +476,12 @@ export class Export implements OnInit {
       // Add section header
       docDefinition.content.push({
         text: section.sectionName,
-        style: 'sectionHeader',
+        style: 'subheader',
         color: colors.primaryColor,
-        margin: [0, 15, 0, 5],
+        margin: [0, 15, 0, 0], // [left, top, right, bottom]
       });
 
-      // Add divider line
-      docDefinition.content.push({
-        canvas: [
-          {
-            type: 'line',
-            x1: 0,
-            y1: 0,
-            x2: 515,
-            y2: 0,
-            lineWidth: 1,
-            lineColor: colors.primaryColor,
-          },
-        ],
-        margin: [0, 0, 0, 10],
-      });
+      this.addSectionTitleLine(docDefinition, colors); // Add line below title
 
       // Add each entry in this section
       section.entries.forEach(entry => {
@@ -498,17 +490,14 @@ export class Export implements OnInit {
           columns: [
             {
               text: entry.title,
-              bold: true,
+              style: 'sectionTitle',
               width: '*',
-              fontSize: 11,
-              color: colors.textColor,
             },
             {
               text: this.formatDate(entry),
               alignment: 'right',
               width: 'auto',
-              fontSize: 10,
-              color: colors.textColor,
+              style: 'dateText',
             },
           ],
           margin: [0, 0, 0, 5],
@@ -518,10 +507,9 @@ export class Export implements OnInit {
         if (entry.location) {
           docDefinition.content.push({
             text: entry.location,
+            style: 'smallText',
             italics: true,
-            fontSize: 10,
-            color: colors.textColor,
-            margin: [0, 0, 0, 5],
+            color: colors.subtitleColor,
           });
         }
 
@@ -529,9 +517,9 @@ export class Export implements OnInit {
         if (entry.description) {
           docDefinition.content.push({
             text: entry.description,
-            fontSize: 10,
+            style: 'normalText',
             color: colors.textColor,
-            margin: [0, 0, 0, 15],
+            margin: [0, 0, 0, 5], // [left, top, right, bottom]
           });
         }
       });
@@ -1142,6 +1130,9 @@ export class Export implements OnInit {
     // Add languages section
     this.addLanguagesSection(docDefinition, colors);
 
+    // Add general sections
+    this.addGeneralSections(docDefinition, colors);
+
     // Add personal details section
     this.addPersonalDetailsSection(docDefinition, colors);
 
@@ -1286,14 +1277,15 @@ export class Export implements OnInit {
 
   // Add personal details section
   private addPersonalDetailsSection(docDefinition: any, colors: ThemeColors): void {
-    const personalDetails = this.resumeService.getPersonalDetails();
-    if (!personalDetails || Object.keys(personalDetails).length === 0) return;
+    // const personalDetails = this.resumeService.getPersonalDetails();
+    // if (!personalDetails || Object.keys(personalDetails).length === 0) return;
+    if (!this.personalDetails || this.isPersonalDetailsEmpty) return;
 
     docDefinition.content.push({ text: 'Personal Details', style: 'subheader' });
     this.addSectionTitleLine(docDefinition, colors);
 
     // Create a two-column layout for personal details
-    docDefinition.content.push(this.createTwoColumnPersonalDetailsTable(personalDetails, colors));
+    docDefinition.content.push(this.createTwoColumnPersonalDetailsTable(this.personalDetails, colors));
   }
 
   private createTwoColumnPersonalDetailsTable(personalDetails: any, colors: ThemeColors): any {

@@ -15,7 +15,7 @@ import { QrCode } from './components/qr-code/qr-code';
 import { Export } from './components/export/export';
 import { Breadcrumb } from './components/breadcrumb/breadcrumb';
 import { ResumeService } from './services/resume';
-import { BreadcrumbItem } from './models';
+import { BreadcrumbItem, GeneralSection } from './models';
 import { BreadcrumbService } from './services/breadcrumb';
 import { Certificates } from './components/certificates/certificates';
 import { Languages } from './components/languages/languages';
@@ -66,8 +66,8 @@ export class App implements OnInit {
     { id: 'education', label: 'Education', icon: 'school', complete: false },
     { id: 'certificates', label: 'Certificates', icon: 'card_membership', complete: false },
     { id: 'languages', label: 'Languages', icon: 'translate', complete: false },
-    { id: 'personalDetails', label: 'Personal', icon: 'person_outline', complete: false },
     { id: 'generalSections', label: 'General Sections', icon: 'list', complete: false },
+    { id: 'personalDetails', label: 'Personal', icon: 'person_outline', complete: false },
     { id: 'declaration', label: 'Declaration', icon: 'gavel', complete: false },
     { id: 'qr-code', label: 'QR Code', icon: 'qr_code', complete: false },
   ];
@@ -129,6 +129,18 @@ export class App implements OnInit {
     const languages = this.resumeService.getLanguages();
     this.breadcrumbSections[7].complete = !!(languages && languages.length > 0 && languages.some(lang => lang.name));
 
+    // For general sections, check if there are any sections defined
+    const generalSections = this.resumeService.getGeneralSections();
+    // Check if we have any general sections
+    const hasSections = generalSections.length > 0;
+    // Check if at least one section has entries
+    const hasSectionWithEntries =
+      hasSections &&
+      generalSections.some((section: GeneralSection) => Array.isArray(section.entries) && section.entries.length > 0);
+    // Set breadcrumb status based on both conditions
+    const isGeneralSectionComplete = hasSections && hasSectionWithEntries;
+    this.breadcrumbSections[8].complete = isGeneralSectionComplete;
+
     // For personal details, check if any MEANINGFUL field has been filled
     const personalDetails = this.resumeService.getPersonalDetails();
     const hasRealPersonalDetails =
@@ -136,11 +148,7 @@ export class App implements OnInit {
       Object.keys(personalDetails).length > 0 &&
       // Check that it's not just default values
       Object.keys(personalDetails).some(key => key !== 'hasSiblings' && key !== 'siblingCount');
-    this.breadcrumbSections[8].complete = !!hasRealPersonalDetails;
-
-    // For general sections, check if there are any sections defined
-    const generalSections = this.resumeService.getGeneralSections();
-    this.breadcrumbSections[9].complete = !!(generalSections && generalSections.length > 0);
+    this.breadcrumbSections[9].complete = !!hasRealPersonalDetails;
 
     // For declaration, check if the text is not empty
     const declaration = this.resumeService.getDeclaration();
