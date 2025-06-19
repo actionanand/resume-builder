@@ -265,6 +265,6 @@ export class PersonalDetailsComponent implements OnInit {
 
   goToNextSection(): void {
     this.saveDetails();
-    this.navigate.emit('declaration');
+    this.navigate.emit('generalSections');
   }
 }

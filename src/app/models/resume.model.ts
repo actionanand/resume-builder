@@ -93,3 +93,14 @@ export interface DeclarationDef {
   enabled: boolean;
   text: string;
 }
+
+export interface GeneralSection {
+  id: string; // Unique identifier for each section
+  sectionName: string;
+  location: string;
+  startDate: string; // Could be Date object instead if preferred
+  endDate: string; // Could be Date object instead if preferred
+  title: string;
+  description: string;
+  currentPosition?: boolean;
+}

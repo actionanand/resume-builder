@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 
-import { Certificate, DeclarationDef, Language, PersonalDetails, ProfileInfo } from '../models';
+import { Certificate, DeclarationDef, GeneralSection, Language, PersonalDetails, ProfileInfo } from '../models';
 
 @Injectable({
   providedIn: 'root',
@@ -15,6 +15,8 @@ export class ResumeService {
   };
 
   readonly DEFAULT_DECLARATION_TEXT = this.DEFAULT_DECLARATION.text;
+
+  private generalSectionsKey = 'resume_general_sections';
 
   private resumeData: any = {
     profile: null,
@@ -113,6 +115,15 @@ export class ResumeService {
 
   getExperiences() {
     return this.resumeData.experience;
+  }
+
+  saveGeneralSections(sections: GeneralSection[]): void {
+    localStorage.setItem(this.generalSectionsKey, JSON.stringify(sections));
+  }
+
+  getGeneralSections(): GeneralSection[] {
+    const sectionsData = localStorage.getItem(this.generalSectionsKey);
+    return sectionsData ? JSON.parse(sectionsData) : [];
   }
 
   addExperience(experience: any) {

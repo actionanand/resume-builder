@@ -1,0 +1,123 @@
+<div class="general-sections-container">
+  <h3>General Sections</h3>
+
+  <!-- Control to add more sections -->
+  <div class="d-flex justify-content-between mb-3">
+    <label class="form-label" for="section-count-input">How many sections do you want to add?</label>
+    <div class="d-flex align-items-center">
+      <input
+        id="section-count-input"
+        type="number"
+        class="form-control form-control-sm me-2"
+        style="width: 60px"
+        min="0"
+        [(ngModel)]="sectionCount"
+        (change)="updateSectionCount()" />
+      <button class="btn btn-sm btn-primary" (click)="addSection()"><i class="fas fa-plus"></i> Add Section</button>
+    </div>
+  </div>
+
+  <!-- Dynamically generated sections -->
+  <div class="sections-list">
+    <div *ngFor="let section of generalSections; let i = index" class="section-card mb-3">
+      <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h5 class="mb-0">Section {{i + 1}}</h5>
+          <button class="btn btn-sm btn-danger" (click)="removeSection(i)">
+            <i class="fas fa-trash"></i>
+          </button>
+        </div>
+
+        <div class="card-body">
+          <!-- Section Name -->
+          <div class="mb-3">
+            <label class="form-label" [for]="'section-name-' + i">Section Name</label>
+            <input
+              id="section-name-{{i}}"
+              type="text"
+              class="form-control"
+              [(ngModel)]="section.sectionName"
+              placeholder="e.g., Education, Experience, Project" />
+          </div>
+
+          <!-- Title -->
+          <div class="mb-3">
+            <label class="form-label" [for]="'section-title-' + i">Title</label>
+            <input
+              id="section-title-{{i}}"
+              type="text"
+              class="form-control"
+              [(ngModel)]="section.title"
+              placeholder="e.g., Software Engineer, Bachelor's Degree" />
+          </div>
+
+          <!-- Location -->
+          <div class="mb-3">
+            <label class="form-label" [for]="'section-location-' + i">Location</label>
+            <input
+              id="section-location-{{i}}"
+              type="text"
+              class="form-control"
+              [(ngModel)]="section.location"
+              placeholder="e.g., San Francisco, CA" />
+          </div>
+
+          <!-- Dates -->
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="form-label" [for]="'section-start-date-' + i">Start Date</label>
+              <input id="section-start-date-{{i}}" type="month" class="form-control" [(ngModel)]="section.startDate" />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" [for]="'section-end-date-' + i">End Date</label>
+              <div class="d-flex">
+                <input
+                  id="section-end-date-{{i}}"
+                  type="month"
+                  class="form-control"
+                  [(ngModel)]="section.endDate"
+                  [disabled]="!!section.currentPosition" />
+                <div class="form-check ms-2 d-flex align-items-center">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    [(ngModel)]="section.currentPosition"
+                    id="current-{{i}}" />
+                  <label class="form-check-label" for="current-{{i}}"> Current </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Description -->
+          <div class="mb-3">
+            <label class="form-label" [for]="'section-description-' + i">Description</label>
+            <textarea
+              id="section-description-{{i}}"
+              class="form-control"
+              rows="4"
+              [(ngModel)]="section.description"
+              placeholder="Enter details about this section"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- No sections message -->
+  <div *ngIf="generalSections.length === 0" class="alert alert-info text-center">
+    Add general sections to your resume using the controls above.
+  </div>
+</div>
+
+<div class="section-navigation with-prev">
+  <button type="button" (click)="goToPreviousSection()" class="btn btn-prev">
+    <i class="material-icons">arrow_forward</i>
+    Previous: Personal Details
+  </button>
+
+  <button type="button" (click)="goToNextSection()" class="btn btn-primary">
+    Next: Declaration
+    <i class="material-icons">arrow_forward</i>
+  </button>
+</div>

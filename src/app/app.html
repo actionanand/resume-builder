@@ -33,6 +33,10 @@
 
     <app-qr-code *ngIf="currentSection === 'qr-code'" (navigate)="onSectionChange($event)"> </app-qr-code>
 
+    <app-general-sections
+      *ngIf="currentSection === 'generalSections'"
+      (navigate)="onSectionChange($event)"></app-general-sections>
+
     <app-export *ngIf="currentSection === 'export'"> </app-export>
   </div>
 

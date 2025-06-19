@@ -20,6 +20,7 @@ import {
   SkillGroup,
   SkillPill,
   ThemeColors,
+  GeneralSection,
 } from '../../models';
 import { Subscription } from 'rxjs';
 
@@ -451,6 +452,133 @@ export class Export implements OnInit {
     }
 
     this.markdownContent = markdown;
+  }
+
+  // In export service
+  private addGeneralSections(docDefinition: any, colors: ThemeColors): void {
+    const generalSections = this.resumeService.getGeneralSections();
+
+    if (!generalSections || generalSections.length === 0) {
+      return;
+    }
+
+    // Group sections by sectionName
+    const sectionGroups = this.groupBy(generalSections, 'sectionName');
+
+    // Add each section group
+    Object.keys(sectionGroups).forEach(sectionName => {
+      if (!sectionName) return; // Skip sections with no name
+
+      // Add section header
+      docDefinition.content.push({
+        text: sectionName,
+        style: 'sectionHeader',
+        color: colors.primaryColor,
+        margin: [0, 15, 0, 5],
+      });
+
+      // Add divider line
+      docDefinition.content.push({
+        canvas: [
+          {
+            type: 'line',
+            x1: 0,
+            y1: 0,
+            x2: 515,
+            y2: 0,
+            lineWidth: 1,
+            lineColor: colors.primaryColor,
+          },
+        ],
+        margin: [0, 0, 0, 10],
+      });
+
+      // Add each item in this section
+      sectionGroups[sectionName].forEach((section: any) => {
+        // Create title and date/location row
+        docDefinition.content.push({
+          columns: [
+            {
+              text: section.title,
+              bold: true,
+              width: '*',
+              fontSize: 11,
+              color: colors.textColor,
+            },
+            {
+              text: this.formatDate(section),
+              alignment: 'right',
+              width: 'auto',
+              fontSize: 10,
+              color: colors.textColor,
+            },
+          ],
+          margin: [0, 0, 0, 5],
+        });
+
+        // Add location if present
+        if (section.location) {
+          docDefinition.content.push({
+            text: section.location,
+            italics: true,
+            fontSize: 10,
+            color: colors.textColor,
+            margin: [0, 0, 0, 5],
+          });
+        }
+
+        // Add description if present
+        if (section.description) {
+          docDefinition.content.push({
+            text: section.description,
+            fontSize: 10,
+            color: colors.textColor,
+            margin: [0, 0, 0, 10],
+          });
+        }
+      });
+    });
+  }
+
+  // Helper method to group sections
+  private groupBy(array: any[], key: string): any {
+    return array.reduce((result, item) => {
+      (result[item[key]] = result[item[key]] || []).push(item);
+      return result;
+    }, {});
+  }
+
+  // Format date for display in PDF
+  private formatDate(section: GeneralSection): string {
+    // If currentPosition is true, show "Start Date - Present"
+    if (section.currentPosition) {
+      return section.startDate ? `${this.formatSingleDate(section.startDate)} - Present` : 'Present';
+    }
+
+    // If both dates exist
+    if (section.startDate && section.endDate) {
+      return `${this.formatSingleDate(section.startDate)} - ${this.formatSingleDate(section.endDate)}`;
+    }
+    // If only start date exists
+    else if (section.startDate) {
+      return this.formatSingleDate(section.startDate);
+    }
+    // If only end date exists
+    else if (section.endDate) {
+      return this.formatSingleDate(section.endDate);
+    }
+    // No dates
+    return '';
+  }
+
+  private formatSingleDate(dateString: string): string {
+    if (!dateString) return '';
+
+    const date = new Date(dateString);
+    const month = date.toLocaleString('default', { month: 'short' });
+    const year = date.getFullYear();
+
+    return `${month} ${year}`;
   }
 
   copyMarkdown(): void {
