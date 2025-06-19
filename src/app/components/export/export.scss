@@ -424,18 +424,18 @@ h2 {
       color: #34495e;
     }
 
-    .skill-group {
-      margin-bottom: 15px;
+    // .skill-group {
+    //   margin-bottom: 15px;
 
-      h3 {
-        margin: 0 0 5px;
-        font-size: 16px;
-      }
+    //   h3 {
+    //     margin: 0 0 5px;
+    //     font-size: 16px;
+    //   }
 
-      p {
-        margin: 0;
-      }
-    }
+    //   p {
+    //     margin: 0;
+    //   }
+    // }
   }
 
   .item-cgpa {
@@ -981,6 +981,84 @@ h2 {
   margin: 15px 0;
   line-height: 1.5;
   color: #444;
+}
+
+/* Skills Section Styling */
+.skills-preview-section {
+  margin: 15px 0;
+  font-family: Arial, sans-serif;
+}
+
+.section-title {
+  color: #4682b4;
+  margin-bottom: 5px;
+  font-size: 16px;
+}
+
+.skills-divider {
+  height: 1px;
+  background-color: #4682b4;
+  margin-bottom: 10px;
+}
+
+/* Two-column layout */
+.skills-columns-container {
+  display: flex;
+  gap: 15px;
+}
+
+.skills-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Category styling */
+.skill-category {
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.category-title {
+  font-size: 11px;
+  font-weight: bold;
+  margin: 0;
+  padding: 8px 10px;
+  color: #333;
+  background-color: #f9f9f9;
+}
+
+/* Pills container */
+.skills-pill-container {
+  padding: 8px 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+/* Skill pill styling */
+.skill-pill {
+  background-color: #f0f9ff;
+  color: #0c4a6e;
+  border: 0.5px solid #bae6fd;
+  border-radius: 10px;
+  padding: 3px 8px;
+  font-size: 9px;
+  display: inline-block;
+}
+
+/* Comma styling */
+.comma {
+  margin-left: -3px;
+  color: #333;
+  font-size: 9px;
+}
+
+/* Hide last comma */
+.skills-pill-container .comma:last-child {
+  display: none;
 }
 
 /* Ensure columns stack nicely on smaller screens */

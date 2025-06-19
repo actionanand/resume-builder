@@ -17,6 +17,7 @@ import {
   SkillCategory,
   SkillColumn,
   SkillComma,
+  SkillGroup,
   SkillPill,
   ThemeColors,
 } from '../../models';
@@ -68,6 +69,9 @@ export class Export implements OnInit {
     { id: 'medium', name: 'Medium' },
     { id: 'large', name: 'Large' },
   ];
+
+  leftColumnSkillGroups: SkillGroup[] = [];
+  rightColumnSkillGroups: SkillGroup[] = [];
 
   declaration: DeclarationDef = { enabled: false, text: '' };
   private subscription: Subscription = new Subscription();
@@ -139,6 +143,18 @@ export class Export implements OnInit {
     this.destroyRef.onDestroy(() => {
       // Clean up subscriptions
       this.subscription.unsubscribe();
+    });
+
+    // Get skills data as SkillGroup array
+    const skillGroups: SkillGroup[] = this.resumeService.getSkills();
+
+    // Split skill groups between columns
+    skillGroups.forEach((skillGroup, index) => {
+      if (index % 2 === 0) {
+        this.leftColumnSkillGroups.push(skillGroup);
+      } else {
+        this.rightColumnSkillGroups.push(skillGroup);
+      }
     });
   }
 

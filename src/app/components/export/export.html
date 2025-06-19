@@ -231,11 +231,36 @@
         </div>
 
         <!-- Skills Section -->
-        <div *ngIf="resumeService.getSkills()?.length" class="preview-section preview-skills">
-          <h2>Skills</h2>
-          <div *ngFor="let skillGroup of resumeService.getSkills()" class="skill-group">
-            <h3>{{ skillGroup.category }}</h3>
-            <p>{{ skillGroup.skills.join(', ') }}</p>
+        <div class="skills-preview-section">
+          <h3 class="section-title">Skills</h3>
+          <div class="skills-divider"></div>
+
+          <div class="skills-columns-container">
+            <!-- Left column -->
+            <div class="skills-column">
+              <div *ngFor="let skillGroup of leftColumnSkillGroups" class="skill-category">
+                <h4 class="category-title">{{skillGroup.category}}</h4>
+                <div class="skills-pill-container">
+                  <ng-container *ngFor="let skill of skillGroup.skills; let last = last">
+                    <span class="skill-pill">{{skill}}</span>
+                    <span class="comma" *ngIf="!last">,</span>
+                  </ng-container>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right column -->
+            <div class="skills-column">
+              <div *ngFor="let skillGroup of rightColumnSkillGroups" class="skill-category">
+                <h4 class="category-title">{{skillGroup.category}}</h4>
+                <div class="skills-pill-container">
+                  <ng-container *ngFor="let skill of skillGroup.skills; let last = last">
+                    <span class="skill-pill">{{skill}}</span>
+                    <span class="comma" *ngIf="!last">,</span>
+                  </ng-container>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
