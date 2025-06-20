@@ -445,6 +445,12 @@ export class Export implements OnInit {
       markdown += languagesList.join('\n') + '\n';
     }
 
+    // Add general sections
+    markdown += this.generateGeneralSectionsMarkdown();
+
+    // Add personal traits section
+    markdown += this.generateTraitsMarkdown();
+
     // Personal details section
     if (personalDetails && Object.keys(personalDetails).length > 0) {
       markdown += '\n## Personal Details\n\n';
@@ -490,6 +496,105 @@ export class Export implements OnInit {
     }
 
     this.markdownContent = markdown;
+  }
+
+  private generateGeneralSectionsMarkdown(): string {
+    const generalSections = this.resumeService.getGeneralSections();
+
+    if (!generalSections || generalSections.length === 0) {
+      return '';
+    }
+
+    let markdown = '';
+
+    // Process each section
+    generalSections.forEach(section => {
+      // Skip sections with no entries
+      if (!section.entries || section.entries.length === 0) {
+        return;
+      }
+
+      // Add section header
+      markdown += `## ${section.sectionName}\n\n`;
+
+      // Process entries
+      section.entries.forEach(entry => {
+        // Add entry title
+        if (entry.title) {
+          markdown += `### ${entry.title}\n`;
+        }
+
+        // Add location if exists
+        if (entry.location) {
+          markdown += `*${entry.location}*\n`;
+        }
+
+        // Add date range if exists
+        if (entry.startDate || entry.endDate || entry.currentPosition) {
+          const startDate = entry.startDate ? this.formatDateMarkdown(entry.startDate) : '';
+          const endDate = entry.currentPosition
+            ? 'Present'
+            : entry.endDate
+              ? this.formatDateMarkdown(entry.endDate)
+              : '';
+          const dateRange = startDate && endDate ? `${startDate} - ${endDate}` : startDate || endDate;
+
+          if (dateRange) {
+            markdown += `*${dateRange}*\n`;
+          }
+        }
+
+        // Add description with a line break
+        if (entry.description) {
+          markdown += `\n${entry.description}\n`;
+        }
+
+        markdown += '\n';
+      });
+    });
+
+    return markdown;
+  }
+
+  private generateTraitsMarkdown(): string {
+    const traits = this.resumeService.getTraits();
+
+    if (!traits || traits.length === 0) {
+      return '';
+    }
+
+    // Filter out empty traits
+    const validTraits = traits.filter(trait => trait.text && trait.text.trim());
+
+    if (validTraits.length === 0) {
+      return '';
+    }
+
+    let markdown = '## Personal Traits\n\n';
+
+    // Add each trait as a list item
+    validTraits.forEach(trait => {
+      markdown += `- ${trait.text.trim()}\n`;
+    });
+
+    markdown += '\n';
+
+    return markdown;
+  }
+
+  private formatDateMarkdown(dateString: string): string {
+    if (!dateString) return '';
+
+    try {
+      const date = new Date(dateString);
+      const month = date.toLocaleString('default', { month: 'short' });
+      const year = date.getFullYear();
+
+      return `${month} ${year}`;
+    } catch (error) {
+      console.error('Error formatting date:', error);
+      return dateString;
+    }
   }
 
   // In export service

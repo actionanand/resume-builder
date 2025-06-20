@@ -12,13 +12,101 @@ Open Large Language Models (LLMs) can be used for text-to-speech synthesis by le
 
 ## Skills
 
-### Angular
+### Core Languages
 
-Javascript, Typescript, JS, TS
+JavaScript, TypeScript, TS
 
-### Ruby On Rails
+### General-Purpose Languages
 
-RoR, Ruby
+GO, JAVA, C#, C, C++, Ruby, RUST
+
+### Markup & Styling
+
+HTML, CSS, SCSS
+
+### UI Frameworks/Libraries
+
+Angular, React, Preact, Vue.js, Svelte
+
+### CSS Frameworks
+
+Bootstrap, Material UI, Tailwind, Bulma, Foundation
+
+### State Management
+
+Redux, MobX, NGRX, Saga, Thunk
+
+### Reactive Programming
+
+RxJS, Signals
+
+### Templating Engines
+
+PUG, Handlebars, EJS
+
+### Micro-Frontends
+
+Single-Spa
+
+### Meta-Frameworks
+
+Next.js, Nuxt.js, SvelteKit, Remix, Analog, Gatsby
+
+### Static Site Generators
+
+Astro, Scully
+
+### Server Frameworks
+
+Express, Nest.js, Ruby on Rails (ROR), Spring Boot, .NET
+
+### API Technologies
+
+GraphQL, REST API, WebSockets
+
+### Authentication/Authorization
+
+OAuth, JWT, RBAC
+
+### Design Patterns
+
+MVC, Component-based architecture (CBA)
+
+### ORM/ODM
+
+Mongoose, Sequelize, Prisma, Entity Framework, Hibernate, ActiveRecord
+
+### JavaScript Runtimes
+
+Node.js, BUN, deno
+
+### Language Specifications
+
+S6 (ES2015), Legacy Standard, ESNext (ES6+)
+
+### Transpilers & Polyfills
+
+Babel
+
+### Relational Databases
+
+MySQL, PostgreSQL, SQL Server, SQLite
+
+### NoSQL Databases
+
+MongoDB, Firestore
+
+### Pipeline Tools
+
+Jenkins, Spinnaker, GitHub Actions
+
+### IDEs & Editors
+
+VS Code, Sublime, PyCharm, IntelliJ IDEA, WebStorm
+
+### Operating Systems
+
+Linux, Windows, MAC, WSL
 
 ## Experience
 
@@ -79,3 +167,57 @@ Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapi
 _SXCCE, Chunkankadai_ | 2010 - 2014 | Nagercoil, Tamilnadu
 
 **CGPA/Percentage:** 6.95/10
+
+## Awards and Recognition
+
+### Ideathon at Innovision
+
+_Clarivate_
+
+Won the second position at NSUT’s Techfest in the Ideathon event.
+
+## VOLUNTEER EXPERIENCE
+
+### Membership Chairperson, Association for Computing Machinery - BVP
+
+_Chennai, Ind_
+_Jun 2021 - Present_
+
+ Responsible for registration of all the student members
+ Responsible for organising events and mentor workshops in the field of Blockchain and Web Development(Django)
+
+### Tech Executive, Association for Computing Machinery - BVP
+
+_Bangalore_
+_Dec 2021 - Jun 2024_
+
+ Took a workshop on Blockchain
+
+## Personal Traits
+
+- Team Player
+- Analytical Thinking
+
+## Personal Details
+
+**Date of Birth:** 22/12/1996
+
+**Place of Birth:** Bangalore
+
+**Nationality:** India
+
+**Gender:** Female
+
+**Marital Status:** Married
+
+**Husband's Name:** Sree Renganathan
+
+**Religion:** Hindu
+
+**Passport Number:** sgzffgt6-666nn b b
+
+**Driving License:** n hbhbn0987yn
+
+**Blood Group:** A1B+
+
+**Hobbies:** swimming, singing
