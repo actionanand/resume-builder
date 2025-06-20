@@ -1069,6 +1069,12 @@ export class Export implements OnInit {
       <p>${languages.map(lang => `${lang.name} (${lang.proficiency})`).join(', ')}</p>`;
     }
 
+    // Add general sections
+    contentHtml += this.generateGeneralSectionsHtml();
+
+    // Add personal traits section (new)
+    contentHtml += this.generatePersonalTraitsHtml();
+
     // Add Personal Details Section
     if (personalDetails && Object.keys(personalDetails).length > 0) {
       contentHtml += `<h2>Personal Details</h2>
@@ -1156,6 +1162,140 @@ export class Export implements OnInit {
       console.error('Error exporting Word document:', error);
       this.showMessage('Error creating Word document');
     }
+  }
+
+  private generatePersonalTraitsHtml(): string {
+    const traits = this.resumeService.getTraits();
+
+    // Skip if no traits
+    if (!traits || traits.length === 0) {
+      return '';
+    }
+
+    // Filter out empty traits
+    const validTraits = traits.filter(trait => trait.text && trait.text.trim());
+    if (validTraits.length === 0) {
+      return '';
+    }
+
+    let html = `
+    <div class="section">
+      <h2>Personal Traits</h2>
+      <ul class="traits-list">`;
+
+    // Add each trait as a list item
+    validTraits.forEach(trait => {
+      html += `
+        <li class="trait-item">${this.escapeHtml(trait.text.trim())}</li>`;
+    });
+
+    html += `
+      </ul>
+    </div>`;
+
+    return html;
+  }
+
+  private generateGeneralSectionsHtml(): string {
+    const generalSections = this.resumeService.getGeneralSections();
+
+    if (!generalSections || generalSections.length === 0) {
+      return '';
+    }
+
+    let html = '';
+
+    // Process each section
+    generalSections.forEach(section => {
+      // Skip sections with no entries
+      if (!section.entries || section.entries.length === 0) {
+        return;
+      }
+
+      // Start section
+      html += `
+    <div class="section">
+      <h2>${this.escapeHtml(section.sectionName)}</h2>`;
+
+      // Process each entry
+      section.entries.forEach(entry => {
+        html += `
+      <div class="entry">`;
+
+        // Title
+        if (entry.title) {
+          html += `
+        <div class="entry-title">${this.escapeHtml(entry.title)}</div>`;
+        }
+
+        // Location and dates
+        const subtitleParts = [];
+        if (entry.location) {
+          subtitleParts.push(this.escapeHtml(entry.location));
+        }
+
+        // Date range
+        if (entry.startDate || entry.endDate || entry.currentPosition) {
+          const startDate = entry.startDate ? this.formatDateWord(entry.startDate) : '';
+          const endDate = entry.currentPosition ? 'Present' : entry.endDate ? this.formatDateWord(entry.endDate) : '';
+          const dateText = startDate && endDate ? `${startDate} - ${endDate}` : startDate || endDate;
+
+          if (dateText) {
+            subtitleParts.push(dateText);
+          }
+        }
+
+        // Add subtitle if we have content
+        if (subtitleParts.length > 0) {
+          html += `
+        <div class="entry-subtitle">${subtitleParts.join(' | ')}</div>`;
+        }
+
+        // Description
+        if (entry.description) {
+          html += `
+        <div class="entry-description">${this.escapeHtml(entry.description).replace(/\n/g, '<br/>')}</div>`;
+        }
+
+        // Close entry
+        html += `
+      </div>`;
+      });
+
+      // Close section
+      html += `
+    </div>`;
+    });
+
+    return html;
+  }
+
+  // Format dates consistently
+  private formatDateWord(dateString: string): string {
+    if (!dateString) return '';
+
+    try {
+      const date = new Date(dateString);
+      const month = date.toLocaleString('default', { month: 'short' });
+      const year = date.getFullYear();
+
+      return `${month} ${year}`;
+    } catch (error) {
+      console.error('Error formatting date:', error);
+      return dateString;
+    }
+  }
+
+  // Escape HTML to prevent XSS issues
+  private escapeHtml(text: string): string {
+    if (!text) return '';
+
+    return text
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
   }
 
   togglePreview(): void {
