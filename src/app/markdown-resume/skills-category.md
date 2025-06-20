@@ -30,6 +30,7 @@
 ## Architecture Patterns
 
 - **Design Patterns**: MVC, Component-based architecture (CBA)
+- **Computational Expertise**: Data Structures & Algorithms
 
 ## ORM & Database Access
 
@@ -66,6 +67,7 @@
 ## DevOps & CI/CD
 
 - **Pipeline Tools**: Jenkins, Spinnaker, GitHub Actions
+- **CI/CD**: Jenkins, Spinnaker, GitHub Actions
 - **Containerization**: Docker
 - **Workflow Orchestration**: Airflow, Rundeck
 - **Code Quality & Security**: SonarQube, Veracode
