@@ -24,12 +24,14 @@ import {
   SectionEntry,
   PersonalDetails,
 } from '../../models';
+import { PILL_COLOR_SCHEMES } from '../../shared/constants/default-pills-color.constant';
+import { PillColors } from '../../models';
 
 @Component({
   selector: 'app-export',
   imports: [CommonModule, FormsModule, QRCodeComponent],
   templateUrl: './export.html',
-  styleUrls: ['./export.scss', './export.general-section.scss', './export.traits.scss'],
+  styleUrls: ['./export.scss', './export.general-section.scss', './export.traits.scss', './export.skills.scss'],
 })
 export class Export implements OnInit {
   @ViewChild('resumePreview') resumePreview!: ElementRef;
@@ -76,6 +78,9 @@ export class Export implements OnInit {
   rightColumnSkillGroups: SkillGroup[] = [];
   personalDetails: PersonalDetails = {};
   isPersonalDetailsEmpty = false;
+
+  // Default selected scheme
+  selectedPillScheme: string = PILL_COLOR_SCHEMES['professional'].name;
 
   declaration: DeclarationDef = { enabled: false, text: '' };
   private subscription: Subscription = new Subscription();
@@ -736,6 +741,56 @@ export class Export implements OnInit {
       margin: [10, 0, 0, 10], // [left, top, right, bottom] bullet indentation
       color: colors.textColor,
     });
+  }
+
+  // Method to get appropriate pill colors based on settings
+  private getPillColors(colors: any): PillColors {
+    let pillColors: PillColors;
+
+    if (this.useDefaultPillColors) {
+      // Use the selected default scheme
+      const scheme = PILL_COLOR_SCHEMES[this.selectedPillScheme] || PILL_COLOR_SCHEMES['professional'];
+      pillColors = scheme.colors;
+    } else {
+      // Use theme-based colors
+      pillColors = {
+        background: colors.ultraLightShade || '#f0f9ff',
+        text: colors.primaryColor || '#0c4a6e',
+        border: colors.lightShade || '#bae6fd',
+      };
+    }
+
+    return pillColors;
+  }
+
+  // Get options for color pills in the template
+  getPillSchemeOptions() {
+    return Object.keys(PILL_COLOR_SCHEMES).map(key => {
+      return {
+        value: key,
+        name: PILL_COLOR_SCHEMES[key].name,
+        colors: PILL_COLOR_SCHEMES[key].colors,
+      };
+    });
+  }
+
+  selectPillScheme(scheme: string) {
+    this.selectedPillScheme = scheme;
+
+    // Refresh all skills to apply new colors
+    this.formatAllSkills();
+
+    // Save settings
+    // this.saveSkills();
+  }
+
+  // Format all skills with current settings
+  formatAllSkills() {
+    // this.skillCategories.forEach(category => {
+    //   if (category.skills && category.skills.length) {
+    //     this.formatSkillItems(category.skills);
+    //   }
+    // });
   }
 
   copyMarkdown(): void {
@@ -2349,23 +2404,26 @@ export class Export implements OnInit {
 
   // Helper method to format individual skill items
   private formatSkillItems(skills: string[], colors: ThemeColors): any[] {
-    let pillColors: { background: string; text: string; border: string };
+    // let pillColors: PillColors;
 
-    if (this.useDefaultPillColors) {
-      // Use default professional colors
-      pillColors = {
-        background: '#f0f9ff', // Light sky blue background
-        text: '#0c4a6e', // Dark navy text
-        border: '#bae6fd', // Light blue border
-      };
-    } else {
-      // Use theme-based colors
-      pillColors = {
-        background: colors.ultraLightShade || '#f0f9ff',
-        text: colors.primaryColor || '#0c4a6e',
-        border: colors.lightShade || '#bae6fd',
-      };
-    }
+    // if (this.useDefaultPillColors) {
+    //   // Use default professional colors
+    //   pillColors = {
+    //     background: '#f0f9ff', // Light sky blue background
+    //     text: '#0c4a6e', // Dark navy text
+    //     border: '#bae6fd', // Light blue border
+    //   };
+    // } else {
+    //   // Use theme-based colors
+    //   pillColors = {
+    //     background: colors.ultraLightShade || '#f0f9ff',
+    //     text: colors.primaryColor || '#0c4a6e',
+    //     border: colors.lightShade || '#bae6fd',
+    //   };
+    // }
+
+    // Get pill colors based on settings
+    const pillColors: PillColors = this.getPillColors(colors);
 
     // You can replace with any of these professional combinations:
     // Default Blue:

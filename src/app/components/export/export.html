@@ -133,6 +133,37 @@
         </div>
       </div>
 
+      <div *ngIf="useDefaultPillColors" class="pill-scheme-selector">
+        <label class="form-label" for="pillSchemeSelector">Skill Pill Style:</label>
+        <input
+          id="pillSchemeSelector"
+          type="text"
+          style="position: absolute; left: -9999px; width: 1px; height: 1px; border: 0; padding: 0; margin: 0"
+          tabindex="-1"
+          aria-hidden="true" />
+
+        <div class="color-scheme-options">
+          <div
+            *ngFor="let scheme of getPillSchemeOptions()"
+            class="color-scheme-preview"
+            [class.selected]="selectedPillScheme === scheme.value"
+            (click)="selectPillScheme(scheme.value)"
+            (keyup.enter)="selectPillScheme(scheme.value)"
+            (keyup.space)="selectPillScheme(scheme.value)"
+            tabindex="0"
+            role="button"
+            [attr.aria-pressed]="selectedPillScheme === scheme.value">
+            <span
+              class="sample-pill"
+              [style.background-color]="scheme.colors.background"
+              [style.color]="scheme.colors.text"
+              [style.border-color]="scheme.colors.border">
+              {{scheme.name}}
+            </span>
+          </div>
+        </div>
+      </div>
+
       <div class="export-actions">
         <button (click)="exportAsPDF()" [disabled]="isGeneratingPDF" class="btn-export">
           <span *ngIf="!isGeneratingPDF">Export as PDF</span>
