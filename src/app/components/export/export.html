@@ -382,6 +382,24 @@
           </div>
         </div>
 
+        <!-- Personal Traits Preview -->
+        <div class="resume-preview-section" *ngIf="resumeService.getTraits() as traits">
+          <div class="resume-section-preview-container">
+            <!-- Section header -->
+            <div class="resume-preview-section-header">
+              <h3 class="resume-preview-section-title">Personal Traits</h3>
+              <div class="resume-preview-section-divider"></div>
+            </div>
+
+            <!-- Traits list -->
+            <div class="resume-preview-traits-container">
+              <ul class="resume-preview-traits-list">
+                <li *ngFor="let trait of traits" class="resume-preview-trait-item">{{ trait.text.trim() }}</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
         <!-- Personal Details Section -->
         <section *ngIf="!!personalDetails && !isPersonalDetailsEmpty" class="resume-section">
           <h2>Personal Details</h2>

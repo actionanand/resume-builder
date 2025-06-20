@@ -1,0 +1,77 @@
+<div class="traits-container">
+  <div class="traits-header">
+    <h3 class="traits-title">Personal Traits</h3>
+    <p class="traits-subtitle">Add your personal traits, characteristics, or soft skills</p>
+  </div>
+
+  <form [formGroup]="traitsForm" class="traits-form">
+    <div class="traits-actions">
+      <button type="button" class="add-trait-button" (click)="addTrait()">
+        <i class="material-icons">add</i> Add Trait
+      </button>
+
+      <button *ngIf="traits.length > 0" type="button" class="delete-all-button" (click)="confirmDeleteAll()">
+        <i class="material-icons">delete_sweep</i> Delete All
+      </button>
+    </div>
+
+    <div formArrayName="traits" class="traits-list">
+      <div *ngFor="let trait of traits.controls; let i = index" [formGroupName]="i" class="trait-item">
+        <div class="trait-input-container" [class.focused]="focusStates['trait-' + i]">
+          <div class="form-field">
+            <label [for]="'trait-' + i" class="form-label">Trait {{i + 1}}</label>
+            <div class="input-wrapper">
+              <input
+                id="trait-{{i}}"
+                type="text"
+                class="form-input"
+                [class.invalid]="isInvalid(i)"
+                formControlName="text"
+                placeholder="e.g., Analytical thinking, Team player"
+                (focus)="setFocus(i, true)"
+                (blur)="setFocus(i, false)" />
+              <button type="button" class="remove-button" (click)="removeTrait(i)">
+                <i class="material-icons">delete</i>
+              </button>
+            </div>
+            <div *ngIf="isInvalid(i)" class="error-message">{{getErrorMessage(i)}}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <!-- Preview Section -->
+  <div class="traits-preview-section">
+    <h4 class="preview-heading">Preview</h4>
+    <div class="traits-preview">
+      <div *ngIf="hasTraitsToPreview()" class="preview-content">
+        <h5 class="preview-title">Personal Traits</h5>
+        <div class="preview-divider"></div>
+        <ul class="traits-list-preview">
+          <li *ngFor="let trait of traits.controls" class="trait-preview-item">
+            <ng-container *ngIf="trait.get('text')?.value?.trim()"> {{trait.get('text')?.value}} </ng-container>
+          </li>
+        </ul>
+      </div>
+
+      <div *ngIf="!hasTraitsToPreview()" class="empty-preview">
+        <!-- <i class="material-icons">format_list_bulleted</i> -->
+        <span class="icon-list">📋</span>
+        <p>Add traits to see a preview here</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-navigation with-prev">
+  <button type="button" (click)="goToPreviousSection()" class="btn btn-prev">
+    <i class="material-icons">arrow_forward</i>
+    Previous: General Sections
+  </button>
+
+  <button type="button" (click)="goToNextSection()" class="btn btn-primary">
+    Next: Personal Details
+    <i class="material-icons">arrow_forward</i>
+  </button>
+</div>

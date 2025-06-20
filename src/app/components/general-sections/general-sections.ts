@@ -129,6 +129,6 @@ export class GeneralSectionsComponent implements OnInit {
 
   goToNextSection(): void {
     this.triggerSave();
-    this.navigate.emit('personalDetails');
+    this.navigate.emit('traits');
   }
 }

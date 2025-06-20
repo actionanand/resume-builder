@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 
-import { Certificate, DeclarationDef, GeneralSection, Language, PersonalDetails, ProfileInfo } from '../models';
+import { Certificate, DeclarationDef, GeneralSection, Language, PersonalDetails, ProfileInfo, Trait } from '../models';
 
 @Injectable({
   providedIn: 'root',
@@ -16,7 +16,8 @@ export class ResumeService {
 
   readonly DEFAULT_DECLARATION_TEXT = this.DEFAULT_DECLARATION.text;
 
-  private generalSectionsKey = 'resume_general_sections';
+  private readonly generalSectionsKey = 'resume_general_sections';
+  private readonly traitsKey = 'resume_traits';
 
   private resumeData: any = {
     profile: null,
@@ -300,5 +301,54 @@ export class ResumeService {
   getPersonalDetails(): PersonalDetails {
     const details = localStorage.getItem('resumePersonalDetails');
     return details ? JSON.parse(details) : {};
+  }
+
+  // Get traits from localStorage
+  getTraits(): Trait[] {
+    try {
+      const savedTraits = localStorage.getItem(this.traitsKey);
+      if (!savedTraits) {
+        return [];
+      }
+
+      return JSON.parse(savedTraits);
+    } catch (error) {
+      console.error('Error retrieving traits from localStorage:', error);
+      return [];
+    }
+  }
+
+  // Save traits to localStorage
+  saveTraits(traits: Trait[]): void {
+    try {
+      localStorage.setItem(this.traitsKey, JSON.stringify(traits));
+      this.notifyDataChanged();
+      console.log('Traits saved successfully');
+    } catch (error) {
+      console.error('Error saving traits to localStorage:', error);
+    }
+  }
+
+  // Delete all traits (clear from localStorage)
+  deleteTraits(): void {
+    try {
+      localStorage.removeItem(this.traitsKey);
+      this.notifyDataChanged();
+      console.log('Traits deleted successfully');
+    } catch (error) {
+      console.error('Error deleting traits from localStorage:', error);
+    }
+  }
+
+  // Delete a specific trait by ID
+  deleteTraitById(traitId: string): void {
+    try {
+      const traits = this.getTraits();
+      const updatedTraits = traits.filter(trait => trait.id !== traitId);
+      this.saveTraits(updatedTraits);
+      console.log(`Trait with ID ${traitId} deleted successfully`);
+    } catch (error) {
+      console.error(`Error deleting trait with ID ${traitId}:`, error);
+    }
   }
 }

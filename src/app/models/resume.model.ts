@@ -109,3 +109,8 @@ export interface SectionEntry {
   currentPosition?: boolean;
   description: string;
 }
+
+export interface Trait {
+  id: string;
+  text: string;
+}

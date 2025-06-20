@@ -22,6 +22,7 @@ import { Languages } from './components/languages/languages';
 import { PersonalDetailsComponent } from './components/personal-details/personal-details';
 import { Declaration } from './components/declaration/declaration';
 import { GeneralSectionsComponent } from './components/general-sections/general-sections';
+import { TraitsComponent } from './components/traits/traits';
 
 @Component({
   selector: 'app-root',
@@ -43,6 +44,7 @@ import { GeneralSectionsComponent } from './components/general-sections/general-
     PersonalDetailsComponent,
     Declaration,
     GeneralSectionsComponent,
+    TraitsComponent,
   ],
   providers: [],
   templateUrl: './app.html',
@@ -67,7 +69,8 @@ export class App implements OnInit {
     { id: 'certificates', label: 'Certificates', icon: 'card_membership', complete: false },
     { id: 'languages', label: 'Languages', icon: 'translate', complete: false },
     { id: 'generalSections', label: 'General Sections', icon: 'list', complete: false },
-    { id: 'personalDetails', label: 'Personal', icon: 'person_outline', complete: false },
+    { id: 'traits', label: 'Personal Traits', icon: 'emoji_people', complete: false },
+    { id: 'personalDetails', label: 'Personal Details', icon: 'person_outline', complete: false },
     { id: 'declaration', label: 'Declaration', icon: 'gavel', complete: false },
     { id: 'qr-code', label: 'QR Code', icon: 'qr_code', complete: false },
   ];
@@ -141,6 +144,14 @@ export class App implements OnInit {
     const isGeneralSectionComplete = hasSections && hasSectionWithEntries;
     this.breadcrumbSections[8].complete = isGeneralSectionComplete;
 
+    // For personal traits, check if any meaningful trait has been filled
+    const traits = this.resumeService.getTraits();
+    this.breadcrumbSections[9].complete = !!(
+      traits &&
+      traits.length > 0 &&
+      traits.some(trait => trait.text && trait.text.trim() !== '')
+    );
+
     // For personal details, check if any MEANINGFUL field has been filled
     const personalDetails = this.resumeService.getPersonalDetails();
     const hasRealPersonalDetails =
@@ -148,15 +159,15 @@ export class App implements OnInit {
       Object.keys(personalDetails).length > 0 &&
       // Check that it's not just default values
       Object.keys(personalDetails).some(key => key !== 'hasSiblings' && key !== 'siblingCount');
-    this.breadcrumbSections[9].complete = !!hasRealPersonalDetails;
+    this.breadcrumbSections[10].complete = !!hasRealPersonalDetails;
 
     // For declaration, check if the text is not empty
     const declaration = this.resumeService.getDeclaration();
-    this.breadcrumbSections[10].complete = !!(declaration && declaration.text && declaration.text.trim() !== '');
+    this.breadcrumbSections[11].complete = !!(declaration && declaration.text && declaration.text.trim() !== '');
 
     // QR code is considered complete if any section is complete
-    this.breadcrumbSections[11].complete = this.breadcrumbSections.some(
-      (section, index) => index < 11 && section.complete,
+    this.breadcrumbSections[12].complete = this.breadcrumbSections.some(
+      (section, index) => index < 12 && section.complete,
     );
 
     // Update the breadcrumb service with the new status

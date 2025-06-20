@@ -1,0 +1,65 @@
+/* Traits Preview Styles */
+.resume-preview-section {
+  margin-top: 30px;
+}
+
+/*
+.resume-section-preview-container {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 20px;
+  background-color: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+*/
+
+.resume-preview-section-header {
+  margin-bottom: 16px;
+}
+
+.resume-preview-section-title {
+  color: #2c3e50;
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+}
+
+.resume-preview-section-divider {
+  height: 2px;
+  background-color: #3498db;
+  width: 100%;
+}
+
+.resume-preview-traits-container {
+  padding-left: 5px;
+}
+
+.resume-preview-traits-list {
+  margin: 10px 0 0 20px;
+  padding: 0;
+}
+
+.resume-preview-trait-item {
+  font-size: 14px;
+  color: #2c3e50;
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+.resume-preview-empty-content {
+  text-align: center;
+  padding: 20px;
+  color: #95a5a6;
+  margin-top: 10px;
+}
+
+.resume-preview-empty-content i {
+  font-size: 36px;
+  margin-bottom: 10px;
+  color: #bdc3c7;
+}
+
+.resume-preview-empty-content p {
+  font-size: 14px;
+  margin: 0;
+}

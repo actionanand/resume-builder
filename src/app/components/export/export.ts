@@ -4,6 +4,7 @@ import { Component, OnInit, ElementRef, ViewChild, inject, Input, DestroyRef } f
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
+import { Subscription } from 'rxjs';
 import { QRCodeComponent } from 'angularx-qrcode';
 import * as pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
@@ -20,17 +21,15 @@ import {
   SkillGroup,
   SkillPill,
   ThemeColors,
-  GeneralSection,
   SectionEntry,
   PersonalDetails,
 } from '../../models';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-export',
   imports: [CommonModule, FormsModule, QRCodeComponent],
   templateUrl: './export.html',
-  styleUrls: ['./export.scss', './export.general-section.scss'],
+  styleUrls: ['./export.scss', './export.general-section.scss', './export.traits.scss'],
 })
 export class Export implements OnInit {
   @ViewChild('resumePreview') resumePreview!: ElementRef;
@@ -599,6 +598,41 @@ export class Export implements OnInit {
     return `${month} ${year}`;
   }
 
+  private addTraitsSection(docDefinition: any, colors: ThemeColors): void {
+    // Get traits from resume service
+    const traits = this.resumeService.getTraits();
+
+    // Only proceed if there are valid traits
+    if (!traits || traits.length === 0) {
+      return;
+    }
+
+    // Filter out empty traits
+    const validTraits = traits.filter(trait => trait.text && trait.text.trim());
+    if (validTraits.length === 0) {
+      return;
+    }
+
+    // Add section header
+    docDefinition.content.push({
+      text: 'Personal Traits',
+      style: 'subheader',
+      color: colors.primaryColor,
+      // margin: [0, 15, 0, 5], // [left, top, right, bottom]
+    });
+
+    this.addSectionTitleLine(docDefinition, colors);
+
+    // Add traits as bullet points
+    const traitItems = validTraits.map(trait => trait.text.trim());
+
+    docDefinition.content.push({
+      ul: traitItems,
+      margin: [10, 0, 0, 10], // [left, top, right, bottom] bullet indentation
+      color: colors.textColor,
+    });
+  }
+
   copyMarkdown(): void {
     // First ensure we have the latest content
     this.generateMarkdown();
@@ -1164,6 +1198,9 @@ export class Export implements OnInit {
 
     // Add general sections
     this.addGeneralSections(docDefinition, colors);
+
+    // Add personal traits section
+    this.addTraitsSection(docDefinition, colors);
 
     // Add personal details section
     this.addPersonalDetailsSection(docDefinition, colors);
@@ -2171,7 +2208,7 @@ export class Export implements OnInit {
             alignment: 'right',
           },
         ],
-        margin: [0, 5, 0, 0],
+        margin: [0, 5, 0, 0], // [left, top, right, bottom]
       });
 
       // Company and location in second row (both left-aligned)
@@ -2209,7 +2246,7 @@ export class Export implements OnInit {
             text: achievement,
             style: 'listItem',
           })),
-          margin: [15, 0, 0, 10],
+          margin: [15, 0, 0, 10], // [left, top, right, bottom] bullet indentation
         };
 
         docDefinition.content.push(achievementList);

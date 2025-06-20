@@ -29,6 +29,8 @@
       *ngIf="currentSection === 'generalSections'"
       (navigate)="onSectionChange($event)"></app-general-sections>
 
+    <app-traits *ngIf="currentSection === 'traits'" (navigate)="onSectionChange($event)"> </app-traits>
+
     <app-personal-details
       *ngIf="currentSection === 'personalDetails'"
       (navigate)="onSectionChange($event)"></app-personal-details>
