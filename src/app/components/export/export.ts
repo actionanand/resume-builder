@@ -31,7 +31,12 @@ import { PillColors } from '../../models';
   selector: 'app-export',
   imports: [CommonModule, FormsModule, QRCodeComponent],
   templateUrl: './export.html',
-  styleUrls: ['./export.scss', './export.general-section.scss', './export.traits.scss', './export.skills.scss'],
+  styleUrls: [
+    './export.scss',
+    './styles/export.general-section.scss',
+    './styles/export.traits.scss',
+    './styles/export.skills.scss',
+  ],
 })
 export class Export implements OnInit {
   @ViewChild('resumePreview') resumePreview!: ElementRef;
