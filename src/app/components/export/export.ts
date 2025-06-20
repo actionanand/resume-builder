@@ -781,21 +781,6 @@ export class Export implements OnInit {
 
   selectPillScheme(scheme: string) {
     this.selectedPillScheme = scheme;
-
-    // Refresh all skills to apply new colors
-    this.formatAllSkills();
-
-    // Save settings
-    // this.saveSkills();
-  }
-
-  // Format all skills with current settings
-  formatAllSkills() {
-    // this.skillCategories.forEach(category => {
-    //   if (category.skills && category.skills.length) {
-    //     this.formatSkillItems(category.skills);
-    //   }
-    // });
   }
 
   copyMarkdown(): void {
@@ -2409,42 +2394,8 @@ export class Export implements OnInit {
 
   // Helper method to format individual skill items
   private formatSkillItems(skills: string[], colors: ThemeColors): any[] {
-    // let pillColors: PillColors;
-
-    // if (this.useDefaultPillColors) {
-    //   // Use default professional colors
-    //   pillColors = {
-    //     background: '#f0f9ff', // Light sky blue background
-    //     text: '#0c4a6e', // Dark navy text
-    //     border: '#bae6fd', // Light blue border
-    //   };
-    // } else {
-    //   // Use theme-based colors
-    //   pillColors = {
-    //     background: colors.ultraLightShade || '#f0f9ff',
-    //     text: colors.primaryColor || '#0c4a6e',
-    //     border: colors.lightShade || '#bae6fd',
-    //   };
-    // }
-
     // Get pill colors based on settings
     const pillColors: PillColors = this.getPillColors(colors);
-
-    // You can replace with any of these professional combinations:
-    // Default Blue:
-    // background: '#f0f9ff', text: '#0c4a6e', border: '#bae6fd'
-
-    // Subtle Professional:
-    // background: '#f2f2f7', text: '#2c3e50', border: '#d1d5db'
-
-    // Modern Tech:
-    // background: '#eef2ff', text: '#3730a3', border: '#c7d2fe'
-
-    // Subdued Gray:
-    // background: '#f3f4f6', text: '#374151', border: '#d1d5db'
-
-    // Soft Green:
-    // background: '#ecfdf5', text: '#065f46', border: '#a7f3d0'
 
     const rows: any[] = [];
     const currentRow: { stack: any[]; margin: [number, number, number, number] } = {
