@@ -351,34 +351,31 @@
           </div>
         </div>
 
-        <!-- General Sections -->
-        <div class="general-sections-preview-wrapper" *ngIf="resumeService.getGeneralSections() as generalSections">
-          <h4 class="general-sections-preview-heading">Preview</h4>
-
-          <div class="general-sections-preview-box">
+        <!-- General Sections Preview -->
+        <div class="resume-preview-section" *ngIf="resumeService.getGeneralSections() as generalSections">
+          <div class="resume-section-preview-container">
             <!-- Loop through each section -->
-            <div *ngFor="let section of generalSections" class="general-section-preview-item">
-              <!-- Only show section if it has entries -->
+            <div *ngFor="let section of generalSections" class="resume-preview-general-section">
+              <!-- Only show sections with entries -->
               <ng-container *ngIf="section.entries && section.entries.length > 0">
-                <h5 class="general-section-preview-title">{{section.sectionName}}</h5>
-                <div class="general-section-preview-divider"></div>
+                <!-- Section header -->
+                <div class="resume-preview-section-header">
+                  <h2 class="resume-preview-section-title">{{section.sectionName}}</h2>
+                  <!-- <div class="resume-preview-section-divider"></div> -->
+                </div>
 
-                <!-- Loop through each entry -->
-                <div *ngFor="let entry of section.entries" class="general-section-entry-item">
-                  <div class="general-section-entry-header">
-                    <div class="general-section-entry-title">{{entry.title || 'No Title'}}</div>
-                    <div
-                      class="general-section-entry-date"
-                      *ngIf="entry.startDate || entry.endDate || entry.currentPosition">
-                      {{entry.startDate ? (entry.startDate | date:'MMM yyyy') : ''}} {{(entry.startDate &&
-                      (entry.endDate || entry.currentPosition)) ? ' - ' : ''}} {{entry.currentPosition ? 'Present' :
-                      (entry.endDate ? (entry.endDate | date:'MMM yyyy') : '')}}
+                <!-- Section entries -->
+                <div class="resume-preview-entries-container">
+                  <div *ngFor="let entry of section.entries" class="resume-preview-entry">
+                    <div class="resume-preview-entry-header">
+                      <div class="resume-preview-entry-title">{{entry.title || 'No Title'}}</div>
+                      <div class="resume-preview-entry-date">{{formatDateForPreview(entry)}}</div>
                     </div>
+
+                    <div *ngIf="entry.location" class="resume-preview-entry-subtitle">{{entry.location}}</div>
+
+                    <div *ngIf="entry.description" class="resume-preview-entry-description">{{entry.description}}</div>
                   </div>
-
-                  <div class="general-section-entry-location" *ngIf="entry.location">{{entry.location}}</div>
-
-                  <div class="general-section-entry-description" *ngIf="entry.description">{{entry.description}}</div>
                 </div>
               </ng-container>
             </div>

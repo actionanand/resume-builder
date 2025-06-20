@@ -252,6 +252,38 @@ export class Export implements OnInit {
     }
   }
 
+  formatDateForPreview(entry: SectionEntry): string {
+    // If currentPosition is true, show "Start Date - Present"
+    if (entry.currentPosition) {
+      return entry.startDate ? `${this.formatMonthYear(entry.startDate)} - Present` : 'Present';
+    }
+
+    // If both dates exist
+    if (entry.startDate && entry.endDate) {
+      return `${this.formatMonthYear(entry.startDate)} - ${this.formatMonthYear(entry.endDate)}`;
+    }
+    // If only start date exists
+    else if (entry.startDate) {
+      return this.formatMonthYear(entry.startDate);
+    }
+    // If only end date exists
+    else if (entry.endDate) {
+      return this.formatMonthYear(entry.endDate);
+    }
+    // No dates
+    return '';
+  }
+
+  private formatMonthYear(dateString: string): string {
+    if (!dateString) return '';
+
+    const date = new Date(dateString);
+    const month = date.toLocaleString('default', { month: 'short' });
+    const year = date.getFullYear();
+
+    return `${month} ${year}`;
+  }
+
   generateMarkdown(): void {
     // Generate markdown directly in the component to have more control
     const profile = this.resumeService.getProfile();
