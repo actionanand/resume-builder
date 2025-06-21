@@ -1,1 +1,91 @@
-<p>home works!</p>
+<div class="landing-page">
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-content fade-in">
+        <h1>Create Stunning Resumes <span class="highlight">in Minutes</span></h1>
+        <p>Professional templates that help you stand out and land your dream job</p>
+        <button class="cta-button" [routerLink]="['/resume']"><i class="material-icons">edit</i> Create Resume</button>
+      </div>
+      <div class="hero-image slide-in-right">
+        <div class="resume-preview"></div>
+        <div class="floating-element e1">
+          <i class="material-icons">work</i>
+        </div>
+        <div class="floating-element e2">
+          <i class="material-icons">school</i>
+        </div>
+        <div class="floating-element e3">
+          <i class="material-icons">psychology</i>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features">
+    <div class="container">
+      <h2 class="section-title">Why Choose Us</h2>
+      <div class="features-grid">
+        <div class="feature-card fade-in-up">
+          <i class="material-icons">speed</i>
+          <h3>Quick & Easy</h3>
+          <p>Create your resume in just a few minutes</p>
+        </div>
+        <div class="feature-card fade-in-up" style="animation-delay: 0.2s">
+          <i class="material-icons">auto_awesome</i>
+          <h3>Professional Templates</h3>
+          <p>Designed by experts to impress recruiters</p>
+        </div>
+        <div class="feature-card fade-in-up" style="animation-delay: 0.4s">
+          <i class="material-icons">description</i>
+          <h3>ATS-Friendly</h3>
+          <p>Optimized to pass applicant tracking systems</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Steps Section -->
+  <section class="steps">
+    <div class="container">
+      <h2 class="section-title">How It Works</h2>
+      <div class="steps-container">
+        <div class="step fade-in-left">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <h3>Choose a template</h3>
+            <p>Select from our collection of professional designs</p>
+          </div>
+        </div>
+        <div class="step-connector"></div>
+        <div class="step fade-in-left" style="animation-delay: 0.3s">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <h3>Add your details</h3>
+            <p>Fill in your information with our easy-to-use editor</p>
+          </div>
+        </div>
+        <div class="step-connector"></div>
+        <div class="step fade-in-left" style="animation-delay: 0.6s">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            <h3>Download & apply</h3>
+            <p>Get your resume in PDF format and start applying</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Call to Action -->
+  <section class="cta-section">
+    <div class="container">
+      <div class="cta-content pulse-animation">
+        <h2>Ready to build your professional resume?</h2>
+        <p>Join thousands of job seekers who've landed their dream jobs</p>
+        <button class="cta-button" routerLink="/resume"><i class="material-icons">arrow_forward</i> Get Started</button>
+      </div>
+    </div>
+  </section>
+</div>

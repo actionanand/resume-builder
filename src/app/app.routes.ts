@@ -10,5 +10,5 @@ export const routes: Routes = [
     path: 'mail-template',
     loadComponent: () => import('./pages/mail-template/mail-template').then(m => m.MailTemplate),
   },
-  { path: '**', redirectTo: 'home' },
+  { path: '**', loadComponent: () => import('./pages/page-not-found/page-not-found').then(m => m.PageNotFound) },
 ];
