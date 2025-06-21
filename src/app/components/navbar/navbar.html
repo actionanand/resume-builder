@@ -1,0 +1,48 @@
+<nav class="app-navbar">
+  <div class="nav-container">
+    <!-- Logo and Brand -->
+    <div class="nav-brand">
+      <a [routerLink]="['/']" class="brand-link">
+        <i class="material-icons">description</i>
+        <span class="brand-name">AR Résumé Builder</span>
+      </a>
+    </div>
+
+    <!-- Mobile Toggle Button -->
+    <button class="mobile-toggle" (click)="toggleMobileNav()">
+      <i class="material-icons">{{ isMobileNavOpen ? 'close' : 'menu' }}</i>
+    </button>
+
+    <!-- Navigation Links -->
+    <div class="nav-links" [class.active]="isMobileNavOpen">
+      <a [routerLink]="['/home']" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-item">
+        <i class="material-icons">home</i>
+        <span>Home</span>
+      </a>
+      <a [routerLink]="['/resume']" routerLinkActive="active" class="nav-item">
+        <i class="material-icons">edit_document</i>
+        <span>CV Builder</span>
+      </a>
+      <a [routerLink]="['/cover-letter']" routerLinkActive="active" class="nav-item">
+        <i class="material-icons">create</i>
+        <span>Cover Letter</span>
+      </a>
+      <a [routerLink]="['/mail-template']" routerLinkActive="active" class="nav-item">
+        <i class="material-icons">style</i>
+        <span>Mail Templates</span>
+      </a>
+      <a [routerLink]="['/interview-qa']" routerLinkActive="active" class="nav-item">
+        <i class="material-icons">auto_awesome</i>
+        <span>QA</span>
+      </a>
+    </div>
+
+    <!-- Action Button -->
+    <!-- <div class="nav-actions">
+      <button class="action-btn preview-btn" (click)="previewResume()">
+        <i class="material-icons">visibility</i>
+        <span>Preview</span>
+      </button>
+    </div> -->
+  </div>
+</nav>

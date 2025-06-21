@@ -1,0 +1,22 @@
+<footer class="app-footer">
+  <div class="footer-container">
+    <!-- Logo and Brand -->
+    <div class="footer-brand">
+      <i class="material-icons">description</i>
+      <span> {{ companyName }} </span>
+    </div>
+
+    <!-- Footer Links -->
+    <div class="footer-links">
+      <a [routerLink]="['/home']" class="footer-link">About</a>
+      <a [routerLink]="['/']" class="footer-link">Privacy</a>
+      <a [routerLink]="['/']" class="footer-link">Terms</a>
+      <!-- <a href="mailto:contact@resumebuilder.com" class="footer-link">Contact</a> -->
+    </div>
+
+    <!-- Copyright -->
+    <div class="footer-copyright">
+      <span>&copy; {{ copyRightYear }} {{ companyName }}. All rights reserved.</span>
+    </div>
+  </div>
+</footer>

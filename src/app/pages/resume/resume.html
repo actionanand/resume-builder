@@ -1,0 +1,54 @@
+<div class="resume-builder-container">
+  <header class="header">
+    <h1>{{ title }}</h1>
+    <p>Build an ATS-friendly résumé with modern features</p>
+  </header>
+
+  <!-- Breadcrumb Navigation -->
+  <app-breadcrumb />
+
+  <!-- Section Container - Shows the active section -->
+  <div class="section-container">
+    <app-profile *ngIf="currentSection === 'profile'" (navigate)="onSectionChange($event)"> </app-profile>
+
+    <app-about *ngIf="currentSection === 'about'" (navigate)="onSectionChange($event)"> </app-about>
+
+    <app-skills *ngIf="currentSection === 'skills'" (navigate)="onSectionChange($event)"> </app-skills>
+
+    <app-experience *ngIf="currentSection === 'experience'" (navigate)="onSectionChange($event)"> </app-experience>
+
+    <app-projects *ngIf="currentSection === 'projects'" (navigate)="onSectionChange($event)"> </app-projects>
+
+    <app-education *ngIf="currentSection === 'education'" (navigate)="onSectionChange($event)"> </app-education>
+
+    <app-certificates *ngIf="currentSection === 'certificates'" (navigate)="onSectionChange($event)"></app-certificates>
+
+    <app-languages *ngIf="currentSection === 'languages'" (navigate)="onSectionChange($event)"></app-languages>
+
+    <app-general-sections
+      *ngIf="currentSection === 'generalSections'"
+      (navigate)="onSectionChange($event)"></app-general-sections>
+
+    <app-traits *ngIf="currentSection === 'traits'" (navigate)="onSectionChange($event)"> </app-traits>
+
+    <app-personal-details
+      *ngIf="currentSection === 'personalDetails'"
+      (navigate)="onSectionChange($event)"></app-personal-details>
+
+    <app-declaration *ngIf="currentSection === 'declaration'" (navigate)="onSectionChange($event)"> </app-declaration>
+
+    <app-qr-code *ngIf="currentSection === 'qr-code'" (navigate)="onSectionChange($event)"> </app-qr-code>
+
+    <app-export *ngIf="currentSection === 'export'"> </app-export>
+  </div>
+
+  <!-- Export Preview - Always visible at the bottom -->
+  <div class="export-preview-container" *ngIf="currentSection !== 'export'">
+    <h2>Résumé Preview</h2>
+    <app-export [previewOnly]="true"></app-export>
+  </div>
+
+  <!-- <footer class="footer">
+    <p>&copy; 2025 AR Résumé Builder</p>
+  </footer> -->
+</div>
